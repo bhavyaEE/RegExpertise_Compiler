@@ -54,10 +54,33 @@ public:
         const std::map<std::string,double> &bindings
     ) const override
     {
-        // TODO-A : Run bin/eval_expr with a numeric expression to make sure you understand how this works.
         return value;
     }
 };
 
+class Int
+    : public Expression
+{
+private:
+    int value;
+public:
+    Int(int _value)
+        : value(_value)
+    {}
 
+    double getValue() const
+    { return value; }
+
+    virtual void print(std::ostream &dst) const override
+    {
+        dst<<value;
+    }
+
+    virtual double evaluate(
+        const std::map<std::string,double> &bindings
+    ) const override
+    {
+        return value;
+    }
+};
 #endif
