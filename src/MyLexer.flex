@@ -16,8 +16,12 @@ extern "C" int fileno(FILE *stream);
 #include "maths_parser.tab.hpp"
 %}
 
-%%
+D			[0-9]
+L			[a-zA-Z_]
+H			[a-fA-F0-9]
 
+%%
+/* arithmetic operators */
 [*]             { return T_TIMES; }
 [+]             { return T_PLUS; }
 [-]             { return T_MINUS; }
@@ -26,13 +30,15 @@ extern "C" int fileno(FILE *stream);
 [++]			      { return INCREMENT; }
 [--]			      { return DECREMENT; }
 
-[~]             { return T_BITNOT; }
-[&]             { return T_BITAND; }
-[|]             { return T_BITOR; }
-[\^]            { return T_BITXOR; }
-[<<]            { return T_BITLEFTSSHIFT; }
-[<<]            { return T_BITRIGHTSHIFT; }
+/*bitwise operators*/
+[~]             { return T_BIT_NOT; }
+[&]             { return T_BIT_AND; }
+[|]             { return T_BIT_OR; }
+[\^]            { return T_BIT_XOR; }
+[<<]            { return T_BIT_LEFT_SHIFT; }
+[<<]            { return T_BIT_RIGHT_SHIFT; }
 
+/* assignet operators*/
 [>>=]			    { return RIGHT_ASSIGN; }
 [<<=]			      {  return LEFT_ASSIGN; }
 [+=]	    		  {  return  ADD_ASSIGN; }
@@ -44,33 +50,43 @@ extern "C" int fileno(FILE *stream);
 [^=]			{  return  XOR_ASSIGN; }
 [|=]			{  return  OR_ASSIGN; }
 
-[!]             { return L_NOT; }
-[&&]			{  return  L_AND; }
-[||]			{  return  L_OR; }
+/* logical operators */
+[!]             { return T_L_NOT; }
+[&&]			{  return  T_L_AND; }
+[||]			{  return  T_L_OR; }
 
-[<=]			{  return  LESSTHAN; }
-[>=]			{  return  GREATERTHAN; }
-[==]			{  return  EQUAL; }
-[!=]			{  return  NOTEQUAL; }
+/* comparison */
+[<]			{  return  T_LESSTHAN; }
+[>]			{  return  T_GREATERTHAN; }
+[==]			{  return  T_EQUAL; }
+[!=]			{  return  T_NOTEQUAL; }
 
+/* characters */
 [(]             { return T_LBRACKET; }
 [)]             { return T_RBRACKET; }
 [{]         { return CUR_LBRACKET; }
 [}]         { return CUR_RBRACKET; }
-[;]			    {  return  SEMICOLON  ; }
+[[]         { return SQU_LBRACKET; }
+[]]         { return SQU_RBRACKET; }
+[;]			    { return  SEMICOLON; }
+[:]         { return COLON;}
 
-log             { return T_LOG; }
-exp             { return T_EXP; }
-sqrt            { return T_SQRT; }
+/* structures */
+"return"        { return T_RETURN; }
+"if"            { return T_IF; }
+"else"          { return T_ELSE; }
 
-return        { return RETURN; }
-int           { return INT; }
-if            { return IF; }
-else          { return ELSE; }
-etc
+/* types */
+"int"           { return T_INT; }
+/* for later
+"double"        { return T_DOUBLE;}
+"char"        { return T_CHAR;}
+"float"        { return T_FLOAT;}
+"double"        { return T_DOUBLE;} */
 
-[0-9]+([.][0-9]*)? { yylval.number=strtod(yytext, 0); return T_NUMBER; }
-[a-z]+          { yylval.string=new std::string(yytext); return T_VARIABLE; }
+
+[0-9]+([.][0-9]*)?      { yylval.string= new std::string(yytext); return NUMBER; }
+[a-zA-Z_]+[a-zA-Z0-9_]* { yylval.string= new std::string(yytext); return VAR_NAME; }
 
 [ \t\r\n]+		{;}
 
