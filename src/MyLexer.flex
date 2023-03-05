@@ -27,8 +27,8 @@ H			[a-fA-F0-9]
 [-]             { return T_MINUS; }
 [\/]            { return T_DIVIDE; }
 [%]             { return T_MOD; } 
-[++]			      { return INCREMENT; }
-[--]			      { return DECREMENT; }
+[++]			      { return T_INCREMENT; }
+[--]			      { return T_DECREMENT; }
 
 /*bitwise operators*/
 [~]             { return T_BIT_NOT; }
@@ -86,7 +86,7 @@ H			[a-fA-F0-9]
 
 
 [0-9]+([.][0-9]*)?      { yylval.string= new std::string(yytext); return NUMBER; }
-[a-zA-Z_]+[a-zA-Z0-9_]* { yylval.string= new std::string(yytext); return VAR_NAME; }
+[a-zA-Z_]+[a-zA-Z0-9_]* { yylval.string= new std::string(yytext); return NAME; }
 
 [ \t\r\n]+		{;}
 
