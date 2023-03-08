@@ -32,8 +32,9 @@ public:
     }
 };
 
+class Primitive : public Expression {};
 class Int
-    : public Expression
+    : public Primitive
 {
 private:
     int value;
@@ -42,19 +43,20 @@ public:
         : value(_value)
     {}
 
-    double getValue() const
-    { return value; }
+    virtual void generateRISCV(std::ostream &dst, Context& context) const override
+		{
+			int stack_pointer = context.get_stack_pointer();
+			std::string destReg = "$2";
 
-    virtual void print(std::ostream &dst) const override
-    {
-        dst<<value;
-    }
+			dst << "\t" << "li" << "\t" << "\t" << "$2" << ", " << value << std::endl;
 
-    virtual double evaluate(
-        const std::map<std::string,double> &bindings
-    ) const override
-    {
-        return value;
-    }
+			context.store_register(dst, destReg, stack_pointer);	
+		}
+
+		virtual type get_data_type(Context& context) const override { 
+            return type(INT); 
+        };
+
+		virtual double evaluate() const override { return value; };
 };
 #endif
