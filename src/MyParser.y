@@ -86,7 +86,7 @@ type_specifier
 	: //VOID
 	/* | CHAR
 	| SHORT |*/
-	 T_INT { $$ = new INT(); /*need to implement this*/}
+	 T_INT { $$ = new type_specifier(typeINT); }
 	/* | LONG
 	| FLOAT
 	| DOUBLE
