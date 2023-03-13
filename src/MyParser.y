@@ -17,7 +17,8 @@
 %union{
   const Node *node;
   double number;
-  std::string *string;
+  std::string string;
+  //can I have vector of node pointer?
 }
 
 
@@ -34,7 +35,7 @@
 //comparison
 %token T_LESSTHAN T_GREATERTHAN T_EQUAL T_NOTEQUAL
 //characters
-%token T_LBRACKET T_RBRACKET CUR_LBRACKET CUR_RBRACKET SQU_LBRACKET SQU_RBRACKET SEMICOLON COLON
+%token T_LBRACKET T_RBRACKET CUR_LBRACKET CUR_RBRACKET SQU_LBRACKET SQU_RBRACKET SEMICOLON COLON COMMA
 //structures
 %token T_RETURN T_IF T_ELSE
 //%token TYPEDEF EXTERN STATIC AUTO REGISTER
@@ -45,6 +46,8 @@
 //%token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
 %type need to do this
+%type <string> NAME
+//T_INT is also ointer to a string but why
 
 
 %start ROOT
@@ -64,23 +67,25 @@ external_declaration
 	;
 
 function_definition
-	: declaration_specifiers declarator compound_statement { $$ = new Function_Definition( $1, $2, $3); /*need to implement func_def*/} //like int f( ){ body};
-	//| declaration_specifiers declarator declaration_list compound_statement {} //like int f(parameters ){ body};
+	: declaration_specifiers NAME T_LBRACKET T_RBRACKET compound_statement { $$ = new Function_No_Arg_Definition( $1, *$2, $5 ); /*need to implement func_def*/} //like int f( ){ body};
+	| declaration_specifiers NAME T_LBRACKET parameter_list T_RBRACKET compound_statement { $$ = new Function_With_Arg_Definition( $1, *$2, $4, $6 );} //like int f(parameters ){ body};
 	;
 
 declaration
-	: declaration_specifiers ';'
-	| declaration_specifiers init_declarator_list ';'
+	: type_specifier SEMICOLON
+	| type_specifier init_declarator SEMICOLON
 	;
 
-declaration_specifiers
-	: /*storage_class_specifier
-	| storage_class_specifier declaration_specifiers */
-	 type_specifier { $$ = $1; }
-	//| type_specifier declaration_specifiers
-	/* | type_qualifier
-	| type_qualifier declaration_specifiers */
+/* init_declarator_list
+	: init_declarator
+	| init_declarator_list ',' init_declarator
+	; */
+
+init_declarator
+	: declarator
+	| declarator '=' initializer
 	;
+
 
 type_specifier
 	: //VOID
@@ -98,12 +103,22 @@ type_specifier
 	;
 
 declarator
-	: NAME { $$ = new Declarator(*$1); /*need to implement declarator*/}
+	: NAME { $$ = new Variable_Declarator(*$1); /*need to implement declarator*/}
 	/* | direct_declarator '[' constant_expression ']'
 	| direct_declarator '[' ']' */
 	/* | declarator T_LBRACKET parameter_type_list T_RBRACKET
 	| declarator T_LBRACKET identifier_list T_RBRACKET */
-	| declarator T_LBRACKET T_RBRACKET { $$ = new Func_Declarator(*$1); /*need to implement; not sure if pointer or not*/ }
+	; 
+
+parameter_list
+	: parameter_declaration { $$ = new std::vector<Declaration*>{$1}; }
+	| parameter_list COMMA parameter_declaration {$$ = $1.push_back($3);}
+	;
+
+parameter_declaration
+	: type_specifier declarator { $$ = new Declaration($1, $2);}
+	/* | declaration_specifiers abstract_declarator
+	| declaration_specifiers */
 	;
 
 compound_statement
@@ -123,13 +138,6 @@ statement_list
 	| statement_list statement
 	;
 
-
-
-
-init_declarator_list
-	: init_declarator
-	| init_declarator_list ',' init_declarator
-	;
 
 
 
@@ -361,21 +369,7 @@ type_qualifier_list
 	;
 
 
-parameter_type_list
-	: parameter_list
-	| parameter_list ',' ELLIPSIS
-	;
 
-parameter_list
-	: parameter_declaration
-	| parameter_list ',' parameter_declaration
-	;
-
-parameter_declaration
-	: declaration_specifiers declarator
-	| declaration_specifiers abstract_declarator
-	| declaration_specifiers
-	;
 
 identifier_list
 	: IDENTIFIER

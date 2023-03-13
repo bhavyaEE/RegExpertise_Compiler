@@ -3,17 +3,17 @@
 
 #include "ast/ast_node.hpp"
 
-enum type
-{
-	typeINT,
-    typeVOID,
-	typeFLOAT,
-	typeSTRING,
-	typeCHAR,
-	typeDOUBLE
-	//typeUNSIGNED_INT,
-	//typeNONE
-}; 
+// enum type
+// {
+// 	typeINT,
+//     typeVOID,
+// 	typeFLOAT,
+// 	typeSTRING,
+// 	typeCHAR,
+// 	typeDOUBLE
+// 	//typeUNSIGNED_INT,
+// 	//typeNONE
+// }; 
 
 class type_specifier : public Node
 {

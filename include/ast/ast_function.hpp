@@ -1,3 +1,10 @@
+#ifndef ast_function.hpp
+#define ast_function.hpp
+
+#include <string>
+#include "ast/ast_node.hpp"
+#include "ast/ast_type_specifier.hpp"
+
 /*If the function declares multiple local variables, 
 additional stack space will be allocated for each variable.
 
@@ -7,3 +14,33 @@ allocated on the stack to store each argument.
 If the function makes calls to other functions,
 space will be allocated on the stack for the return address 
 and any arguments passed to the called function.*/
+
+class Function_No_Arg_Definition : public Node {
+    private:
+        type_specifier* Type;
+        std::string Function_Name;
+        Statement* Function_Body;
+
+    public: 
+        Function_No_Arg_Definition(type_specifier* type, std::string func_name, Statement* funct_body);
+        ~Function_No_Arg_Definition();
+        void visualiser(std::ostream &os) const override;
+        void generateRISCV(std::ostream &dst, Context& context, int destReg) const override;
+
+}
+
+class Function_With_Arg_Definition : public Node {
+    private:
+        type_specifier* Type;
+        std::string Function_Name;
+        std::vector<Declaration*> Function_Arguments;
+        Statement* Function_Body;
+
+    public: 
+        Function_With_Arg_Definition(type_specifier* type, std::string func_name, std::vector<Declarator*> func_args, Statement* funct_body);
+        ~Function_With_Arg_Definition();
+        void visualiser(std::ostream &os) const override;
+        void generateRISCV(std::ostream &dst, Context& context, int destReg) const override;
+
+}
+#endif
