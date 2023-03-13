@@ -1,5 +1,5 @@
-#ifndef ast_type_specifiers_hpp
-#define ast_type_specifiers_hpp
+#ifndef ast_type_specifiers.hpp
+#define ast_type_specifiers.hpp
 
 #include "ast/ast_node.hpp"
 

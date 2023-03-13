@@ -1,5 +1,5 @@
-#ifndef ast_function.hpp
-#define ast_function.hpp
+#ifndef ast_declarator.hpp
+#define ast_declarator.hpp
 
 
 #include "ast/ast_node.hpp"
@@ -11,3 +11,5 @@ class Declarator : public Node
 		virtual void compile_declaration(std::ostream &dst, Context& context, type declarator_type) const override; 
 		virtual void compile_declaration_initialisation(std::ostream &dst, Context& context, type declarator_type, Expression* expressions) const override;
 };
+
+#endif
