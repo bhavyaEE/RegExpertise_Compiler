@@ -15,9 +15,14 @@
 // Represents the value associated with any kind of
 // AST node.
 %union{
-  const Node *node;
-  double number;
-  std::string string;
+  	const Node *NodePtr;
+  	int number;
+  	std::string string;
+  	Declarator 		*DeclaratorPtr;
+	Declaration 	*DeclarationPtr;
+	Statement 		*StatementPtr;
+	Expression 		*ExpressionPtr;
+	std::vector<Declaration*> *DeclarationVectorPtr; 
   //can I have vector of node pointer?
 }
 
@@ -41,12 +46,18 @@
 //%token TYPEDEF EXTERN STATIC AUTO REGISTER
 //types
 %token T_INT //CHAR SHORT  LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
-//%token STRUCT UNION ENUM ELLIPSIS
 
-//%token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
-%type need to do this
+/* %type need to do this */
+%type <NodePtr> root_program external_declaration function_definition
+%type <NodePtr> type_specifier
 %type <string> NAME
+%type <number> NUMBER
+%type <StatementPtr> statement compound_statement jump_statement
+%type <DeclarationVectorPtr> parameter_list
+%type <DeclarationPtr> parameter_declaration
+%type <DeclaratorPtr> declarator
+%type <DeclarationPtr> declaration
 //T_INT is also ointer to a string but why
 
 
@@ -67,8 +78,8 @@ external_declaration
 	;
 
 function_definition
-	: declaration_specifiers NAME T_LBRACKET T_RBRACKET compound_statement { $$ = new Function_No_Arg_Definition( $1, *$2, $5 ); /*need to implement func_def*/} //like int f( ){ body};
-	| declaration_specifiers NAME T_LBRACKET parameter_list T_RBRACKET compound_statement { $$ = new Function_With_Arg_Definition( $1, *$2, $4, $6 );} //like int f(parameters ){ body};
+	: type_specifier NAME T_LBRACKET T_RBRACKET compound_statement { $$ = new Function_No_Arg_Definition( $1, *$2, $5 ); /*need to implement func_def*/} //like int f( ){ body};
+	| type_specifier NAME T_LBRACKET parameter_list T_RBRACKET compound_statement { $$ = new Function_With_Arg_Definition( $1, *$2, $4, $6 );} //like int f(parameters ){ body};
 	;
 
 declaration
@@ -138,10 +149,14 @@ statement_list
 	| statement_list statement
 	;
 
-
-
-
-
+statement
+	: labeled_statement
+	| compound_statement
+	| expression_statement
+	| selection_statement
+	| iteration_statement
+	| jump_statement
+	;
 
 primary_expression
 	: IDENTIFIER
@@ -408,15 +423,6 @@ initializer
 initializer_list
 	: initializer
 	| initializer_list ',' initializer
-	;
-
-statement
-	: labeled_statement
-	| compound_statement
-	| expression_statement
-	| selection_statement
-	| iteration_statement
-	| jump_statement
 	;
 
 labeled_statement

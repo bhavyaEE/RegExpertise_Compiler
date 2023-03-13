@@ -12,11 +12,7 @@ class Declaration : public Node
 		Declarator* Init_Declarator;
 
 	public:
-		Declaration(type_specifier* _TYPE, Declarator* _init_declarator) 
-		: TYPE(_TYPE), Init_Declarator(_init_declarator) {}
-
-		virtual void compile(std::ostream &dst, Context& context, int destReg) const override
-		{
-			*Init_Declarator->generateRISCV(dst, context, destReg);
-		}
+		Declaration(type_specifier* _TYPE, Declarator* _init_declarator);
+		void visualiser(std::ostream &os) const override;
+		void generateRISCV(std::ostream &dst, Context& context, int destReg) const override;
 }

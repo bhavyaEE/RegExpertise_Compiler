@@ -16,10 +16,6 @@ extern "C" int fileno(FILE *stream);
 #include "maths_parser.tab.hpp"
 %}
 
-D			[0-9]
-L			[a-zA-Z_]
-H			[a-fA-F0-9]
-
 %%
 /* arithmetic operators */
 [*]             { return T_TIMES; }
@@ -70,6 +66,7 @@ H			[a-fA-F0-9]
 []]         { return SQU_RBRACKET; }
 [;]			    { return  SEMICOLON; }
 [:]         { return COLON;}
+[,]         { return COMMA; }
 
 /* structures */
 "return"        { return T_RETURN; }
@@ -85,7 +82,7 @@ H			[a-fA-F0-9]
 "double"        { return T_DOUBLE;} */
 
 
-[0-9]+([.][0-9]*)?      { yylval.string= new std::string(yytext); return NUMBER; }
+[0-9]+([.][0-9]*)?      { yylval.number=strtod(yytext, 0); return NUMBER; }
 [a-zA-Z_]+[a-zA-Z0-9_]* { yylval.string= new std::string(yytext); return NAME; }
 
 [ \t\r\n]+		{;}

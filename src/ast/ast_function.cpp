@@ -15,6 +15,10 @@ void Function_No_Arg_Definition::visualiser(std::ostream &os) const {
 
 void Function_No_Arg_Definition::generateRISCV(std::ostream &os, Context& context, int destReg) const {
     //a bunch of stack allocation deallocation
+    os << ".globl " << Function_Name << std::endl;
+    // Function label
+    os << Function_Name << ":" << std::endl;
+    Function_Body->generateRISCV();
 }
 
 Function_With_Arg_Definition :: Function_With_Arg_Definition(type_specifier* type, std::string func_name, std::vector<Declarator*> func_args, Statement* funct_body)
