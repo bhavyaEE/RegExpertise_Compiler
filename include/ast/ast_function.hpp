@@ -1,8 +1,7 @@
-#ifndef ast_function.hpp
-#define ast_function.hpp
+#pragma once
 
 #include <string>
-#include "ast/ast_node.hpp"
+#include "ast_node.hpp"
 
 /*If the function declares multiple local variables, 
 additional stack space will be allocated for each variable.
@@ -21,12 +20,15 @@ class Function_No_Arg_Definition : public Node {
         Node* Function_Body;
 
     public: 
-        Function_No_Arg_Definition(type_specifier* type, std::string func_name, Node* funct_body);
+        Function_No_Arg_Definition(std::string type, std::string func_name, Node* funct_body);
         ~Function_No_Arg_Definition();
         void visualiser(std::ostream &os) const override;
-        void generateRISCV(std::ostream &dst, Context& context, int destReg) const override;
+        void generateRISCV(std::ostream &os, /*Context& context,*/int destReg) const override;
 
-}
+};
+
+
+
 
 // class Function_With_Arg_Definition : public Node {
 //     private:
@@ -42,4 +44,3 @@ class Function_No_Arg_Definition : public Node {
 //         void generateRISCV(std::ostream &dst, Context& context, int destReg) const override;
 
 // }
-#endif
