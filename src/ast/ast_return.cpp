@@ -17,7 +17,7 @@ void Return::visualiser(std::ostream &os) const {
     os << std::endl;
 }
 
-void Return::generateRISCV(std::ostream &os, int destReg) const {
+void Return::generateRISCV(std::ostream &os, /*Context& context,*/ int destReg) const {
     if (return_expression != NULL) {
         return_expression->generateRISCV(os, 10);//change to a0??
     } else {
