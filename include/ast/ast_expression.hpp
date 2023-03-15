@@ -13,7 +13,7 @@ class Add_Expression : public Node
 	public:
 		Add_Expression (Expression* _left, Expression* _right) : Operator (_left, _right) {}
 
-		virtual void compile(std::ostream &dst, Context& context) const override
+		void generateRISCV(std::ostream &os, /*Context& context,*/ int destReg) const override
 		{
 
 		}
@@ -25,7 +25,7 @@ class Sub_Expression : public Node
 	public:
 		Sub_Expression (Expression* _left, Expression* _right) : Operator (_left, _right) {}
 
-		virtual void compile(std::ostream &dst, Context& context) const override
+		void generateRISCV(std::ostream &os, /*Context& context,*/ int destReg) const override
 		{
 
 		}
@@ -82,6 +82,3 @@ class Not_Equal_Expression : public Node
 		Not_Equal_Expression (Expression* _left, Expression* _right) : Operator (_left,_right) {}
 };
 
-
-
-#endif
