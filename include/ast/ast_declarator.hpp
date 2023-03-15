@@ -2,7 +2,7 @@
 #define ast_declarator.hpp
 
 
-#include "ast/ast_node.hpp"
+#include "ast_node.hpp"
 
 class Declarator : public Node 
 {

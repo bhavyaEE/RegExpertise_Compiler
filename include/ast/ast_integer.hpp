@@ -14,8 +14,8 @@ class Int
     public:
         Int(int _value){}
         void visualiser(std::ostream &os) const override;
-        void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
-	    type get_data_type(Context& context) const override;
+        void generateRISCV(std::ostream &os, int destReg) const override;
+	    // type get_data_type(Context& context) const override;
 	    double get_value() const override;
 };
 

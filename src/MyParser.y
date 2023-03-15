@@ -51,14 +51,18 @@
 /* %type need to do this */
 %type <NodePtr> root_program external_declaration function_definition
 %type <NodePtr> type_specifier
-%type <string> NAME
+%type <string> NAME  
 %type <number> NUMBER
 %type <StatementPtr> statement compound_statement jump_statement
 %type <DeclarationVectorPtr> parameter_list
 %type <DeclarationPtr> parameter_declaration
 %type <DeclaratorPtr> declarator
 %type <DeclarationPtr> declaration
-//T_INT is also ointer to a string but why
+%type <ExpressionPtr> expression assignment_expression conditional_expression logical_and_expression logical_or_expression
+%type <ExpressionPtr> inclusive_or_expression exclusive_or_expression
+%type <ExpressionPtr> and_expression equality_expression relational_expression shift_expression 
+%type <ExpressionPtr> additive_expression multiplicative_expression unary_expression postfix_expression primary_expression
+//T_INT is also pointer to a string but why
 
 
 %start ROOT
@@ -84,7 +88,7 @@ function_definition
 
 declaration
 	: type_specifier SEMICOLON
-	| type_specifier init_declarator SEMICOLON
+	| type_specifier init_declarator SEMICOLON {$$ = new Declaration(*$1, $2);}
 	;
 
 /* init_declarator_list
@@ -123,7 +127,7 @@ declarator
 
 parameter_list
 	: parameter_declaration { $$ = new std::vector<Declaration*>{$1}; }
-	| parameter_list COMMA parameter_declaration {$$ = $1.push_back($3);}
+	| parameter_list COMMA parameter_declaration {$1->push_back($3); $$ = $1;}
 	;
 
 parameter_declaration
@@ -199,16 +203,12 @@ unary_operator
 	| '!'
 	;
 
-cast_expression
-	: unary_expression
-	| T_LBRACKET type_name T_RBRACKET cast_expression
-	;
 
 multiplicative_expression
-	: cast_expression
-	| multiplicative_expression '*' cast_expression
-	| multiplicative_expression '/' cast_expression
-	| multiplicative_expression '%' cast_expression
+	: unary_expression
+	| multiplicative_expression '*' unary_expression
+	| multiplicative_expression '/' unary_expression
+	| multiplicative_expression '%' unary_expression
 	;
 
 additive_expression
