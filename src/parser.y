@@ -1,89 +1,225 @@
+%define parse.error verbose 
+
 %code requires{
-  #include "ast.hpp"
+    #include "ast.hpp"
+    #include <cassert>
+    #include <vector>
 
-  #include <cassert>
+    extern const Node *g_root; 
 
-  extern const Expression *g_root; // A way of getting the AST out
-
-  //! This is to fix problems when generating C++
-  // We are declaring the functions provided by Flex, so
-  // that Bison generated code can call them.
-  int yylex(void);
-  void yyerror(const char *);
+    int yylex(void);
+    void yyerror(const char *);
 }
 
-// Represents the value associated with any kind of
-// AST node.
-%union{
-  const Expression *expr;
-  double number;
-  std::string *string;
+%union
+{
+	Node 		*NodePtr;
+	std::string 	*string;
+	int 			number;
+	std::vector<Node*>* 	NodeVectorPtr;
 }
 
-%token T_TIMES T_DIVIDE T_PLUS T_MINUS T_MOD INCREMENT DECREMENT
-%token RETURN INT IF ELSE
-%token T_LBRACKET T_RBRACKET CUR_LBRACKET CUR_RBRACKET SEMICOLON
-%token T_LOG T_EXP T_SQRT
-%token T_NUMBER T_VARIABLE
-/* need to ad bitwise assignment logical and comparison operators*/
-%type <expr> EXPR TERM UNARY FACTOR
-%type <number> T_NUMBER
-%type <string> T_VARIABLE T_LOG T_EXP T_SQRT FUNCTION_NAME
+/* ------------------------------------					Tokens					------------------------------------ */
+
+// Assignment Operators needed
+%token T_ASSIGN
+// Arithmetic Operators
+%token T_TIMES T_DIVIDE T_PLUS T_MINUS 
+// Characters Operators
+%token T_LBRACKET T_RBRACKET CUR_LBRACKET CUR_RBRACKET SQU_LBRACKET SQU_RBRACKET COLON SEMICOLON COMMA
+// Comparison Operators
+%token T_LESSTHAN T_GREATERTHAN T_LESS_EQUAL T_GREATER_EQUAL T_EQUAL T_NOT_EQUAL
+// Types Operators
+%token T_INT 
+// Structures Operators
+%token T_IF T_ELSE T_WHILE T_RETURN
+// Rules
+%token NAME NUMBER 
+
+
+%type <NodePtr> root_program external_declaration function_definition
+
+%type <NodePtr>	declarator initialisation_declarator
+%type <NodeVectorPtr> initialisation_declarator_list
+
+%type <NodePtr> declaration //parameter_declaration 
+%type <NodeVectorPtr> declaration_list //parameter_list
+
+%type <NodePtr> primary_expression postfix_expression statement_list
+%type <NodePtr> multiply_expression add_expression 
+%type <NodePtr> compare_expression equal_expression
+%type <NodePtr> bitwise_expression logical_expression  
+%type <NodePtr> assignment_expression expression 
+
+%type <NodePtr> statement 
+%type <NodePtr> jump_statement compound_statement expression_statement condition_statement iteration_statement
+
+// %type <NodeVectorPtr> statement_list
+
+%type <string> 	NAME   
+
+%type <string> 	type_specifier 
+
+%type <number> NUMBER
+
 
 %start ROOT
 
 %%
 
-/* The TODO notes a are just a guide, and are non-exhaustive.
-   The expectation is that you do each one, then compile and test.
-   Testing should be done using patterns that target the specific
-   feature; the testbench is there to make sure that you haven't
-   broken anything while you added it.
-*/
 
-ROOT : EXPR { g_root = $1; }
+ROOT : root_program { g_root = $1; }
 
-/* TODO-3 : Add support for (x + 6) and (10 - y). You'll need to add production rules, and create an AddOperator or
-            SubOperator. */
-EXPR :    EXPR T_PLUS TERM { $$ = new AddOperator( $1, $3 ); }
-        | EXPR T_MINUS TERM { $$ = new SubOperator( $1, $3 ); }
-        | TERM           { $$ = $1; }
-        
+root_program
+	: external_declaration { $$ = $1; }
+	| root_program external_declaration { std::cerr << "TODO, write a root_program function i guess in ast" << std::endl;  }
+	;
 
-/* TODO-4 : Add support (x * 6) and (z / 11). */
-TERM :    TERM T_TIMES UNARY { $$ = new MulOperator( $1, $3 ); } 
-         | TERM T_DIVIDE UNARY { $$ =  new DivOperator( $1, $3 ); }
-         | UNARY          { $$ = $1; }
+external_declaration
+	: function_definition { $$ = $1; }
+	| declaration { $$ = $1; }
+	;
 
-/*  TODO-5 : Add support for (- 5) and (- x). You'll need to add production rules for the unary minus operator and create a NegOperator. */
-UNARY : FACTOR        { $$ = $1; }
-      | T_MINUS UNARY { $$ = new NegOperator( $2 ); }
+function_definition
+	: type_specifier NAME T_LBRACKET T_RBRACKET compound_statement { $$ = new Function_No_Arg_Definition( *$1, *$2, $5 );} 
+	/* | type_specifier NAME T_LBRACKET parameter_list T_RBRACKET compound_statement { $$ = new Function_With_Arg_Definition( $1, *$2, $4, $6 );} //like int f(parameters ){ body}; */
+	;
 
-/* TODO-2 : Add a rule for variable, base on the pattern of number. */
-FACTOR : T_NUMBER     { $$ = new Number( $1 ); }
-        | T_VARIABLE   { $$ = new Variable( *$1 ); }
-        | T_LBRACKET EXPR T_RBRACKET { $$ = $2; }
-        | T_LOG T_LBRACKET EXPR T_RBRACKET { $$ = new LogFunction( $3 ); }
-        | T_EXP T_LBRACKET EXPR T_RBRACKET { $$ = new ExpFunction( $3 ); }
-        | T_SQRT T_LBRACKET EXPR T_RBRACKET { $$ = new SqrtFunction( $3 ); }
-        | FACTOR T_EXPONENT UNARY { $$ = new ExpOperator( $1, $3 ); }
-         
+initialisation_declarator_list	
+  : initialisation_declarator 											{ $$ = new std::vector<Node*>(1, $1);	}
+	|	initialisation_declarator_list COMMA initialisation_declarator	{ $1->push_back($3); $$ = $1; }
+  ;
 
-/* TODO-6 : Add support log(x), by modifying the rule for FACTOR. */
+initialisation_declarator		
+  : 	declarator 	{ $$ = $1; }
+  //| 	declarator T_ASSIGN assignment_expression 					{ $$ = new Initialisation_Variable_Declarator($1, $3); } 
+  /* X=5 */
+  ;
 
-/* TODO-7 : Extend support to other functions. Requires modifications here, and to FACTOR. */
-FUNCTION_NAME : T_LOG { $$ = new std::string("log"); }
-               | T_EXP { $$ = new std::string("exp"); }
-               | T_SQRT { $$ = new std::string("sqrt"); } 
-                
+declaration_list				
+  : 	declaration 												{ $$ = new std::vector<Node*>(1, $1); } 
+	| 	declaration_list declaration  				{ $1->push_back($2); $$ = $1; }
+  ;
+
+declarator
+  : NAME 
+  ;
+
+declaration 					
+  :	type_specifier SEMICOLON											
+	| type_specifier initialisation_declarator_list SEMICOLON 	/* INT X = 5 */		
+  ;
+
+
+
+primary_expression				
+  : 	NUMBER														{ $$ = new Int($1); }
+	| 	NAME		 											
+	| 	T_LBRACKET expression T_RBRACKET								{ $$ = $2; }	
+  ;	
+
+postfix_expression				
+  :	primary_expression												{ $$ = $1; }
+	/* |	primary_expression INC_OP										{ $$ = new Post_Increment_Expression($1); } */
+  ;
+
+add_expression					
+  : 	multiply_expression					  							{ $$ = $1; }
+	// | 	add_expression T_PLUS multiply_expression						{ $$ = new Add_Expression($1, $3); }
+	// | 	add_expression T_MINUS multiply_expression  					{ $$ = new Sub_Expression($1, $3); }
+  ;
+
+multiply_expression				
+  :	postfix_expression				 								{ $$ = $1; }
+	// | multiply_expression T_TIMES postfix_expression 				{ $$ = new Multiply_Expression($1, $3); }
+	// | multiply_expression T_DIVIDE postfix_expression 				{ $$ = new Divide_Expression($1, $3); }
+  ;
+
+compare_expression				
+    : add_expression { $$=$1; }
+    // |	compare_expression T_LESSTHAN add_expression					{ $$ = new Less_Than_Expression($1, $3); }
+    // |	compare_expression T_LESS_EQUAL add_expression				{ $$ = new Less_Equal_Expression($1, $3); }
+    // |	compare_expression T_GREATERTHAN add_expression				{ $$ = new More_THAN_Expression($1, $3); }
+    // |	compare_expression T_GREATER_EQUAL add_expression			{ $$ = new More_Equal_Expression($1, $3); }
+    ;
+
+equal_expression				
+    : compare_expression { $$=$1; }
+    //|	equal_expression T_EQUAL compare_expression						{ $$ = new Equal_Expression($1, $3); }
+    //|	equal_expression T_NOT_EQUAL compare_expression					{ $$ = new Not_Equal_Expression($1, $3); }
+    ;
+
+bitwise_expression				
+  : 	equal_expression { $$=$1; }
+  ;
+
+logical_expression				
+  : 	bitwise_expression { $$=$1; }
+  ;
+
+assignment_expression			
+  : logical_expression { $$=$1; }
+	//|	postfix_expression T_ASSIGN assignment_expression 				{ $$ = new Direct_Assignment($1, $3); }	
+  ;
+
+expression 
+  : assignment_expression { $$=$1; }
+  ;
+
+
+statement 						
+  : jump_statement														{ $$ = $1; }
+  | compound_statement													{ $$ = $1; }
+  | expression_statement												{ $$ = $1; }
+  | condition_statement													{ $$ = $1; }
+  |	iteration_statement													{ $$ = $1; }
+  ;
+
+
+statement_list 					
+  : statement { $$ = $1; }
+  //|{$$ = new std::vector<NodePtr>{$1};}
+  //| 	statement_list statement											{ $1->push_back($2); $$ = $1; }
+  ;
+
+compound_statement  			
+  : CUR_LBRACKET CUR_RBRACKET									
+  | CUR_LBRACKET statement_list CUR_RBRACKET					{ $$ = $2; }
+  | CUR_LBRACKET declaration_list CUR_RBRACKET					
+  | CUR_LBRACKET declaration_list statement_list CUR_RBRACKET	
+  ;
+
+					
+jump_statement					
+  : T_RETURN SEMICOLON												{ $$ = new Return(NULL); }
+  | T_RETURN expression SEMICOLON										{ $$ = new Return($2); }
+
+expression_statement			
+  : expression SEMICOLON												{ $$ = $1; }
+
+condition_statement 			
+  :	T_IF T_LBRACKET expression T_RBRACKET statement						
+  |	T_IF T_LBRACKET expression T_RBRACKET statement T_ELSE statement	
+  ;
+
+iteration_statement				
+  :	T_WHILE T_LBRACKET expression T_RBRACKET statement 				
+  ;
+
+
+type_specifier	
+:	T_INT 		{ $$ = new std::string("int"); }
+;
+		
 
 %%
 
-const Expression *g_root; // Definition of variable (to match declaration earlier)
 
-const Expression *parseAST()
+const Node *g_root; 
+
+const Node* parseAST()
 {
-  g_root=0;
-  yyparse();
-  return g_root;
+	g_root = 0;
+	yyparse ();
+	return g_root;
 }
