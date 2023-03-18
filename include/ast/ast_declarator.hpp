@@ -3,11 +3,27 @@
 
 #include "ast_node.hpp"
 
-class Declarator : public Node 
+class Variable_Declarator : public Node
 {
+	private: std::string variable_name;
 	public:
-		~Declarator(){}
+		Variable_Declarator(std::string var_name);
+		~Variable_Declarator();
         void visualiser(std::ostream &os) const override;
-		void compile_declaration(std::ostream &os, /*Context& context,*/ type declarator_type) const override; 
-		void compile_declaration_initialisation(std::ostream &os, /*Context& context,*/ type declarator_type, Expression* expressions) const override;
+		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
+
+};
+
+class Initialisation_Variable_Declarator : public Node
+{
+	private:
+		std::string variable_name;
+		Node*		expression;
+	public:
+		Initialisation_Variable_Declarator(std::string var_name, Node* _expression);
+		~Initialisation_Variable_Declarator();
+		void visualiser(std::ostream &os) const override;
+		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
+
+
 };

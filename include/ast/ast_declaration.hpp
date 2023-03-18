@@ -11,7 +11,7 @@ class Declaration : public Node
 
 	public:
 		Declaration(std::string _TYPE, Node* _init_declarator);
-		~Declaration(){}
+		~Declaration();
 		void visualiser(std::ostream &os) const override;
-		void generateRISCV(std::ostream &os, /*Context& context,*/ int destReg) const override;
+		void generateRISCV(std::ostream &dst, Context& context, int destReg) const override;
 };

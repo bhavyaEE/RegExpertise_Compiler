@@ -31,8 +31,8 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    
- 
+
+
 
     // TODO: uncomment the below lines if you're using Flex/Bison.
     // This configures Flex to look at sourcePath instead of
@@ -48,12 +48,14 @@ int main(int argc, char **argv)
     std::ofstream output;
     output.open(outputPath, std::ios::trunc);
 
+    Context context;
+
     // Compile the input
     std::cout << "Compiling: " << sourcePath << std::endl;
     //compile(output);
     auto root = parseAST();
     root->visualiser(std::cout);
-    root->generateRISCV(output, 10);
+    root->generateRISCV(output, context, 5);
     std::cout << "Compiled to: " << outputPath << std::endl;
 
     output.close();

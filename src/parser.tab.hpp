@@ -51,7 +51,7 @@ extern int yydebug;
     #include <cassert>
     #include <vector>
 
-    extern const Node *g_root; 
+    extern const Node *g_root;
 
     int yylex(void);
     void yyerror(const char *);
@@ -136,9 +136,9 @@ union YYSTYPE
 {
 #line 15 "src/parser.y"
 
-	Node 		*NodePtr;
-	std::string 	*string;
-	int 			number;
+	Node 		           *NodePtr;
+	std::string        	*string;
+	int 			          number;
 	std::vector<Node*>* 	NodeVectorPtr;
 
 #line 145 "src/parser.tab.hpp"

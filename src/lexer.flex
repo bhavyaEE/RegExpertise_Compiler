@@ -17,10 +17,10 @@
 
 [<]			{  return  T_LESSTHAN; }
 [>]			{  return  T_GREATERTHAN; }
-[<=]    { return T_LESS_EQUAL; }
-[>=]    { return T_GREATER_EQUAL; }
-[==]			{  return  T_EQUAL; }
-[!=]			{  return  T_NOT_EQUAL; }
+[<][=]   { return T_LESS_EQUAL; }
+[>][=]    { return T_GREATER_EQUAL; }
+[=][=]			{  return  T_EQUAL; }
+[!][=]			{  return  T_NOT_EQUAL; }
 
 [=]     { return T_ASSIGN; }
 

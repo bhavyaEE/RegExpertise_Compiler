@@ -5,14 +5,14 @@
 
 class Return : public Node{
 
-    public: 
+    public:
 
-    Return(Node* return_expression); 
+    Return(Node* return_expression);
     ~Return();
 
-    void visualiser(std::ostream &os) const override; 
-    void generateRISCV(std::ostream &os, /*Context& context,*/ int destReg) const override;
+    void visualiser(std::ostream &os) const override;
+    void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 
-    private: 
+    private:
     Node* return_expression;
 };
