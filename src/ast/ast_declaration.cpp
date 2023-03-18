@@ -5,6 +5,11 @@ Declaration::Declaration(std::string _TYPE, Node* _init_declarator)
 
 Declaration::~Declaration(){}
 
+std::string Declaration::get_parameter() const{
+    Variable_Declarator* vard_node = dynamic_cast<Variable_Declarator*>(Init_Declarator);
+    return vard_node->get_variable_name();
+}
+
 void Declaration::visualiser(std::ostream &os) const {
     os << "Declaration: "<<Type << std::endl;
     Init_Declarator->visualiser(os);

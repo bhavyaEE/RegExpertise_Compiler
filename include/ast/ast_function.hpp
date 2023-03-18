@@ -2,6 +2,7 @@
 
 #include <string>
 #include "ast_node.hpp"
+#include "ast_declaration.hpp"
 
 /*If the function declares multiple local variables,
 additional stack space will be allocated for each variable.
@@ -28,19 +29,17 @@ class Function_No_Arg_Definition : public Node {
 };
 
 
+class Function_With_Arg_Definition : public Node {
+    private:
+        std::string Type;
+        std::string Function_Name;
+        std::vector<Node*>* Function_Arguments;
+        Node* Function_Body;
 
+    public:
+        Function_With_Arg_Definition(std::string type, std::string func_name, std::vector<Node*>* func_args, Node* func_body);
+        ~Function_With_Arg_Definition();
+        void visualiser(std::ostream &os) const override;
+        void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 
-// class Function_With_Arg_Definition : public Node {
-//     private:
-//         type_specifier* Type;
-//         std::string Function_Name;
-//         std::vector<NodePtr>* Function_Arguments;
-//         Statement* Function_Body;
-
-//     public:
-//         Function_With_Arg_Definition(type_specifier* type, std::string func_name, std::vector<Declarator*>* func_args, Statement* funct_body);
-//         ~Function_With_Arg_Definition();
-//         void visualiser(std::ostream &os) const override;
-//         void generateRISCV(std::ostream &dst, Context& context, int destReg) const override;
-
-// }
+};

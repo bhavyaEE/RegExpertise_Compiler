@@ -32,7 +32,7 @@ void Variable::visualiser(std::ostream &os) const{
 void Variable::generateRISCV(std::ostream &os, Context& context, int destReg) const {
     variable this_variable = context.get_variable(variable_name);
 	int offset = this_variable.get_variable_address();
-    context.store_word(os, destReg, offset );
+    context.load_word(os, destReg, offset );
 }
 std::string Variable::get_variable_name() const{
     return variable_name;

@@ -40,6 +40,7 @@
 "while"         { return T_WHILE; }
 
 "int"           { return T_INT; }
+"unsigned"      { return T_UNSIGNED;}
 
 [0-9]+([.][0-9]*)?      { yylval.number=strtod(yytext, 0); return NUMBER; }
 [a-zA-Z_]+[a-zA-Z0-9_]* { yylval.string= new std::string(yytext); return NAME; }

@@ -10,7 +10,7 @@ class Compound_Statement : public Node
 		std::vector<Node*>* 	declaration_list;
 
 	public:
-		Compound_Statement (std::vector<Node*>* _declaration_list = NULL, std::vector<Node*>* _statement_list = NULL);
+		Compound_Statement (std::vector<Node*>* _declaration_list, std::vector<Node*>* _statement_list);
 		void visualiser(std::ostream &os) const override;
 		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 };

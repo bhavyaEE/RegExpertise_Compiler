@@ -5,6 +5,10 @@ Variable_Declarator :: Variable_Declarator(std::string var_name)
 
 Variable_Declarator::~Variable_Declarator(){}
 
+std::string Variable_Declarator::get_variable_name() const{
+    return variable_name;
+}
+
 void Variable_Declarator::visualiser(std::ostream &os) const {
     os << "variable name: "<<variable_name << std::endl;
 }

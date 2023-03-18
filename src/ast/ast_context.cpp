@@ -36,13 +36,9 @@ void Context::store_word(std::ostream& os, int register_name, int memory_locatio
 {
     os << "sw x" << register_name << "," << memory_location << "(s0)" << std::endl;
 }
-// void allocate_stack(){
-//     frame_pointer_offset -=8;
-// }
-// void deallocate_stack(){
-//     if (register_counter != 0)
-		// 	{
-		// 		frame_pointer += 8;
-		// 		register_counter--;
-		// 	}
-// }
+
+variable Context::add_arguments(std::string argument_name, int offset)
+{
+    (*variable_map)[argument_name] = new variable(offset);
+    return *((*variable_map)[argument_name]);
+}

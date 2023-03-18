@@ -30,7 +30,7 @@
 // Comparison Operators
 %token T_LESSTHAN T_GREATERTHAN T_LESS_EQUAL T_GREATER_EQUAL T_EQUAL T_NOT_EQUAL
 // Types Operators
-%token T_INT
+%token T_INT T_UNSIGNED
 // Structures Operators
 %token T_IF T_ELSE T_WHILE T_RETURN
 // Rules
@@ -42,8 +42,8 @@
 %type <NodePtr>	declarator initialisation_declarator
 /* %type <NodeVectorPtr> initialisation_declarator_list */
 
-%type <NodePtr> declaration //parameter_declaration
-%type <NodeVectorPtr> declaration_list //parameter_list
+%type <NodePtr> declaration parameter_declaration
+%type <NodeVectorPtr> declaration_list parameter_list
 
 %type <NodePtr> primary_expression postfix_expression
 %type <NodePtr> multiply_expression add_expression
@@ -82,7 +82,7 @@ external_declaration
 
 function_definition
 	: type_specifier NAME T_LBRACKET T_RBRACKET compound_statement { $$ = new Function_No_Arg_Definition( *$1, *$2, $5 );}
-	/* | type_specifier NAME T_LBRACKET parameter_list T_RBRACKET compound_statement { $$ = new Function_With_Arg_Definition( $1, *$2, $4, $6 );} //like int f(parameters ){ body}; */
+	| type_specifier NAME T_LBRACKET parameter_list T_RBRACKET compound_statement { $$ = new Function_With_Arg_Definition( *$1, *$2, $4, $6 );} //like int f(parameters ){ body}; */
 	;
 
 /* initialisation_declarator_list
@@ -108,6 +108,14 @@ declarator
 declaration
   :	type_specifier SEMICOLON
 	| type_specifier initialisation_declarator SEMICOLON 	{$$ = new Declaration(*$1, $2); }/* i cahnged list to declarator*/
+  ;
+
+parameter_declaration
+  :	type_specifier declarator   { $$ = new Declaration(*$1, $2); }
+  ;
+parameter_list
+  :	parameter_declaration				     					{ $$ = new std::vector<Node*>(1, $1); }
+	|	parameter_list COMMA parameter_declaration 				{ $1->push_back($3); $$ = $1; }
   ;
 
 
@@ -207,6 +215,7 @@ iteration_statement
 
 type_specifier
   :	T_INT 		{ $$ = new std::string("int"); }
+  | T_UNSIGNED {$$ = new std::string("unsigned");}
 ;
 
 

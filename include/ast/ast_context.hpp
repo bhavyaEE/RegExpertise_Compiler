@@ -21,6 +21,7 @@ class variable{
 };
 
 typedef std::map<std::string, variable*> var_map;
+
 struct Context{
     private:
         var_map* variable_map = new var_map();
@@ -32,6 +33,7 @@ struct Context{
 
 		variable get_variable(std::string variable_name);
 
+		variable add_arguments(std::string argument_name, int offset);
         int get_fp_offset();
         // void allocate_stack();
 		// void deallocate_stack();

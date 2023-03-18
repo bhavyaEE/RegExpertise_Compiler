@@ -9,6 +9,7 @@ class Variable_Declarator : public Node
 	public:
 		Variable_Declarator(std::string var_name);
 		~Variable_Declarator();
+		virtual std::string get_variable_name() const;
         void visualiser(std::ostream &os) const override;
 		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 

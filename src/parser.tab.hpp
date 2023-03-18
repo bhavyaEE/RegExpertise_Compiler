@@ -88,12 +88,13 @@ extern int yydebug;
     T_EQUAL = 276,                 /* T_EQUAL  */
     T_NOT_EQUAL = 277,             /* T_NOT_EQUAL  */
     T_INT = 278,                   /* T_INT  */
-    T_IF = 279,                    /* T_IF  */
-    T_ELSE = 280,                  /* T_ELSE  */
-    T_WHILE = 281,                 /* T_WHILE  */
-    T_RETURN = 282,                /* T_RETURN  */
-    NAME = 283,                    /* NAME  */
-    NUMBER = 284                   /* NUMBER  */
+    T_UNSIGNED = 279,              /* T_UNSIGNED  */
+    T_IF = 280,                    /* T_IF  */
+    T_ELSE = 281,                  /* T_ELSE  */
+    T_WHILE = 282,                 /* T_WHILE  */
+    T_RETURN = 283,                /* T_RETURN  */
+    NAME = 284,                    /* NAME  */
+    NUMBER = 285                   /* NUMBER  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -123,12 +124,13 @@ extern int yydebug;
 #define T_EQUAL 276
 #define T_NOT_EQUAL 277
 #define T_INT 278
-#define T_IF 279
-#define T_ELSE 280
-#define T_WHILE 281
-#define T_RETURN 282
-#define NAME 283
-#define NUMBER 284
+#define T_UNSIGNED 279
+#define T_IF 280
+#define T_ELSE 281
+#define T_WHILE 282
+#define T_RETURN 283
+#define NAME 284
+#define NUMBER 285
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -141,7 +143,7 @@ union YYSTYPE
 	int 			          number;
 	std::vector<Node*>* 	NodeVectorPtr;
 
-#line 145 "src/parser.tab.hpp"
+#line 147 "src/parser.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;
