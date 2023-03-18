@@ -1,21 +1,11 @@
 Terminals unused in grammar
 
-    T_TIMES
-    T_DIVIDE
-    T_PLUS
-    T_MINUS
     SQU_LBRACKET
     SQU_RBRACKET
     COLON
-    T_LESSTHAN
-    T_GREATERTHAN
-    T_LESS_EQUAL
-    T_GREATER_EQUAL
-    T_EQUAL
-    T_NOT_EQUAL
 
 
-State 79 conflicts: 1 shift/reduce
+State 106 conflicts: 1 shift/reduce
 
 
 Grammar
@@ -56,171 +46,187 @@ Grammar
    21 postfix_expression: primary_expression
 
    22 add_expression: multiply_expression
+   23               | add_expression T_PLUS multiply_expression
+   24               | add_expression T_MINUS multiply_expression
 
-   23 multiply_expression: postfix_expression
+   25 multiply_expression: postfix_expression
+   26                    | multiply_expression T_TIMES postfix_expression
+   27                    | multiply_expression T_DIVIDE postfix_expression
 
-   24 compare_expression: add_expression
+   28 compare_expression: add_expression
+   29                   | compare_expression T_LESSTHAN add_expression
+   30                   | compare_expression T_LESS_EQUAL add_expression
+   31                   | compare_expression T_GREATERTHAN add_expression
+   32                   | compare_expression T_GREATER_EQUAL add_expression
 
-   25 equal_expression: compare_expression
+   33 equal_expression: compare_expression
+   34                 | equal_expression T_EQUAL compare_expression
+   35                 | equal_expression T_NOT_EQUAL compare_expression
 
-   26 bitwise_expression: equal_expression
+   36 bitwise_expression: equal_expression
+   37                   | bitwise_expression T_BIT_AND equal_expression
+   38                   | bitwise_expression T_BIT_OR equal_expression
+   39                   | bitwise_expression T_BIT_XOR equal_expression
 
-   27 logical_expression: bitwise_expression
+   40 logical_expression: bitwise_expression
 
-   28 assignment_expression: logical_expression
-   29                      | postfix_expression T_ASSIGN assignment_expression
+   41 assignment_expression: logical_expression
+   42                      | postfix_expression T_ASSIGN assignment_expression
 
-   30 expression: assignment_expression
+   43 expression: assignment_expression
 
-   31 statement: jump_statement
-   32          | compound_statement
-   33          | expression_statement
-   34          | condition_statement
-   35          | iteration_statement
+   44 statement: jump_statement
+   45          | compound_statement
+   46          | expression_statement
+   47          | condition_statement
+   48          | iteration_statement
 
-   36 statement_list: statement
-   37               | statement_list statement
+   49 statement_list: statement
+   50               | statement_list statement
 
-   38 compound_statement: CUR_LBRACKET CUR_RBRACKET
-   39                   | CUR_LBRACKET statement_list CUR_RBRACKET
-   40                   | CUR_LBRACKET declaration_list CUR_RBRACKET
-   41                   | CUR_LBRACKET declaration_list statement_list CUR_RBRACKET
+   51 compound_statement: CUR_LBRACKET CUR_RBRACKET
+   52                   | CUR_LBRACKET statement_list CUR_RBRACKET
+   53                   | CUR_LBRACKET declaration_list CUR_RBRACKET
+   54                   | CUR_LBRACKET declaration_list statement_list CUR_RBRACKET
 
-   42 jump_statement: T_RETURN SEMICOLON
-   43               | T_RETURN expression SEMICOLON
+   55 jump_statement: T_RETURN SEMICOLON
+   56               | T_RETURN expression SEMICOLON
 
-   44 expression_statement: expression SEMICOLON
+   57 expression_statement: expression SEMICOLON
 
-   45 condition_statement: T_IF T_LBRACKET expression T_RBRACKET statement
-   46                    | T_IF T_LBRACKET expression T_RBRACKET statement T_ELSE statement
+   58 condition_statement: T_IF T_LBRACKET expression T_RBRACKET statement
+   59                    | T_IF T_LBRACKET expression T_RBRACKET statement T_ELSE statement
 
-   47 iteration_statement: T_WHILE T_LBRACKET expression T_RBRACKET statement
+   60 iteration_statement: T_WHILE T_LBRACKET expression T_RBRACKET statement
 
-   48 type_specifier: T_INT
-   49               | T_UNSIGNED
+   61 type_specifier: T_INT
+   62               | T_UNSIGNED
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
     error (256)
-    T_ASSIGN (258) 9 29
-    T_TIMES (259)
-    T_DIVIDE (260)
-    T_PLUS (261)
-    T_MINUS (262)
-    T_LBRACKET (263) 6 7 20 45 46 47
-    T_RBRACKET (264) 6 7 20 45 46 47
-    CUR_LBRACKET (265) 38 39 40 41
-    CUR_RBRACKET (266) 38 39 40 41
-    SQU_LBRACKET (267)
-    SQU_RBRACKET (268)
-    COLON (269)
-    SEMICOLON (270) 13 14 42 43 44
-    COMMA (271) 17
-    T_LESSTHAN (272)
-    T_GREATERTHAN (273)
-    T_LESS_EQUAL (274)
-    T_GREATER_EQUAL (275)
-    T_EQUAL (276)
-    T_NOT_EQUAL (277)
-    T_INT (278) 48
-    T_UNSIGNED (279) 49
-    T_IF (280) 45 46
-    T_ELSE (281) 46
-    T_WHILE (282) 47
-    T_RETURN (283) 42 43
-    NAME <string> (284) 6 7 9 12 19
-    NUMBER <number> (285) 18
+    T_ASSIGN (258) 9 42
+    T_TIMES (259) 26
+    T_DIVIDE (260) 27
+    T_PLUS (261) 23
+    T_MINUS (262) 24
+    T_BIT_AND (263) 37
+    T_BIT_OR (264) 38
+    T_BIT_XOR (265) 39
+    T_LBRACKET (266) 6 7 20 58 59 60
+    T_RBRACKET (267) 6 7 20 58 59 60
+    CUR_LBRACKET (268) 51 52 53 54
+    CUR_RBRACKET (269) 51 52 53 54
+    SQU_LBRACKET (270)
+    SQU_RBRACKET (271)
+    COLON (272)
+    SEMICOLON (273) 13 14 55 56 57
+    COMMA (274) 17
+    T_LESSTHAN (275) 29
+    T_GREATERTHAN (276) 31
+    T_LESS_EQUAL (277) 30
+    T_GREATER_EQUAL (278) 32
+    T_EQUAL (279) 34
+    T_NOT_EQUAL (280) 35
+    T_INT (281) 61
+    T_UNSIGNED (282) 62
+    T_IF (283) 58 59
+    T_ELSE (284) 59
+    T_WHILE (285) 60
+    T_RETURN (286) 55 56
+    NAME <string> (287) 6 7 9 12 19
+    NUMBER <number> (288) 18
 
 
 Nonterminals, with rules where they appear
 
-    $accept (31)
+    $accept (34)
         on left: 0
-    ROOT (32)
+    ROOT (35)
         on left: 1
         on right: 0
-    root_program <NodePtr> (33)
+    root_program <NodePtr> (36)
         on left: 2 3
         on right: 1 3
-    external_declaration <NodePtr> (34)
+    external_declaration <NodePtr> (37)
         on left: 4 5
         on right: 2 3
-    function_definition <NodePtr> (35)
+    function_definition <NodePtr> (38)
         on left: 6 7
         on right: 4
-    initialisation_declarator <NodePtr> (36)
+    initialisation_declarator <NodePtr> (39)
         on left: 8 9
         on right: 14
-    declaration_list <NodeVectorPtr> (37)
+    declaration_list <NodeVectorPtr> (40)
         on left: 10 11
-        on right: 11 40 41
-    declarator <NodePtr> (38)
+        on right: 11 53 54
+    declarator <NodePtr> (41)
         on left: 12
         on right: 8 15
-    declaration <NodePtr> (39)
+    declaration <NodePtr> (42)
         on left: 13 14
         on right: 5 10 11
-    parameter_declaration <NodePtr> (40)
+    parameter_declaration <NodePtr> (43)
         on left: 15
         on right: 16 17
-    parameter_list <NodeVectorPtr> (41)
+    parameter_list <NodeVectorPtr> (44)
         on left: 16 17
         on right: 7 17
-    primary_expression <NodePtr> (42)
+    primary_expression <NodePtr> (45)
         on left: 18 19 20
         on right: 21
-    postfix_expression <NodePtr> (43)
+    postfix_expression <NodePtr> (46)
         on left: 21
-        on right: 23 29
-    add_expression <NodePtr> (44)
-        on left: 22
-        on right: 24
-    multiply_expression <NodePtr> (45)
-        on left: 23
-        on right: 22
-    compare_expression <NodePtr> (46)
-        on left: 24
-        on right: 25
-    equal_expression <NodePtr> (47)
-        on left: 25
-        on right: 26
-    bitwise_expression <NodePtr> (48)
-        on left: 26
-        on right: 27
-    logical_expression <NodePtr> (49)
-        on left: 27
-        on right: 28
-    assignment_expression <NodePtr> (50)
-        on left: 28 29
-        on right: 9 29 30
-    expression <NodePtr> (51)
-        on left: 30
-        on right: 20 43 44 45 46 47
-    statement <NodePtr> (52)
-        on left: 31 32 33 34 35
-        on right: 36 37 45 46 47
-    statement_list <NodeVectorPtr> (53)
-        on left: 36 37
-        on right: 37 39 41
-    compound_statement <NodePtr> (54)
-        on left: 38 39 40 41
-        on right: 6 7 32
-    jump_statement <NodePtr> (55)
-        on left: 42 43
-        on right: 31
-    expression_statement <NodePtr> (56)
-        on left: 44
-        on right: 33
-    condition_statement <NodePtr> (57)
-        on left: 45 46
-        on right: 34
-    iteration_statement <NodePtr> (58)
-        on left: 47
-        on right: 35
-    type_specifier <string> (59)
-        on left: 48 49
+        on right: 25 26 27 42
+    add_expression <NodePtr> (47)
+        on left: 22 23 24
+        on right: 23 24 28 29 30 31 32
+    multiply_expression <NodePtr> (48)
+        on left: 25 26 27
+        on right: 22 23 24 26 27
+    compare_expression <NodePtr> (49)
+        on left: 28 29 30 31 32
+        on right: 29 30 31 32 33 34 35
+    equal_expression <NodePtr> (50)
+        on left: 33 34 35
+        on right: 34 35 36 37 38 39
+    bitwise_expression <NodePtr> (51)
+        on left: 36 37 38 39
+        on right: 37 38 39 40
+    logical_expression <NodePtr> (52)
+        on left: 40
+        on right: 41
+    assignment_expression <NodePtr> (53)
+        on left: 41 42
+        on right: 9 42 43
+    expression <NodePtr> (54)
+        on left: 43
+        on right: 20 56 57 58 59 60
+    statement <NodePtr> (55)
+        on left: 44 45 46 47 48
+        on right: 49 50 58 59 60
+    statement_list <NodeVectorPtr> (56)
+        on left: 49 50
+        on right: 50 52 54
+    compound_statement <NodePtr> (57)
+        on left: 51 52 53 54
+        on right: 6 7 45
+    jump_statement <NodePtr> (58)
+        on left: 55 56
+        on right: 44
+    expression_statement <NodePtr> (59)
+        on left: 57
+        on right: 46
+    condition_statement <NodePtr> (60)
+        on left: 58 59
+        on right: 47
+    iteration_statement <NodePtr> (61)
+        on left: 60
+        on right: 48
+    type_specifier <string> (62)
+        on left: 61 62
         on right: 6 7 13 14 15
 
 
@@ -241,16 +247,16 @@ State 0
 
 State 1
 
-   48 type_specifier: T_INT .
+   61 type_specifier: T_INT .
 
-    $default  reduce using rule 48 (type_specifier)
+    $default  reduce using rule 61 (type_specifier)
 
 
 State 2
 
-   49 type_specifier: T_UNSIGNED .
+   62 type_specifier: T_UNSIGNED .
 
-    $default  reduce using rule 49 (type_specifier)
+    $default  reduce using rule 62 (type_specifier)
 
 
 State 3
@@ -442,54 +448,85 @@ State 21
 
 State 22
 
-   23 multiply_expression: postfix_expression .
-   29 assignment_expression: postfix_expression . T_ASSIGN assignment_expression
+   25 multiply_expression: postfix_expression .
+   42 assignment_expression: postfix_expression . T_ASSIGN assignment_expression
 
     T_ASSIGN  shift, and go to state 36
 
-    $default  reduce using rule 23 (multiply_expression)
+    $default  reduce using rule 25 (multiply_expression)
 
 
 State 23
 
-   24 compare_expression: add_expression .
+   23 add_expression: add_expression . T_PLUS multiply_expression
+   24               | add_expression . T_MINUS multiply_expression
+   28 compare_expression: add_expression .
 
-    $default  reduce using rule 24 (compare_expression)
+    T_PLUS   shift, and go to state 37
+    T_MINUS  shift, and go to state 38
+
+    $default  reduce using rule 28 (compare_expression)
 
 
 State 24
 
    22 add_expression: multiply_expression .
+   26 multiply_expression: multiply_expression . T_TIMES postfix_expression
+   27                    | multiply_expression . T_DIVIDE postfix_expression
+
+    T_TIMES   shift, and go to state 39
+    T_DIVIDE  shift, and go to state 40
 
     $default  reduce using rule 22 (add_expression)
 
 
 State 25
 
-   25 equal_expression: compare_expression .
+   29 compare_expression: compare_expression . T_LESSTHAN add_expression
+   30                   | compare_expression . T_LESS_EQUAL add_expression
+   31                   | compare_expression . T_GREATERTHAN add_expression
+   32                   | compare_expression . T_GREATER_EQUAL add_expression
+   33 equal_expression: compare_expression .
 
-    $default  reduce using rule 25 (equal_expression)
+    T_LESSTHAN       shift, and go to state 41
+    T_GREATERTHAN    shift, and go to state 42
+    T_LESS_EQUAL     shift, and go to state 43
+    T_GREATER_EQUAL  shift, and go to state 44
+
+    $default  reduce using rule 33 (equal_expression)
 
 
 State 26
 
-   26 bitwise_expression: equal_expression .
+   34 equal_expression: equal_expression . T_EQUAL compare_expression
+   35                 | equal_expression . T_NOT_EQUAL compare_expression
+   36 bitwise_expression: equal_expression .
 
-    $default  reduce using rule 26 (bitwise_expression)
+    T_EQUAL      shift, and go to state 45
+    T_NOT_EQUAL  shift, and go to state 46
+
+    $default  reduce using rule 36 (bitwise_expression)
 
 
 State 27
 
-   27 logical_expression: bitwise_expression .
+   37 bitwise_expression: bitwise_expression . T_BIT_AND equal_expression
+   38                   | bitwise_expression . T_BIT_OR equal_expression
+   39                   | bitwise_expression . T_BIT_XOR equal_expression
+   40 logical_expression: bitwise_expression .
 
-    $default  reduce using rule 27 (logical_expression)
+    T_BIT_AND  shift, and go to state 47
+    T_BIT_OR   shift, and go to state 48
+    T_BIT_XOR  shift, and go to state 49
+
+    $default  reduce using rule 40 (logical_expression)
 
 
 State 28
 
-   28 assignment_expression: logical_expression .
+   41 assignment_expression: logical_expression .
 
-    $default  reduce using rule 28 (assignment_expression)
+    $default  reduce using rule 41 (assignment_expression)
 
 
 State 29
@@ -503,9 +540,9 @@ State 30
 
     6 function_definition: type_specifier NAME T_LBRACKET T_RBRACKET . compound_statement
 
-    CUR_LBRACKET  shift, and go to state 37
+    CUR_LBRACKET  shift, and go to state 50
 
-    compound_statement  go to state 38
+    compound_statement  go to state 51
 
 
 State 31
@@ -520,36 +557,36 @@ State 32
     7 function_definition: type_specifier NAME T_LBRACKET parameter_list . T_RBRACKET compound_statement
    17 parameter_list: parameter_list . COMMA parameter_declaration
 
-    T_RBRACKET  shift, and go to state 39
-    COMMA       shift, and go to state 40
+    T_RBRACKET  shift, and go to state 52
+    COMMA       shift, and go to state 53
 
 
 State 33
 
    15 parameter_declaration: type_specifier . declarator
 
-    NAME  shift, and go to state 41
+    NAME  shift, and go to state 54
 
-    declarator  go to state 42
+    declarator  go to state 55
 
 
 State 34
 
-   30 expression: assignment_expression .
+   43 expression: assignment_expression .
 
-    $default  reduce using rule 30 (expression)
+    $default  reduce using rule 43 (expression)
 
 
 State 35
 
    20 primary_expression: T_LBRACKET expression . T_RBRACKET
 
-    T_RBRACKET  shift, and go to state 43
+    T_RBRACKET  shift, and go to state 56
 
 
 State 36
 
-   29 assignment_expression: postfix_expression T_ASSIGN . assignment_expression
+   42 assignment_expression: postfix_expression T_ASSIGN . assignment_expression
 
     T_LBRACKET  shift, and go to state 18
     NAME        shift, and go to state 19
@@ -563,29 +600,213 @@ State 36
     equal_expression       go to state 26
     bitwise_expression     go to state 27
     logical_expression     go to state 28
-    assignment_expression  go to state 44
+    assignment_expression  go to state 57
 
 
 State 37
 
-   38 compound_statement: CUR_LBRACKET . CUR_RBRACKET
-   39                   | CUR_LBRACKET . statement_list CUR_RBRACKET
-   40                   | CUR_LBRACKET . declaration_list CUR_RBRACKET
-   41                   | CUR_LBRACKET . declaration_list statement_list CUR_RBRACKET
+   23 add_expression: add_expression T_PLUS . multiply_expression
+
+    T_LBRACKET  shift, and go to state 18
+    NAME        shift, and go to state 19
+    NUMBER      shift, and go to state 20
+
+    primary_expression   go to state 21
+    postfix_expression   go to state 58
+    multiply_expression  go to state 59
+
+
+State 38
+
+   24 add_expression: add_expression T_MINUS . multiply_expression
+
+    T_LBRACKET  shift, and go to state 18
+    NAME        shift, and go to state 19
+    NUMBER      shift, and go to state 20
+
+    primary_expression   go to state 21
+    postfix_expression   go to state 58
+    multiply_expression  go to state 60
+
+
+State 39
+
+   26 multiply_expression: multiply_expression T_TIMES . postfix_expression
+
+    T_LBRACKET  shift, and go to state 18
+    NAME        shift, and go to state 19
+    NUMBER      shift, and go to state 20
+
+    primary_expression  go to state 21
+    postfix_expression  go to state 61
+
+
+State 40
+
+   27 multiply_expression: multiply_expression T_DIVIDE . postfix_expression
+
+    T_LBRACKET  shift, and go to state 18
+    NAME        shift, and go to state 19
+    NUMBER      shift, and go to state 20
+
+    primary_expression  go to state 21
+    postfix_expression  go to state 62
+
+
+State 41
+
+   29 compare_expression: compare_expression T_LESSTHAN . add_expression
+
+    T_LBRACKET  shift, and go to state 18
+    NAME        shift, and go to state 19
+    NUMBER      shift, and go to state 20
+
+    primary_expression   go to state 21
+    postfix_expression   go to state 58
+    add_expression       go to state 63
+    multiply_expression  go to state 24
+
+
+State 42
+
+   31 compare_expression: compare_expression T_GREATERTHAN . add_expression
+
+    T_LBRACKET  shift, and go to state 18
+    NAME        shift, and go to state 19
+    NUMBER      shift, and go to state 20
+
+    primary_expression   go to state 21
+    postfix_expression   go to state 58
+    add_expression       go to state 64
+    multiply_expression  go to state 24
+
+
+State 43
+
+   30 compare_expression: compare_expression T_LESS_EQUAL . add_expression
+
+    T_LBRACKET  shift, and go to state 18
+    NAME        shift, and go to state 19
+    NUMBER      shift, and go to state 20
+
+    primary_expression   go to state 21
+    postfix_expression   go to state 58
+    add_expression       go to state 65
+    multiply_expression  go to state 24
+
+
+State 44
+
+   32 compare_expression: compare_expression T_GREATER_EQUAL . add_expression
+
+    T_LBRACKET  shift, and go to state 18
+    NAME        shift, and go to state 19
+    NUMBER      shift, and go to state 20
+
+    primary_expression   go to state 21
+    postfix_expression   go to state 58
+    add_expression       go to state 66
+    multiply_expression  go to state 24
+
+
+State 45
+
+   34 equal_expression: equal_expression T_EQUAL . compare_expression
+
+    T_LBRACKET  shift, and go to state 18
+    NAME        shift, and go to state 19
+    NUMBER      shift, and go to state 20
+
+    primary_expression   go to state 21
+    postfix_expression   go to state 58
+    add_expression       go to state 23
+    multiply_expression  go to state 24
+    compare_expression   go to state 67
+
+
+State 46
+
+   35 equal_expression: equal_expression T_NOT_EQUAL . compare_expression
+
+    T_LBRACKET  shift, and go to state 18
+    NAME        shift, and go to state 19
+    NUMBER      shift, and go to state 20
+
+    primary_expression   go to state 21
+    postfix_expression   go to state 58
+    add_expression       go to state 23
+    multiply_expression  go to state 24
+    compare_expression   go to state 68
+
+
+State 47
+
+   37 bitwise_expression: bitwise_expression T_BIT_AND . equal_expression
+
+    T_LBRACKET  shift, and go to state 18
+    NAME        shift, and go to state 19
+    NUMBER      shift, and go to state 20
+
+    primary_expression   go to state 21
+    postfix_expression   go to state 58
+    add_expression       go to state 23
+    multiply_expression  go to state 24
+    compare_expression   go to state 25
+    equal_expression     go to state 69
+
+
+State 48
+
+   38 bitwise_expression: bitwise_expression T_BIT_OR . equal_expression
+
+    T_LBRACKET  shift, and go to state 18
+    NAME        shift, and go to state 19
+    NUMBER      shift, and go to state 20
+
+    primary_expression   go to state 21
+    postfix_expression   go to state 58
+    add_expression       go to state 23
+    multiply_expression  go to state 24
+    compare_expression   go to state 25
+    equal_expression     go to state 70
+
+
+State 49
+
+   39 bitwise_expression: bitwise_expression T_BIT_XOR . equal_expression
+
+    T_LBRACKET  shift, and go to state 18
+    NAME        shift, and go to state 19
+    NUMBER      shift, and go to state 20
+
+    primary_expression   go to state 21
+    postfix_expression   go to state 58
+    add_expression       go to state 23
+    multiply_expression  go to state 24
+    compare_expression   go to state 25
+    equal_expression     go to state 71
+
+
+State 50
+
+   51 compound_statement: CUR_LBRACKET . CUR_RBRACKET
+   52                   | CUR_LBRACKET . statement_list CUR_RBRACKET
+   53                   | CUR_LBRACKET . declaration_list CUR_RBRACKET
+   54                   | CUR_LBRACKET . declaration_list statement_list CUR_RBRACKET
 
     T_LBRACKET    shift, and go to state 18
-    CUR_LBRACKET  shift, and go to state 37
-    CUR_RBRACKET  shift, and go to state 45
+    CUR_LBRACKET  shift, and go to state 50
+    CUR_RBRACKET  shift, and go to state 72
     T_INT         shift, and go to state 1
     T_UNSIGNED    shift, and go to state 2
-    T_IF          shift, and go to state 46
-    T_WHILE       shift, and go to state 47
-    T_RETURN      shift, and go to state 48
+    T_IF          shift, and go to state 73
+    T_WHILE       shift, and go to state 74
+    T_RETURN      shift, and go to state 75
     NAME          shift, and go to state 19
     NUMBER        shift, and go to state 20
 
-    declaration_list       go to state 49
-    declaration            go to state 50
+    declaration_list       go to state 76
+    declaration            go to state 77
     primary_expression     go to state 21
     postfix_expression     go to state 22
     add_expression         go to state 23
@@ -595,101 +816,262 @@ State 37
     bitwise_expression     go to state 27
     logical_expression     go to state 28
     assignment_expression  go to state 34
-    expression             go to state 51
-    statement              go to state 52
-    statement_list         go to state 53
-    compound_statement     go to state 54
-    jump_statement         go to state 55
-    expression_statement   go to state 56
-    condition_statement    go to state 57
-    iteration_statement    go to state 58
-    type_specifier         go to state 59
+    expression             go to state 78
+    statement              go to state 79
+    statement_list         go to state 80
+    compound_statement     go to state 81
+    jump_statement         go to state 82
+    expression_statement   go to state 83
+    condition_statement    go to state 84
+    iteration_statement    go to state 85
+    type_specifier         go to state 86
 
 
-State 38
+State 51
 
     6 function_definition: type_specifier NAME T_LBRACKET T_RBRACKET compound_statement .
 
     $default  reduce using rule 6 (function_definition)
 
 
-State 39
+State 52
 
     7 function_definition: type_specifier NAME T_LBRACKET parameter_list T_RBRACKET . compound_statement
 
-    CUR_LBRACKET  shift, and go to state 37
+    CUR_LBRACKET  shift, and go to state 50
 
-    compound_statement  go to state 60
+    compound_statement  go to state 87
 
 
-State 40
+State 53
 
    17 parameter_list: parameter_list COMMA . parameter_declaration
 
     T_INT       shift, and go to state 1
     T_UNSIGNED  shift, and go to state 2
 
-    parameter_declaration  go to state 61
+    parameter_declaration  go to state 88
     type_specifier         go to state 33
 
 
-State 41
+State 54
 
    12 declarator: NAME .
 
     $default  reduce using rule 12 (declarator)
 
 
-State 42
+State 55
 
    15 parameter_declaration: type_specifier declarator .
 
     $default  reduce using rule 15 (parameter_declaration)
 
 
-State 43
+State 56
 
    20 primary_expression: T_LBRACKET expression T_RBRACKET .
 
     $default  reduce using rule 20 (primary_expression)
 
 
-State 44
+State 57
 
-   29 assignment_expression: postfix_expression T_ASSIGN assignment_expression .
+   42 assignment_expression: postfix_expression T_ASSIGN assignment_expression .
 
-    $default  reduce using rule 29 (assignment_expression)
-
-
-State 45
-
-   38 compound_statement: CUR_LBRACKET CUR_RBRACKET .
-
-    $default  reduce using rule 38 (compound_statement)
+    $default  reduce using rule 42 (assignment_expression)
 
 
-State 46
+State 58
 
-   45 condition_statement: T_IF . T_LBRACKET expression T_RBRACKET statement
-   46                    | T_IF . T_LBRACKET expression T_RBRACKET statement T_ELSE statement
+   25 multiply_expression: postfix_expression .
 
-    T_LBRACKET  shift, and go to state 62
-
-
-State 47
-
-   47 iteration_statement: T_WHILE . T_LBRACKET expression T_RBRACKET statement
-
-    T_LBRACKET  shift, and go to state 63
+    $default  reduce using rule 25 (multiply_expression)
 
 
-State 48
+State 59
 
-   42 jump_statement: T_RETURN . SEMICOLON
-   43               | T_RETURN . expression SEMICOLON
+   23 add_expression: add_expression T_PLUS multiply_expression .
+   26 multiply_expression: multiply_expression . T_TIMES postfix_expression
+   27                    | multiply_expression . T_DIVIDE postfix_expression
+
+    T_TIMES   shift, and go to state 39
+    T_DIVIDE  shift, and go to state 40
+
+    $default  reduce using rule 23 (add_expression)
+
+
+State 60
+
+   24 add_expression: add_expression T_MINUS multiply_expression .
+   26 multiply_expression: multiply_expression . T_TIMES postfix_expression
+   27                    | multiply_expression . T_DIVIDE postfix_expression
+
+    T_TIMES   shift, and go to state 39
+    T_DIVIDE  shift, and go to state 40
+
+    $default  reduce using rule 24 (add_expression)
+
+
+State 61
+
+   26 multiply_expression: multiply_expression T_TIMES postfix_expression .
+
+    $default  reduce using rule 26 (multiply_expression)
+
+
+State 62
+
+   27 multiply_expression: multiply_expression T_DIVIDE postfix_expression .
+
+    $default  reduce using rule 27 (multiply_expression)
+
+
+State 63
+
+   23 add_expression: add_expression . T_PLUS multiply_expression
+   24               | add_expression . T_MINUS multiply_expression
+   29 compare_expression: compare_expression T_LESSTHAN add_expression .
+
+    T_PLUS   shift, and go to state 37
+    T_MINUS  shift, and go to state 38
+
+    $default  reduce using rule 29 (compare_expression)
+
+
+State 64
+
+   23 add_expression: add_expression . T_PLUS multiply_expression
+   24               | add_expression . T_MINUS multiply_expression
+   31 compare_expression: compare_expression T_GREATERTHAN add_expression .
+
+    T_PLUS   shift, and go to state 37
+    T_MINUS  shift, and go to state 38
+
+    $default  reduce using rule 31 (compare_expression)
+
+
+State 65
+
+   23 add_expression: add_expression . T_PLUS multiply_expression
+   24               | add_expression . T_MINUS multiply_expression
+   30 compare_expression: compare_expression T_LESS_EQUAL add_expression .
+
+    T_PLUS   shift, and go to state 37
+    T_MINUS  shift, and go to state 38
+
+    $default  reduce using rule 30 (compare_expression)
+
+
+State 66
+
+   23 add_expression: add_expression . T_PLUS multiply_expression
+   24               | add_expression . T_MINUS multiply_expression
+   32 compare_expression: compare_expression T_GREATER_EQUAL add_expression .
+
+    T_PLUS   shift, and go to state 37
+    T_MINUS  shift, and go to state 38
+
+    $default  reduce using rule 32 (compare_expression)
+
+
+State 67
+
+   29 compare_expression: compare_expression . T_LESSTHAN add_expression
+   30                   | compare_expression . T_LESS_EQUAL add_expression
+   31                   | compare_expression . T_GREATERTHAN add_expression
+   32                   | compare_expression . T_GREATER_EQUAL add_expression
+   34 equal_expression: equal_expression T_EQUAL compare_expression .
+
+    T_LESSTHAN       shift, and go to state 41
+    T_GREATERTHAN    shift, and go to state 42
+    T_LESS_EQUAL     shift, and go to state 43
+    T_GREATER_EQUAL  shift, and go to state 44
+
+    $default  reduce using rule 34 (equal_expression)
+
+
+State 68
+
+   29 compare_expression: compare_expression . T_LESSTHAN add_expression
+   30                   | compare_expression . T_LESS_EQUAL add_expression
+   31                   | compare_expression . T_GREATERTHAN add_expression
+   32                   | compare_expression . T_GREATER_EQUAL add_expression
+   35 equal_expression: equal_expression T_NOT_EQUAL compare_expression .
+
+    T_LESSTHAN       shift, and go to state 41
+    T_GREATERTHAN    shift, and go to state 42
+    T_LESS_EQUAL     shift, and go to state 43
+    T_GREATER_EQUAL  shift, and go to state 44
+
+    $default  reduce using rule 35 (equal_expression)
+
+
+State 69
+
+   34 equal_expression: equal_expression . T_EQUAL compare_expression
+   35                 | equal_expression . T_NOT_EQUAL compare_expression
+   37 bitwise_expression: bitwise_expression T_BIT_AND equal_expression .
+
+    T_EQUAL      shift, and go to state 45
+    T_NOT_EQUAL  shift, and go to state 46
+
+    $default  reduce using rule 37 (bitwise_expression)
+
+
+State 70
+
+   34 equal_expression: equal_expression . T_EQUAL compare_expression
+   35                 | equal_expression . T_NOT_EQUAL compare_expression
+   38 bitwise_expression: bitwise_expression T_BIT_OR equal_expression .
+
+    T_EQUAL      shift, and go to state 45
+    T_NOT_EQUAL  shift, and go to state 46
+
+    $default  reduce using rule 38 (bitwise_expression)
+
+
+State 71
+
+   34 equal_expression: equal_expression . T_EQUAL compare_expression
+   35                 | equal_expression . T_NOT_EQUAL compare_expression
+   39 bitwise_expression: bitwise_expression T_BIT_XOR equal_expression .
+
+    T_EQUAL      shift, and go to state 45
+    T_NOT_EQUAL  shift, and go to state 46
+
+    $default  reduce using rule 39 (bitwise_expression)
+
+
+State 72
+
+   51 compound_statement: CUR_LBRACKET CUR_RBRACKET .
+
+    $default  reduce using rule 51 (compound_statement)
+
+
+State 73
+
+   58 condition_statement: T_IF . T_LBRACKET expression T_RBRACKET statement
+   59                    | T_IF . T_LBRACKET expression T_RBRACKET statement T_ELSE statement
+
+    T_LBRACKET  shift, and go to state 89
+
+
+State 74
+
+   60 iteration_statement: T_WHILE . T_LBRACKET expression T_RBRACKET statement
+
+    T_LBRACKET  shift, and go to state 90
+
+
+State 75
+
+   55 jump_statement: T_RETURN . SEMICOLON
+   56               | T_RETURN . expression SEMICOLON
 
     T_LBRACKET  shift, and go to state 18
-    SEMICOLON   shift, and go to state 64
+    SEMICOLON   shift, and go to state 91
     NAME        shift, and go to state 19
     NUMBER      shift, and go to state 20
 
@@ -702,27 +1084,27 @@ State 48
     bitwise_expression     go to state 27
     logical_expression     go to state 28
     assignment_expression  go to state 34
-    expression             go to state 65
+    expression             go to state 92
 
 
-State 49
+State 76
 
    11 declaration_list: declaration_list . declaration
-   40 compound_statement: CUR_LBRACKET declaration_list . CUR_RBRACKET
-   41                   | CUR_LBRACKET declaration_list . statement_list CUR_RBRACKET
+   53 compound_statement: CUR_LBRACKET declaration_list . CUR_RBRACKET
+   54                   | CUR_LBRACKET declaration_list . statement_list CUR_RBRACKET
 
     T_LBRACKET    shift, and go to state 18
-    CUR_LBRACKET  shift, and go to state 37
-    CUR_RBRACKET  shift, and go to state 66
+    CUR_LBRACKET  shift, and go to state 50
+    CUR_RBRACKET  shift, and go to state 93
     T_INT         shift, and go to state 1
     T_UNSIGNED    shift, and go to state 2
-    T_IF          shift, and go to state 46
-    T_WHILE       shift, and go to state 47
-    T_RETURN      shift, and go to state 48
+    T_IF          shift, and go to state 73
+    T_WHILE       shift, and go to state 74
+    T_RETURN      shift, and go to state 75
     NAME          shift, and go to state 19
     NUMBER        shift, and go to state 20
 
-    declaration            go to state 67
+    declaration            go to state 94
     primary_expression     go to state 21
     postfix_expression     go to state 22
     add_expression         go to state 23
@@ -732,49 +1114,49 @@ State 49
     bitwise_expression     go to state 27
     logical_expression     go to state 28
     assignment_expression  go to state 34
-    expression             go to state 51
-    statement              go to state 52
-    statement_list         go to state 68
-    compound_statement     go to state 54
-    jump_statement         go to state 55
-    expression_statement   go to state 56
-    condition_statement    go to state 57
-    iteration_statement    go to state 58
-    type_specifier         go to state 59
+    expression             go to state 78
+    statement              go to state 79
+    statement_list         go to state 95
+    compound_statement     go to state 81
+    jump_statement         go to state 82
+    expression_statement   go to state 83
+    condition_statement    go to state 84
+    iteration_statement    go to state 85
+    type_specifier         go to state 86
 
 
-State 50
+State 77
 
    10 declaration_list: declaration .
 
     $default  reduce using rule 10 (declaration_list)
 
 
-State 51
+State 78
 
-   44 expression_statement: expression . SEMICOLON
+   57 expression_statement: expression . SEMICOLON
 
-    SEMICOLON  shift, and go to state 69
-
-
-State 52
-
-   36 statement_list: statement .
-
-    $default  reduce using rule 36 (statement_list)
+    SEMICOLON  shift, and go to state 96
 
 
-State 53
+State 79
 
-   37 statement_list: statement_list . statement
-   39 compound_statement: CUR_LBRACKET statement_list . CUR_RBRACKET
+   49 statement_list: statement .
+
+    $default  reduce using rule 49 (statement_list)
+
+
+State 80
+
+   50 statement_list: statement_list . statement
+   52 compound_statement: CUR_LBRACKET statement_list . CUR_RBRACKET
 
     T_LBRACKET    shift, and go to state 18
-    CUR_LBRACKET  shift, and go to state 37
-    CUR_RBRACKET  shift, and go to state 70
-    T_IF          shift, and go to state 46
-    T_WHILE       shift, and go to state 47
-    T_RETURN      shift, and go to state 48
+    CUR_LBRACKET  shift, and go to state 50
+    CUR_RBRACKET  shift, and go to state 97
+    T_IF          shift, and go to state 73
+    T_WHILE       shift, and go to state 74
+    T_RETURN      shift, and go to state 75
     NAME          shift, and go to state 19
     NUMBER        shift, and go to state 20
 
@@ -787,100 +1169,80 @@ State 53
     bitwise_expression     go to state 27
     logical_expression     go to state 28
     assignment_expression  go to state 34
-    expression             go to state 51
-    statement              go to state 71
-    compound_statement     go to state 54
-    jump_statement         go to state 55
-    expression_statement   go to state 56
-    condition_statement    go to state 57
-    iteration_statement    go to state 58
+    expression             go to state 78
+    statement              go to state 98
+    compound_statement     go to state 81
+    jump_statement         go to state 82
+    expression_statement   go to state 83
+    condition_statement    go to state 84
+    iteration_statement    go to state 85
 
 
-State 54
+State 81
 
-   32 statement: compound_statement .
+   45 statement: compound_statement .
 
-    $default  reduce using rule 32 (statement)
-
-
-State 55
-
-   31 statement: jump_statement .
-
-    $default  reduce using rule 31 (statement)
+    $default  reduce using rule 45 (statement)
 
 
-State 56
+State 82
 
-   33 statement: expression_statement .
+   44 statement: jump_statement .
 
-    $default  reduce using rule 33 (statement)
-
-
-State 57
-
-   34 statement: condition_statement .
-
-    $default  reduce using rule 34 (statement)
+    $default  reduce using rule 44 (statement)
 
 
-State 58
+State 83
 
-   35 statement: iteration_statement .
+   46 statement: expression_statement .
 
-    $default  reduce using rule 35 (statement)
+    $default  reduce using rule 46 (statement)
 
 
-State 59
+State 84
+
+   47 statement: condition_statement .
+
+    $default  reduce using rule 47 (statement)
+
+
+State 85
+
+   48 statement: iteration_statement .
+
+    $default  reduce using rule 48 (statement)
+
+
+State 86
 
    13 declaration: type_specifier . SEMICOLON
    14            | type_specifier . initialisation_declarator SEMICOLON
 
     SEMICOLON  shift, and go to state 11
-    NAME       shift, and go to state 72
+    NAME       shift, and go to state 99
 
     initialisation_declarator  go to state 13
     declarator                 go to state 14
 
 
-State 60
+State 87
 
     7 function_definition: type_specifier NAME T_LBRACKET parameter_list T_RBRACKET compound_statement .
 
     $default  reduce using rule 7 (function_definition)
 
 
-State 61
+State 88
 
    17 parameter_list: parameter_list COMMA parameter_declaration .
 
     $default  reduce using rule 17 (parameter_list)
 
 
-State 62
+State 89
 
-   45 condition_statement: T_IF T_LBRACKET . expression T_RBRACKET statement
-   46                    | T_IF T_LBRACKET . expression T_RBRACKET statement T_ELSE statement
-
-    T_LBRACKET  shift, and go to state 18
-    NAME        shift, and go to state 19
-    NUMBER      shift, and go to state 20
-
-    primary_expression     go to state 21
-    postfix_expression     go to state 22
-    add_expression         go to state 23
-    multiply_expression    go to state 24
-    compare_expression     go to state 25
-    equal_expression       go to state 26
-    bitwise_expression     go to state 27
-    logical_expression     go to state 28
-    assignment_expression  go to state 34
-    expression             go to state 73
-
-
-State 63
-
-   47 iteration_statement: T_WHILE T_LBRACKET . expression T_RBRACKET statement
+   58 condition_statement: T_IF T_LBRACKET . expression T_RBRACKET statement
+   59                    | T_IF T_LBRACKET . expression T_RBRACKET statement T_ELSE statement
 
     T_LBRACKET  shift, and go to state 18
     NAME        shift, and go to state 19
@@ -895,48 +1257,68 @@ State 63
     bitwise_expression     go to state 27
     logical_expression     go to state 28
     assignment_expression  go to state 34
-    expression             go to state 74
+    expression             go to state 100
 
 
-State 64
+State 90
 
-   42 jump_statement: T_RETURN SEMICOLON .
+   60 iteration_statement: T_WHILE T_LBRACKET . expression T_RBRACKET statement
 
-    $default  reduce using rule 42 (jump_statement)
+    T_LBRACKET  shift, and go to state 18
+    NAME        shift, and go to state 19
+    NUMBER      shift, and go to state 20
+
+    primary_expression     go to state 21
+    postfix_expression     go to state 22
+    add_expression         go to state 23
+    multiply_expression    go to state 24
+    compare_expression     go to state 25
+    equal_expression       go to state 26
+    bitwise_expression     go to state 27
+    logical_expression     go to state 28
+    assignment_expression  go to state 34
+    expression             go to state 101
 
 
-State 65
+State 91
 
-   43 jump_statement: T_RETURN expression . SEMICOLON
+   55 jump_statement: T_RETURN SEMICOLON .
 
-    SEMICOLON  shift, and go to state 75
-
-
-State 66
-
-   40 compound_statement: CUR_LBRACKET declaration_list CUR_RBRACKET .
-
-    $default  reduce using rule 40 (compound_statement)
+    $default  reduce using rule 55 (jump_statement)
 
 
-State 67
+State 92
+
+   56 jump_statement: T_RETURN expression . SEMICOLON
+
+    SEMICOLON  shift, and go to state 102
+
+
+State 93
+
+   53 compound_statement: CUR_LBRACKET declaration_list CUR_RBRACKET .
+
+    $default  reduce using rule 53 (compound_statement)
+
+
+State 94
 
    11 declaration_list: declaration_list declaration .
 
     $default  reduce using rule 11 (declaration_list)
 
 
-State 68
+State 95
 
-   37 statement_list: statement_list . statement
-   41 compound_statement: CUR_LBRACKET declaration_list statement_list . CUR_RBRACKET
+   50 statement_list: statement_list . statement
+   54 compound_statement: CUR_LBRACKET declaration_list statement_list . CUR_RBRACKET
 
     T_LBRACKET    shift, and go to state 18
-    CUR_LBRACKET  shift, and go to state 37
-    CUR_RBRACKET  shift, and go to state 76
-    T_IF          shift, and go to state 46
-    T_WHILE       shift, and go to state 47
-    T_RETURN      shift, and go to state 48
+    CUR_LBRACKET  shift, and go to state 50
+    CUR_RBRACKET  shift, and go to state 103
+    T_IF          shift, and go to state 73
+    T_WHILE       shift, and go to state 74
+    T_RETURN      shift, and go to state 75
     NAME          shift, and go to state 19
     NUMBER        shift, and go to state 20
 
@@ -949,37 +1331,37 @@ State 68
     bitwise_expression     go to state 27
     logical_expression     go to state 28
     assignment_expression  go to state 34
-    expression             go to state 51
-    statement              go to state 71
-    compound_statement     go to state 54
-    jump_statement         go to state 55
-    expression_statement   go to state 56
-    condition_statement    go to state 57
-    iteration_statement    go to state 58
+    expression             go to state 78
+    statement              go to state 98
+    compound_statement     go to state 81
+    jump_statement         go to state 82
+    expression_statement   go to state 83
+    condition_statement    go to state 84
+    iteration_statement    go to state 85
 
 
-State 69
+State 96
 
-   44 expression_statement: expression SEMICOLON .
+   57 expression_statement: expression SEMICOLON .
 
-    $default  reduce using rule 44 (expression_statement)
-
-
-State 70
-
-   39 compound_statement: CUR_LBRACKET statement_list CUR_RBRACKET .
-
-    $default  reduce using rule 39 (compound_statement)
+    $default  reduce using rule 57 (expression_statement)
 
 
-State 71
+State 97
 
-   37 statement_list: statement_list statement .
+   52 compound_statement: CUR_LBRACKET statement_list CUR_RBRACKET .
 
-    $default  reduce using rule 37 (statement_list)
+    $default  reduce using rule 52 (compound_statement)
 
 
-State 72
+State 98
+
+   50 statement_list: statement_list statement .
+
+    $default  reduce using rule 50 (statement_list)
+
+
+State 99
 
     9 initialisation_declarator: NAME . T_ASSIGN assignment_expression
    12 declarator: NAME .
@@ -989,45 +1371,45 @@ State 72
     $default  reduce using rule 12 (declarator)
 
 
-State 73
+State 100
 
-   45 condition_statement: T_IF T_LBRACKET expression . T_RBRACKET statement
-   46                    | T_IF T_LBRACKET expression . T_RBRACKET statement T_ELSE statement
+   58 condition_statement: T_IF T_LBRACKET expression . T_RBRACKET statement
+   59                    | T_IF T_LBRACKET expression . T_RBRACKET statement T_ELSE statement
 
-    T_RBRACKET  shift, and go to state 77
-
-
-State 74
-
-   47 iteration_statement: T_WHILE T_LBRACKET expression . T_RBRACKET statement
-
-    T_RBRACKET  shift, and go to state 78
+    T_RBRACKET  shift, and go to state 104
 
 
-State 75
+State 101
 
-   43 jump_statement: T_RETURN expression SEMICOLON .
+   60 iteration_statement: T_WHILE T_LBRACKET expression . T_RBRACKET statement
 
-    $default  reduce using rule 43 (jump_statement)
-
-
-State 76
-
-   41 compound_statement: CUR_LBRACKET declaration_list statement_list CUR_RBRACKET .
-
-    $default  reduce using rule 41 (compound_statement)
+    T_RBRACKET  shift, and go to state 105
 
 
-State 77
+State 102
 
-   45 condition_statement: T_IF T_LBRACKET expression T_RBRACKET . statement
-   46                    | T_IF T_LBRACKET expression T_RBRACKET . statement T_ELSE statement
+   56 jump_statement: T_RETURN expression SEMICOLON .
+
+    $default  reduce using rule 56 (jump_statement)
+
+
+State 103
+
+   54 compound_statement: CUR_LBRACKET declaration_list statement_list CUR_RBRACKET .
+
+    $default  reduce using rule 54 (compound_statement)
+
+
+State 104
+
+   58 condition_statement: T_IF T_LBRACKET expression T_RBRACKET . statement
+   59                    | T_IF T_LBRACKET expression T_RBRACKET . statement T_ELSE statement
 
     T_LBRACKET    shift, and go to state 18
-    CUR_LBRACKET  shift, and go to state 37
-    T_IF          shift, and go to state 46
-    T_WHILE       shift, and go to state 47
-    T_RETURN      shift, and go to state 48
+    CUR_LBRACKET  shift, and go to state 50
+    T_IF          shift, and go to state 73
+    T_WHILE       shift, and go to state 74
+    T_RETURN      shift, and go to state 75
     NAME          shift, and go to state 19
     NUMBER        shift, and go to state 20
 
@@ -1040,24 +1422,24 @@ State 77
     bitwise_expression     go to state 27
     logical_expression     go to state 28
     assignment_expression  go to state 34
-    expression             go to state 51
-    statement              go to state 79
-    compound_statement     go to state 54
-    jump_statement         go to state 55
-    expression_statement   go to state 56
-    condition_statement    go to state 57
-    iteration_statement    go to state 58
+    expression             go to state 78
+    statement              go to state 106
+    compound_statement     go to state 81
+    jump_statement         go to state 82
+    expression_statement   go to state 83
+    condition_statement    go to state 84
+    iteration_statement    go to state 85
 
 
-State 78
+State 105
 
-   47 iteration_statement: T_WHILE T_LBRACKET expression T_RBRACKET . statement
+   60 iteration_statement: T_WHILE T_LBRACKET expression T_RBRACKET . statement
 
     T_LBRACKET    shift, and go to state 18
-    CUR_LBRACKET  shift, and go to state 37
-    T_IF          shift, and go to state 46
-    T_WHILE       shift, and go to state 47
-    T_RETURN      shift, and go to state 48
+    CUR_LBRACKET  shift, and go to state 50
+    T_IF          shift, and go to state 73
+    T_WHILE       shift, and go to state 74
+    T_RETURN      shift, and go to state 75
     NAME          shift, and go to state 19
     NUMBER        shift, and go to state 20
 
@@ -1070,42 +1452,42 @@ State 78
     bitwise_expression     go to state 27
     logical_expression     go to state 28
     assignment_expression  go to state 34
-    expression             go to state 51
-    statement              go to state 80
-    compound_statement     go to state 54
-    jump_statement         go to state 55
-    expression_statement   go to state 56
-    condition_statement    go to state 57
-    iteration_statement    go to state 58
+    expression             go to state 78
+    statement              go to state 107
+    compound_statement     go to state 81
+    jump_statement         go to state 82
+    expression_statement   go to state 83
+    condition_statement    go to state 84
+    iteration_statement    go to state 85
 
 
-State 79
+State 106
 
-   45 condition_statement: T_IF T_LBRACKET expression T_RBRACKET statement .
-   46                    | T_IF T_LBRACKET expression T_RBRACKET statement . T_ELSE statement
+   58 condition_statement: T_IF T_LBRACKET expression T_RBRACKET statement .
+   59                    | T_IF T_LBRACKET expression T_RBRACKET statement . T_ELSE statement
 
-    T_ELSE  shift, and go to state 81
+    T_ELSE  shift, and go to state 108
 
-    T_ELSE    [reduce using rule 45 (condition_statement)]
-    $default  reduce using rule 45 (condition_statement)
-
-
-State 80
-
-   47 iteration_statement: T_WHILE T_LBRACKET expression T_RBRACKET statement .
-
-    $default  reduce using rule 47 (iteration_statement)
+    T_ELSE    [reduce using rule 58 (condition_statement)]
+    $default  reduce using rule 58 (condition_statement)
 
 
-State 81
+State 107
 
-   46 condition_statement: T_IF T_LBRACKET expression T_RBRACKET statement T_ELSE . statement
+   60 iteration_statement: T_WHILE T_LBRACKET expression T_RBRACKET statement .
+
+    $default  reduce using rule 60 (iteration_statement)
+
+
+State 108
+
+   59 condition_statement: T_IF T_LBRACKET expression T_RBRACKET statement T_ELSE . statement
 
     T_LBRACKET    shift, and go to state 18
-    CUR_LBRACKET  shift, and go to state 37
-    T_IF          shift, and go to state 46
-    T_WHILE       shift, and go to state 47
-    T_RETURN      shift, and go to state 48
+    CUR_LBRACKET  shift, and go to state 50
+    T_IF          shift, and go to state 73
+    T_WHILE       shift, and go to state 74
+    T_RETURN      shift, and go to state 75
     NAME          shift, and go to state 19
     NUMBER        shift, and go to state 20
 
@@ -1118,17 +1500,17 @@ State 81
     bitwise_expression     go to state 27
     logical_expression     go to state 28
     assignment_expression  go to state 34
-    expression             go to state 51
-    statement              go to state 82
-    compound_statement     go to state 54
-    jump_statement         go to state 55
-    expression_statement   go to state 56
-    condition_statement    go to state 57
-    iteration_statement    go to state 58
+    expression             go to state 78
+    statement              go to state 109
+    compound_statement     go to state 81
+    jump_statement         go to state 82
+    expression_statement   go to state 83
+    condition_statement    go to state 84
+    iteration_statement    go to state 85
 
 
-State 82
+State 109
 
-   46 condition_statement: T_IF T_LBRACKET expression T_RBRACKET statement T_ELSE statement .
+   59 condition_statement: T_IF T_LBRACKET expression T_RBRACKET statement T_ELSE statement .
 
-    $default  reduce using rule 46 (condition_statement)
+    $default  reduce using rule 59 (condition_statement)

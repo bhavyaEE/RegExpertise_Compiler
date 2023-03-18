@@ -72,29 +72,32 @@ extern int yydebug;
     T_DIVIDE = 260,                /* T_DIVIDE  */
     T_PLUS = 261,                  /* T_PLUS  */
     T_MINUS = 262,                 /* T_MINUS  */
-    T_LBRACKET = 263,              /* T_LBRACKET  */
-    T_RBRACKET = 264,              /* T_RBRACKET  */
-    CUR_LBRACKET = 265,            /* CUR_LBRACKET  */
-    CUR_RBRACKET = 266,            /* CUR_RBRACKET  */
-    SQU_LBRACKET = 267,            /* SQU_LBRACKET  */
-    SQU_RBRACKET = 268,            /* SQU_RBRACKET  */
-    COLON = 269,                   /* COLON  */
-    SEMICOLON = 270,               /* SEMICOLON  */
-    COMMA = 271,                   /* COMMA  */
-    T_LESSTHAN = 272,              /* T_LESSTHAN  */
-    T_GREATERTHAN = 273,           /* T_GREATERTHAN  */
-    T_LESS_EQUAL = 274,            /* T_LESS_EQUAL  */
-    T_GREATER_EQUAL = 275,         /* T_GREATER_EQUAL  */
-    T_EQUAL = 276,                 /* T_EQUAL  */
-    T_NOT_EQUAL = 277,             /* T_NOT_EQUAL  */
-    T_INT = 278,                   /* T_INT  */
-    T_UNSIGNED = 279,              /* T_UNSIGNED  */
-    T_IF = 280,                    /* T_IF  */
-    T_ELSE = 281,                  /* T_ELSE  */
-    T_WHILE = 282,                 /* T_WHILE  */
-    T_RETURN = 283,                /* T_RETURN  */
-    NAME = 284,                    /* NAME  */
-    NUMBER = 285                   /* NUMBER  */
+    T_BIT_AND = 263,               /* T_BIT_AND  */
+    T_BIT_OR = 264,                /* T_BIT_OR  */
+    T_BIT_XOR = 265,               /* T_BIT_XOR  */
+    T_LBRACKET = 266,              /* T_LBRACKET  */
+    T_RBRACKET = 267,              /* T_RBRACKET  */
+    CUR_LBRACKET = 268,            /* CUR_LBRACKET  */
+    CUR_RBRACKET = 269,            /* CUR_RBRACKET  */
+    SQU_LBRACKET = 270,            /* SQU_LBRACKET  */
+    SQU_RBRACKET = 271,            /* SQU_RBRACKET  */
+    COLON = 272,                   /* COLON  */
+    SEMICOLON = 273,               /* SEMICOLON  */
+    COMMA = 274,                   /* COMMA  */
+    T_LESSTHAN = 275,              /* T_LESSTHAN  */
+    T_GREATERTHAN = 276,           /* T_GREATERTHAN  */
+    T_LESS_EQUAL = 277,            /* T_LESS_EQUAL  */
+    T_GREATER_EQUAL = 278,         /* T_GREATER_EQUAL  */
+    T_EQUAL = 279,                 /* T_EQUAL  */
+    T_NOT_EQUAL = 280,             /* T_NOT_EQUAL  */
+    T_INT = 281,                   /* T_INT  */
+    T_UNSIGNED = 282,              /* T_UNSIGNED  */
+    T_IF = 283,                    /* T_IF  */
+    T_ELSE = 284,                  /* T_ELSE  */
+    T_WHILE = 285,                 /* T_WHILE  */
+    T_RETURN = 286,                /* T_RETURN  */
+    NAME = 287,                    /* NAME  */
+    NUMBER = 288                   /* NUMBER  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -108,29 +111,32 @@ extern int yydebug;
 #define T_DIVIDE 260
 #define T_PLUS 261
 #define T_MINUS 262
-#define T_LBRACKET 263
-#define T_RBRACKET 264
-#define CUR_LBRACKET 265
-#define CUR_RBRACKET 266
-#define SQU_LBRACKET 267
-#define SQU_RBRACKET 268
-#define COLON 269
-#define SEMICOLON 270
-#define COMMA 271
-#define T_LESSTHAN 272
-#define T_GREATERTHAN 273
-#define T_LESS_EQUAL 274
-#define T_GREATER_EQUAL 275
-#define T_EQUAL 276
-#define T_NOT_EQUAL 277
-#define T_INT 278
-#define T_UNSIGNED 279
-#define T_IF 280
-#define T_ELSE 281
-#define T_WHILE 282
-#define T_RETURN 283
-#define NAME 284
-#define NUMBER 285
+#define T_BIT_AND 263
+#define T_BIT_OR 264
+#define T_BIT_XOR 265
+#define T_LBRACKET 266
+#define T_RBRACKET 267
+#define CUR_LBRACKET 268
+#define CUR_RBRACKET 269
+#define SQU_LBRACKET 270
+#define SQU_RBRACKET 271
+#define COLON 272
+#define SEMICOLON 273
+#define COMMA 274
+#define T_LESSTHAN 275
+#define T_GREATERTHAN 276
+#define T_LESS_EQUAL 277
+#define T_GREATER_EQUAL 278
+#define T_EQUAL 279
+#define T_NOT_EQUAL 280
+#define T_INT 281
+#define T_UNSIGNED 282
+#define T_IF 283
+#define T_ELSE 284
+#define T_WHILE 285
+#define T_RETURN 286
+#define NAME 287
+#define NUMBER 288
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -143,7 +149,7 @@ union YYSTYPE
 	int 			          number;
 	std::vector<Node*>* 	NodeVectorPtr;
 
-#line 147 "src/parser.tab.hpp"
+#line 153 "src/parser.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

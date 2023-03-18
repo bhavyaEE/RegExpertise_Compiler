@@ -25,6 +25,8 @@
 %token T_ASSIGN
 // Arithmetic Operators
 %token T_TIMES T_DIVIDE T_PLUS T_MINUS
+// Bitwise and Logical Operators
+%token T_BIT_AND T_BIT_OR T_BIT_XOR
 // Characters Operators
 %token T_LBRACKET T_RBRACKET CUR_LBRACKET CUR_RBRACKET SQU_LBRACKET SQU_RBRACKET COLON SEMICOLON COMMA
 // Comparison Operators
@@ -132,38 +134,41 @@ postfix_expression
 
 add_expression
   : 	multiply_expression					  							{ $$ = $1; }
-	// | 	add_expression T_PLUS multiply_expression						{ $$ = new Add_Expression($1, $3); }
-	// | 	add_expression T_MINUS multiply_expression  					{ $$ = new Sub_Expression($1, $3); }
+	| 	add_expression T_PLUS multiply_expression						{ $$ = new Add_Expression($1, $3); }
+  | 	add_expression T_MINUS multiply_expression  					{ $$ = new Sub_Expression($1, $3); }
   ;
 
 multiply_expression
   :	postfix_expression				 								{ $$ = $1; }
-	// | multiply_expression T_TIMES postfix_expression 				{ $$ = new Multiply_Expression($1, $3); }
-	// | multiply_expression T_DIVIDE postfix_expression 				{ $$ = new Divide_Expression($1, $3); }
+	| multiply_expression T_TIMES postfix_expression 				{ $$ = new Multiply_Expression($1, $3); }
+	| multiply_expression T_DIVIDE postfix_expression 				{ $$ = new Divide_Expression($1, $3); }
   ;
 
 compare_expression
     : add_expression { $$=$1; }
-    // |	compare_expression T_LESSTHAN add_expression					{ $$ = new Less_Than_Expression($1, $3); }
-    // |	compare_expression T_LESS_EQUAL add_expression				{ $$ = new Less_Equal_Expression($1, $3); }
-    // |	compare_expression T_GREATERTHAN add_expression				{ $$ = new More_THAN_Expression($1, $3); }
-    // |	compare_expression T_GREATER_EQUAL add_expression			{ $$ = new More_Equal_Expression($1, $3); }
+    |	compare_expression T_LESSTHAN add_expression					{ $$ = new Less_Than_Expression($1, $3); }
+    |	compare_expression T_LESS_EQUAL add_expression				{ $$ = new Less_Equal_Expression($1, $3); }
+    |	compare_expression T_GREATERTHAN add_expression				{ $$ = new More_Than_Expression($1, $3); }
+    |	compare_expression T_GREATER_EQUAL add_expression			{ $$ = new More_Equal_Expression($1, $3); }
     ;
 
 equal_expression
     : compare_expression { $$=$1; }
-    //|	equal_expression T_EQUAL compare_expression						{ $$ = new Equal_Expression($1, $3); }
-    //|	equal_expression T_NOT_EQUAL compare_expression					{ $$ = new Not_Equal_Expression($1, $3); }
+    |	equal_expression T_EQUAL compare_expression						{ $$ = new Equal_Expression($1, $3); }
+    |	equal_expression T_NOT_EQUAL compare_expression					{ $$ = new Not_Equal_Expression($1, $3); }
     ;
 
 bitwise_expression
   : 	equal_expression { $$=$1; }
+  |   bitwise_expression T_BIT_AND equal_expression						{ $$ = new Bit_And_Expression($1, $3); }
+  |   bitwise_expression T_BIT_OR equal_expression						{ $$ = new Bit_Or_Expression($1, $3); }
+  |   bitwise_expression T_BIT_XOR equal_expression						{ $$ = new Bit_Xor_Expression($1, $3); }
   ;
-
 logical_expression
   : 	bitwise_expression { $$=$1; }
+  //|   logical_expression T_LOGICAL_AND bitwise_expression						{ $$ = new Logic_And_Expression($1, $3); }
+  //|   logical_expression T_LOGICAL_OR bitwise_expression						{ $$ = new Logic_Or_Expression($1, $3); }
   ;
-
 assignment_expression
   : logical_expression { $$=$1; }
 	|	postfix_expression T_ASSIGN assignment_expression 				{ $$ = new Direct_Assignment($1, $3); }

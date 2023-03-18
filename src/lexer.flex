@@ -9,11 +9,14 @@
   /* Comments (To be done at a later date) */
   // "/*"			{ comment(); }
 
-  /* Types */
 [*]             { return T_TIMES; }
 [+]             { return T_PLUS; }
 [-]             { return T_MINUS; }
 [\/]            { return T_DIVIDE; }
+
+[&]                                 { return (T_BIT_AND); }
+[|]                                 { return (T_BIT_OR); }
+[\^]                                { return (T_BIT_XOR); }
 
 [<]			{  return  T_LESSTHAN; }
 [>]			{  return  T_GREATERTHAN; }

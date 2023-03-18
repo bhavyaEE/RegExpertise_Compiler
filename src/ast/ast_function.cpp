@@ -55,10 +55,10 @@ void Function_With_Arg_Definition::generateRISCV(std::ostream &os, Context& cont
     // os << "addi " << "sp,sp" << "-16" << std::endl;
     // os << "sw " << "s0,12" << "(sp)" << std::endl;
     // os << "addi " << "s0,sp" << "16" << std::endl;
-    int argument_frame_pointer = -32;
+    int argument_frame_pointer = 0;
 	int argument_registers[4]  = {10, 11, 12, 13};
     for(int i = 0; i < Function_Arguments->size(); i++){
-        argument_frame_pointer -= 4;
+        argument_frame_pointer += 4;
         context.store_word(os, argument_registers[i], argument_frame_pointer);
         Declaration* this_arg = dynamic_cast<Declaration*>((*Function_Arguments)[i]);
         context.add_arguments(this_arg->get_parameter(), argument_frame_pointer);
