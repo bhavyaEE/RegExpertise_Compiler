@@ -20,6 +20,18 @@ class Direct_Assignment : public Node{
 
 };
 
+class Array_Expression : public Node{
+	private:
+		Node* array_name;
+		Node* size_expression;
+	public:
+		Array_Expression(Node* _array_name, Node* _size_expression);
+		~Array_Expression(){};
+		void visualiser(std::ostream &os) const override;
+		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
+
+};
+
 /* -------------------Arithmetic------------------------ */
 
 class Add_Expression : public Node

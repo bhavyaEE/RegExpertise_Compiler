@@ -13,10 +13,12 @@
 class variable{
     private:
         int fp_offset;
+		int size = 0;
     public:
-        variable(int _fp_offset);
+        variable(int _fp_offset, int _size);
         ~variable();
         int get_variable_address();
+		int get_size();
 
 };
 
@@ -25,7 +27,6 @@ typedef std::map<std::string, variable*> var_map;
 struct Context{
     private:
         var_map* variable_map = new var_map();
-        bool HasArg = false;
         int frame_pointer_offset = -16;
     public:
 
@@ -37,21 +38,11 @@ struct Context{
         int get_fp_offset();
         // void allocate_stack();
 		// void deallocate_stack();
+		int for_array_declaration(int array_size);
 
 		void load_word(std::ostream& os, int register_name, int memory_location);
 
 		void store_word(std::ostream& os, int register_name, int memory_location);
-
-		// void output_load_operation(std::ostream& os, type load_type, std::string register_1, std::string register_2, int frame_offset)
-		// {
-		// 	os << "\t" << "lw" << "\t" << "$" << register_1 << "," << frame_offset << "($" << register_2 << ")" << std::endl;
-		// }
-
-		// // Testing
-		// void output_store_operation(std::ostream& os, type load_type, std::string register_1, std::string register_2, int frame_offset)
-		// {
-		// 	os << "\t" << "sw" << "\t" << "$" << register_1 << "," << frame_offset << "($" << register_2 << ")" << std::endl;
-		// }
 
 
 

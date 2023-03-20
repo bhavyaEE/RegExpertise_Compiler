@@ -105,6 +105,7 @@ declaration_list
 
 declarator
   : NAME { $$ = new Variable_Declarator(*$1); }
+  | NAME SQU_LBRACKET add_expression SQU_RBRACKET { $$ = new Array_Declarator(*$1, $3);}
   ;
 
 declaration
@@ -129,7 +130,8 @@ primary_expression
 
 postfix_expression
   :	primary_expression												{ $$ = $1; }
-	/* |	primary_expression INC_OP										{ $$ = new Post_Increment_Expression($1); } */
+	| NAME SQU_LBRACKET expression SQU_LBRACKET { $$ = new Array_Expression($1, $3);}
+  /* |	primary_expression INC_OP										{ $$ = new Post_Increment_Expression($1); } */
   ;
 
 add_expression

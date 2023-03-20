@@ -10,13 +10,38 @@ void Direct_Assignment::visualiser(std::ostream &os) const{
     expression->visualiser(os);
 }
 void Direct_Assignment::generateRISCV(std::ostream &os, Context& context, int destReg) const {
-    Variable* var_node = dynamic_cast<Variable*>(left);
-    std::string var_name = var_node->get_variable_name();
-    variable this_variable = context.get_variable(var_name);
-    int offset = this_variable.get_variable_address();
+    left->generateRISCV(os, context, destReg);
+    int offset = left->get_variable_address();
     expression->generateRISCV(os, context, destReg);
     context.store_word(os, destReg, offset);
 }
+
+Array_Expression :: Array_Expression(Node* _array_name, Node* _size_expression)
+:array_name(_array_name), size_expression(_size_expression){}
+
+void Array_Expression::visualiser(std::ostream &os) const{
+    array_name->visualiser(os);
+    os << " array index ";
+    size_expression->visualiser(os);
+    os << " is assigned to be" <<std::endl;
+}
+
+void Array_Expression::generateRISCV(std::ostream &os, Context& context, int destReg) const {
+    std::string arr_name = array_name->get_variable_name();
+    variable this_variable = context.get_variable(arr_name);
+	int offset = this_variable.get_variable_address();
+    int index = size_expression->get_value();
+
+    context.store_word(os, destReg, offset);
+}
+
+
+
+
+
+
+
+
 
 /* ------------------------------ADD -------------------------------------*/
 
