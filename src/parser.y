@@ -125,12 +125,12 @@ parameter_list
 primary_expression
   : 	NUMBER														{ $$ = new Int($1); }
 	| 	NAME                              { $$ = new Variable(*$1);}
+  |   NAME SQU_LBRACKET expression SQU_LBRACKET { $$ = new Array(*$1, $3);}
 	| 	T_LBRACKET expression T_RBRACKET								{ $$ = $2; }
   ;
 
 postfix_expression
   :	primary_expression												{ $$ = $1; }
-	| NAME SQU_LBRACKET expression SQU_LBRACKET { $$ = new Array_Expression($1, $3);}
   /* |	primary_expression INC_OP										{ $$ = new Post_Increment_Expression($1); } */
   ;
 
@@ -174,6 +174,7 @@ logical_expression
 assignment_expression
   : logical_expression { $$=$1; }
 	|	postfix_expression T_ASSIGN assignment_expression 				{ $$ = new Direct_Assignment($1, $3); }
+  | NAME SQU_LBRACKET expression SQU_LBRACKET T_ASSIGN assignment_expression { $$ = new Array_Assignment_Expression(*$1, $3, $6);}
   ;
 
 expression

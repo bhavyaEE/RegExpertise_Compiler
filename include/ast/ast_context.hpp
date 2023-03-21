@@ -13,12 +13,10 @@
 class variable{
     private:
         int fp_offset;
-		int size = 0;
     public:
-        variable(int _fp_offset, int _size);
+        variable(int _fp_offset);
         ~variable();
         int get_variable_address();
-		int get_size();
 
 };
 
@@ -38,7 +36,7 @@ struct Context{
         int get_fp_offset();
         // void allocate_stack();
 		// void deallocate_stack();
-		int for_array_declaration(int array_size);
+		void for_array_declaration(int array_size);
 
 		void load_word(std::ostream& os, int register_name, int memory_location);
 

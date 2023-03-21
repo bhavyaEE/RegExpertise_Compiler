@@ -16,27 +16,39 @@ void Direct_Assignment::generateRISCV(std::ostream &os, Context& context, int de
     context.store_word(os, destReg, offset);
 }
 
-Array_Expression :: Array_Expression(Node* _array_name, Node* _size_expression)
-:array_name(_array_name), size_expression(_size_expression){}
+Array_Assignment_Expression :: Array_Assignment_Expression(std::string _array_name, Node* _size_expression, Node* _expression)
+:array_name(_array_name), size_expression(_size_expression), expression(_expression){}
 
-void Array_Expression::visualiser(std::ostream &os) const{
-    array_name->visualiser(os);
+void Array_Assignment_Expression::visualiser(std::ostream &os) const{
+    os <<"array name: " << array_name << "  ";
     os << " array index ";
     size_expression->visualiser(os);
     os << " is assigned to be" <<std::endl;
+    expression->visualiser(os);
+    os <<std::endl;
 }
 
-void Array_Expression::generateRISCV(std::ostream &os, Context& context, int destReg) const {
-    std::string arr_name = array_name->get_variable_name();
-    variable this_variable = context.get_variable(arr_name);
-	int offset = this_variable.get_variable_address();
+void Array_Assignment_Expression::generateRISCV(std::ostream &os, Context& context, int destReg) const {
+    variable this_variable = context.get_variable(array_name);
     int index = size_expression->get_value();
-
+    int offset = this_variable.get_variable_address() +index*4;
+    expression->generateRISCV(os, context, destReg);
     context.store_word(os, destReg, offset);
 }
 
-
-
+Array::Array(std::string _name, Node* _index)
+    :array_name(_name),  index(_index){}
+void Array::visualiser(std::ostream &os) const{
+    os << array_name << "[";
+    index->visualiser(os);
+    os  << "]"<<std::endl;
+}
+void Array::generateRISCV(std::ostream &os, Context& context, int destReg) const {
+    variable this_variable = context.get_variable(array_name);
+    int array_index = index->get_value();
+    int offset = this_variable.get_variable_address() +array_index*4;
+    context.load_word(os, destReg, offset);
+}
 
 
 
@@ -51,7 +63,9 @@ Add_Expression::~Add_Expression(){
 			delete leftop;
 			delete rightop;
 		}
-
+int Add_Expression::get_value()const{
+    return leftop->get_value()+rightop->get_value();
+}
 void Add_Expression::visualiser(std::ostream &os) const {
     os << " " << "Add expression: " << std::endl;
     os << " " << "Left Op: ";
@@ -82,7 +96,9 @@ Sub_Expression::~Sub_Expression(){
 			delete leftop;
 			delete rightop;
 		}
-
+int Sub_Expression::get_value()const{
+    return leftop->get_value()-rightop->get_value();
+}
 void Sub_Expression::visualiser(std::ostream &os) const {
     os << " " << "Sub expression: " << std::endl;
     os << " " << "Left Op: ";
@@ -113,7 +129,9 @@ Multiply_Expression::~Multiply_Expression(){
 			delete leftop;
 			delete rightop;
 		}
-
+int Multiply_Expression::get_value()const{
+    return leftop->get_value()*rightop->get_value();
+}
 void Multiply_Expression::visualiser(std::ostream &os) const {
     os << " " << "Multiply expression: " << std::endl;
     os << " " << "Left Op: ";
@@ -144,7 +162,9 @@ Divide_Expression::~Divide_Expression(){
 			delete leftop;
 			delete rightop;
 		}
-
+int Divide_Expression::get_value()const{
+    return leftop->get_value()/rightop->get_value();
+}
 void Divide_Expression::visualiser(std::ostream &os) const {
     os << " " << "Divide expression: " << std::endl;
     os << " " << "Left Op: ";

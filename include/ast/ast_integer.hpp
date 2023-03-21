@@ -26,6 +26,7 @@ class Variable : public Node
 	public:
 		Variable(std::string _variable_name);
         ~Variable(){}
+        // int get_value() const override;
         void visualiser(std::ostream &os) const override;
 		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
         std::string get_variable_name() const override;

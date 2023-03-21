@@ -20,13 +20,26 @@ class Direct_Assignment : public Node{
 
 };
 
-class Array_Expression : public Node{
+class Array_Assignment_Expression : public Node{
 	private:
-		Node* array_name;
+		std::string array_name;
 		Node* size_expression;
+		Node* expression;
 	public:
-		Array_Expression(Node* _array_name, Node* _size_expression);
-		~Array_Expression(){};
+		Array_Assignment_Expression(std::string _array_name, Node* _size_expression, Node* _expression);
+		~Array_Assignment_Expression(){};
+		void visualiser(std::ostream &os) const override;
+		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
+
+};
+
+class Array : public Node{
+	private:
+		std::string array_name;
+		Node* index;
+	public:
+		Array(std::string _name, Node* _index);
+		~Array(){};
 		void visualiser(std::ostream &os) const override;
 		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 
@@ -42,7 +55,7 @@ class Add_Expression : public Node
 	public:
 		Add_Expression (Node* left, Node* right);
 		~Add_Expression();
-
+		int get_value() const override;
 		void visualiser(std::ostream &os) const override; //should it be virtual
         void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 
@@ -56,7 +69,7 @@ class Sub_Expression : public Node
 	public:
 		Sub_Expression (Node* left, Node* right);
 		~Sub_Expression();
-
+		int get_value()const override;
 		void visualiser(std::ostream &os) const override; //should it be virtual
         void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 };
@@ -69,6 +82,7 @@ class Multiply_Expression : public Node
 	public:
 		Multiply_Expression (Node* _left, Node* _right);
 		~Multiply_Expression();
+		int get_value()const override;
 		void visualiser(std::ostream &os) const override; //should it be virtual
         void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 };
@@ -81,7 +95,7 @@ class Divide_Expression : public Node
 	public:
 		Divide_Expression (Node* _left, Node* _right);
 		~Divide_Expression();
-
+		int get_value()const override;
 		void visualiser(std::ostream &os) const override; //should it be virtual
         void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 };

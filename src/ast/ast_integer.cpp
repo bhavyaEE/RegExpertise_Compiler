@@ -26,6 +26,9 @@ int Int::get_value() const {
 }
 
 Variable::Variable(std::string _variable_name) : variable_name (_variable_name){}
+// int Variable::get_value() const{
+
+// }
 void Variable::visualiser(std::ostream &os) const{
     os << " " << "variable = " << variable_name << std::endl;
 }
