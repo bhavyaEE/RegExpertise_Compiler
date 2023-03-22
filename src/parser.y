@@ -26,7 +26,7 @@
 // Arithmetic Operators
 %token T_TIMES T_DIVIDE T_PLUS T_MINUS
 // Bitwise and Logical Operators
-%token T_BIT_AND T_BIT_OR T_BIT_XOR
+%token T_BIT_AND T_BIT_OR T_BIT_XOR T_LOGICAL_OR T_LOGICAL_AND T_RIGHT_SHIFT T_LEFT_SHIFT
 // Characters Operators
 %token T_LBRACKET T_RBRACKET CUR_LBRACKET CUR_RBRACKET SQU_LBRACKET SQU_RBRACKET COLON SEMICOLON COMMA
 // Comparison Operators
@@ -34,7 +34,7 @@
 // Types Operators
 %token T_INT T_UNSIGNED
 // Structures Operators
-%token T_IF T_ELSE T_WHILE T_RETURN
+%token T_IF T_ELSE T_WHILE T_RETURN T_FOR INC_OP
 // Rules
 %token NAME NUMBER
 
@@ -49,7 +49,7 @@
 
 %type <NodePtr> primary_expression postfix_expression
 %type <NodePtr> multiply_expression add_expression
-%type <NodePtr> compare_expression equal_expression
+%type <NodePtr> shift_expression compare_expression equal_expression 
 %type <NodePtr> bitwise_expression logical_expression
 %type <NodePtr> assignment_expression expression
 
@@ -125,13 +125,13 @@ parameter_list
 primary_expression
   : 	NUMBER														{ $$ = new Int($1); }
 	| 	NAME                              { $$ = new Variable(*$1);}
-  |   NAME SQU_LBRACKET expression SQU_LBRACKET { $$ = new Array(*$1, $3);}
+  |   NAME SQU_LBRACKET expression SQU_RBRACKET { $$ = new Array(*$1, $3);}
 	| 	T_LBRACKET expression T_RBRACKET								{ $$ = $2; }
   ;
 
 postfix_expression
   :	primary_expression												{ $$ = $1; }
-  /* |	primary_expression INC_OP										{ $$ = new Post_Increment_Expression($1); } */
+	|	postfix_expression INC_OP 						{ $$ = new Post_Increment_Expression($1); }
   ;
 
 add_expression
@@ -146,12 +146,18 @@ multiply_expression
 	| multiply_expression T_DIVIDE postfix_expression 				{ $$ = new Divide_Expression($1, $3); }
   ;
 
-compare_expression
+shift_expression
     : add_expression { $$=$1; }
-    |	compare_expression T_LESSTHAN add_expression					{ $$ = new Less_Than_Expression($1, $3); }
-    |	compare_expression T_LESS_EQUAL add_expression				{ $$ = new Less_Equal_Expression($1, $3); }
-    |	compare_expression T_GREATERTHAN add_expression				{ $$ = new More_Than_Expression($1, $3); }
-    |	compare_expression T_GREATER_EQUAL add_expression			{ $$ = new More_Equal_Expression($1, $3); }
+    |	shift_expression T_LEFT_SHIFT add_expression					{ $$ = new Left_Shift_Expression($1, $3); }
+    |	shift_expression T_RIGHT_SHIFT add_expression				{ $$ = new Right_Shift_Expression($1, $3); }
+    ;
+
+compare_expression
+    : shift_expression { $$=$1; }
+    |	compare_expression T_LESSTHAN shift_expression					{ $$ = new Less_Than_Expression($1, $3); }
+    |	compare_expression T_LESS_EQUAL shift_expression				{ $$ = new Less_Equal_Expression($1, $3); }
+    |	compare_expression T_GREATERTHAN shift_expression				{ $$ = new More_Than_Expression($1, $3); }
+    |	compare_expression T_GREATER_EQUAL shift_expression			{ $$ = new More_Equal_Expression($1, $3); }
     ;
 
 equal_expression
@@ -168,13 +174,12 @@ bitwise_expression
   ;
 logical_expression
   : 	bitwise_expression { $$=$1; }
-  //|   logical_expression T_LOGICAL_AND bitwise_expression						{ $$ = new Logic_And_Expression($1, $3); }
-  //|   logical_expression T_LOGICAL_OR bitwise_expression						{ $$ = new Logic_Or_Expression($1, $3); }
+  |   logical_expression T_LOGICAL_AND bitwise_expression						{ $$ = new Logic_And_Expression($1, $3); }
+  |   logical_expression T_LOGICAL_OR bitwise_expression						{ $$ = new Logic_Or_Expression($1, $3); }
   ;
 assignment_expression
   : logical_expression { $$=$1; }
 	|	postfix_expression T_ASSIGN assignment_expression 				{ $$ = new Direct_Assignment($1, $3); }
-  | NAME SQU_LBRACKET expression SQU_LBRACKET T_ASSIGN assignment_expression { $$ = new Array_Assignment_Expression(*$1, $3, $6);}
   ;
 
 expression
@@ -197,7 +202,7 @@ statement_list
   ;
 
 compound_statement
-  : CUR_LBRACKET CUR_RBRACKET
+  : CUR_LBRACKET CUR_RBRACKET {$$ = new Compound_Statement(NULL, NULL);}
   | CUR_LBRACKET statement_list CUR_RBRACKET					{ $$ = new Compound_Statement($2, NULL); }
   | CUR_LBRACKET declaration_list CUR_RBRACKET        { $$ = new Compound_Statement(NULL, $2); }
   | CUR_LBRACKET declaration_list statement_list CUR_RBRACKET {$$ = new Compound_Statement($3, $2);}
@@ -212,12 +217,14 @@ expression_statement
   : expression SEMICOLON												{ $$ = $1; }
 
 condition_statement
-  :	T_IF T_LBRACKET expression T_RBRACKET statement
-  |	T_IF T_LBRACKET expression T_RBRACKET statement T_ELSE statement
+  :	T_IF T_LBRACKET expression T_RBRACKET statement { $$ = new If_Statement($3, $5); }
+  |	T_IF T_LBRACKET expression T_RBRACKET statement T_ELSE statement { $$ = new If_Else_Statement($3, $5, $7); }
   ;
 
 iteration_statement
-  :	T_WHILE T_LBRACKET expression T_RBRACKET statement
+  :	T_WHILE T_LBRACKET expression T_RBRACKET statement { $$ = new While_Statement($3, $5); }
+  | T_FOR T_LBRACKET expression_statement expression_statement T_RBRACKET statement { $$ = new For_Loop($3, $4, NULL, $6); }
+	| T_FOR T_LBRACKET expression_statement expression_statement expression T_RBRACKET statement { $$ = new For_Loop($3, $4, $5, $7); }
   ;
 
 

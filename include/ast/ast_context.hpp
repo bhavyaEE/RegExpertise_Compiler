@@ -13,10 +13,13 @@
 class variable{
     private:
         int fp_offset;
+        int value;
     public:
-        variable(int _fp_offset);
+        variable(int _fp_offset, int _value);
         ~variable();
         int get_variable_address();
+        void store_value(int val);
+        int return_variable_value();
 
 };
 
@@ -26,6 +29,8 @@ struct Context{
     private:
         var_map* variable_map = new var_map();
         int frame_pointer_offset = -16;
+    protected: 
+		int labelnumber = 0;
     public:
 
 		variable new_variable(std::string variable_name);
@@ -34,14 +39,10 @@ struct Context{
 
 		variable add_arguments(std::string argument_name, int offset);
         int get_fp_offset();
-        // void allocate_stack();
-		// void deallocate_stack();
 		void for_array_declaration(int array_size);
-
 		void load_word(std::ostream& os, int register_name, int memory_location);
-
 		void store_word(std::ostream& os, int register_name, int memory_location);
-
+        std::string createlabel(std::string inputlabelname);
 
 
 };

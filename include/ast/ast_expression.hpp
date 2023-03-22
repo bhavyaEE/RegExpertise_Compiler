@@ -20,30 +20,20 @@ class Direct_Assignment : public Node{
 
 };
 
-class Array_Assignment_Expression : public Node{
-	private:
-		std::string array_name;
-		Node* size_expression;
-		Node* expression;
-	public:
-		Array_Assignment_Expression(std::string _array_name, Node* _size_expression, Node* _expression);
-		~Array_Assignment_Expression(){};
-		void visualiser(std::ostream &os) const override;
-		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
+// class Array_Assignment_Expression : public Node{
+// 	private:
+// 		std::string array_name;
+// 		Node* size_expression;
+// 		Node* expression;
+// 	public:
+// 		Array_Assignment_Expression(std::string _array_name, Node* _size_expression, Node* _expression);
+// 		~Array_Assignment_Expression(){};
+// 		void visualiser(std::ostream &os) const override;
+// 		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 
-};
+// };
 
-class Array : public Node{
-	private:
-		std::string array_name;
-		Node* index;
-	public:
-		Array(std::string _name, Node* _index);
-		~Array(){};
-		void visualiser(std::ostream &os) const override;
-		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 
-};
 
 /* -------------------Arithmetic------------------------ */
 
@@ -55,7 +45,7 @@ class Add_Expression : public Node
 	public:
 		Add_Expression (Node* left, Node* right);
 		~Add_Expression();
-		int get_value() const override;
+		int get_value(Context& context) const override;
 		void visualiser(std::ostream &os) const override; //should it be virtual
         void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 
@@ -69,7 +59,7 @@ class Sub_Expression : public Node
 	public:
 		Sub_Expression (Node* left, Node* right);
 		~Sub_Expression();
-		int get_value()const override;
+		int get_value(Context& context)const override;
 		void visualiser(std::ostream &os) const override; //should it be virtual
         void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 };
@@ -82,7 +72,7 @@ class Multiply_Expression : public Node
 	public:
 		Multiply_Expression (Node* _left, Node* _right);
 		~Multiply_Expression();
-		int get_value()const override;
+		int get_value(Context& context)const override;
 		void visualiser(std::ostream &os) const override; //should it be virtual
         void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 };
@@ -95,7 +85,7 @@ class Divide_Expression : public Node
 	public:
 		Divide_Expression (Node* _left, Node* _right);
 		~Divide_Expression();
-		int get_value()const override;
+		int get_value(Context& context)const override;
 		void visualiser(std::ostream &os) const override; //should it be virtual
         void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 };
@@ -233,7 +223,7 @@ class Logic_And_Expression : public Node
 		Logic_And_Expression (Node* _left, Node* _right);
 		~Logic_And_Expression();
 
-		void visualiser(std::ostream &os) const override; //should it be virtual
+		void visualiser(std::ostream &os) const override; 
         void generateRISCV(std::ostream &os,  Context& context, int destReg) const override;
 };
 
@@ -247,6 +237,44 @@ class Logic_Or_Expression : public Node
 		Logic_Or_Expression (Node* _left, Node* _right);
 		~Logic_Or_Expression();
 
-		void visualiser(std::ostream &os) const override; //should it be virtual
+		void visualiser(std::ostream &os) const override; 
+        void generateRISCV(std::ostream &os,  Context& context, int destReg) const override;
+};
+
+class Left_Shift_Expression : public Node
+{
+	private:
+		Node* leftop;
+		Node* rightop;
+	public:
+		Left_Shift_Expression (Node* _left, Node* _right);
+		~Left_Shift_Expression();
+
+		void visualiser(std::ostream &os) const override; 
+        void generateRISCV(std::ostream &os,  Context& context, int destReg) const override;
+};
+
+class Right_Shift_Expression : public Node
+{
+	private:
+		Node* leftop;
+		Node* rightop;
+	public:
+		Right_Shift_Expression (Node* _left, Node* _right);
+		~Right_Shift_Expression();
+
+		void visualiser(std::ostream &os) const override; 
+        void generateRISCV(std::ostream &os,  Context& context, int destReg) const override;
+};
+
+class Post_Increment_Expression : public Node
+{
+	private:
+		Node* op;
+	public:
+		Post_Increment_Expression (Node* _op);
+		~Post_Increment_Expression();
+
+		void visualiser(std::ostream &os) const override; 
         void generateRISCV(std::ostream &os,  Context& context, int destReg) const override;
 };

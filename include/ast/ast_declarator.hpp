@@ -36,7 +36,7 @@ class Array_Declarator : public Node
 		Array_Declarator(std::string _array_name, Node* _expression);
 		~Array_Declarator();
 		std::string get_array_name() const;
-		int get_array_size() const;
+		int get_array_size(Context& context) const;
 		void visualiser(std::ostream &os) const override;
 		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 };

@@ -10,47 +10,36 @@ void Direct_Assignment::visualiser(std::ostream &os) const{
     expression->visualiser(os);
 }
 void Direct_Assignment::generateRISCV(std::ostream &os, Context& context, int destReg) const {
-    left->generateRISCV(os, context, destReg);
-    int offset = left->get_variable_address();
+    // left->generateRISCV(os, context, destReg);
+    std::string name = left->get_variable_name();
+    variable this_variable = context.get_variable(name);
+    int index = left->get_index(context);
+    int offset =  this_variable.get_variable_address() + index*4;
     expression->generateRISCV(os, context, destReg);
+    int val = expression->get_value(context);
+    this_variable.store_value(val);
     context.store_word(os, destReg, offset);
 }
 
-Array_Assignment_Expression :: Array_Assignment_Expression(std::string _array_name, Node* _size_expression, Node* _expression)
-:array_name(_array_name), size_expression(_size_expression), expression(_expression){}
+// Array_Assignment_Expression :: Array_Assignment_Expression(std::string _array_name, Node* _size_expression, Node* _expression)
+// :array_name(_array_name), size_expression(_size_expression), expression(_expression){}
 
-void Array_Assignment_Expression::visualiser(std::ostream &os) const{
-    os <<"array name: " << array_name << "  ";
-    os << " array index ";
-    size_expression->visualiser(os);
-    os << " is assigned to be" <<std::endl;
-    expression->visualiser(os);
-    os <<std::endl;
-}
+// void Array_Assignment_Expression::visualiser(std::ostream &os) const{
+//     os <<"array name: " << array_name << "  ";
+//     os << " array index " << size_expression->get_value() <<std::endl;
+//     // size_expression->visualiser(os);
+//     os << " is assigned to be" <<std::endl;
+//     expression->visualiser(os);
+//     os <<std::endl;
+// }
 
-void Array_Assignment_Expression::generateRISCV(std::ostream &os, Context& context, int destReg) const {
-    variable this_variable = context.get_variable(array_name);
-    int index = size_expression->get_value();
-    int offset = this_variable.get_variable_address() +index*4;
-    expression->generateRISCV(os, context, destReg);
-    context.store_word(os, destReg, offset);
-}
-
-Array::Array(std::string _name, Node* _index)
-    :array_name(_name),  index(_index){}
-void Array::visualiser(std::ostream &os) const{
-    os << array_name << "[";
-    index->visualiser(os);
-    os  << "]"<<std::endl;
-}
-void Array::generateRISCV(std::ostream &os, Context& context, int destReg) const {
-    variable this_variable = context.get_variable(array_name);
-    int array_index = index->get_value();
-    int offset = this_variable.get_variable_address() +array_index*4;
-    context.load_word(os, destReg, offset);
-}
-
-
+// void Array_Assignment_Expression::generateRISCV(std::ostream &os, Context& context, int destReg) const {
+//     variable this_variable = context.get_variable(array_name);
+//     int index = size_expression->get_value();
+//     int offset = this_variable.get_variable_address() +index*4;
+//     expression->generateRISCV(os, context, destReg);
+//     context.store_word(os, destReg, offset);
+// }
 
 
 
@@ -63,8 +52,8 @@ Add_Expression::~Add_Expression(){
 			delete leftop;
 			delete rightop;
 		}
-int Add_Expression::get_value()const{
-    return leftop->get_value()+rightop->get_value();
+int Add_Expression::get_value(Context& context)const{
+    return leftop->get_value(context)+rightop->get_value(context);
 }
 void Add_Expression::visualiser(std::ostream &os) const {
     os << " " << "Add expression: " << std::endl;
@@ -96,8 +85,8 @@ Sub_Expression::~Sub_Expression(){
 			delete leftop;
 			delete rightop;
 		}
-int Sub_Expression::get_value()const{
-    return leftop->get_value()-rightop->get_value();
+int Sub_Expression::get_value(Context& context)const{
+    return leftop->get_value(context)-rightop->get_value(context);
 }
 void Sub_Expression::visualiser(std::ostream &os) const {
     os << " " << "Sub expression: " << std::endl;
@@ -129,8 +118,8 @@ Multiply_Expression::~Multiply_Expression(){
 			delete leftop;
 			delete rightop;
 		}
-int Multiply_Expression::get_value()const{
-    return leftop->get_value()*rightop->get_value();
+int Multiply_Expression::get_value(Context& context)const{
+    return leftop->get_value(context)*rightop->get_value(context);
 }
 void Multiply_Expression::visualiser(std::ostream &os) const {
     os << " " << "Multiply expression: " << std::endl;
@@ -162,8 +151,8 @@ Divide_Expression::~Divide_Expression(){
 			delete leftop;
 			delete rightop;
 		}
-int Divide_Expression::get_value()const{
-    return leftop->get_value()/rightop->get_value();
+int Divide_Expression::get_value(Context& context)const{
+    return leftop->get_value(context)/rightop->get_value(context);
 }
 void Divide_Expression::visualiser(std::ostream &os) const {
     os << " " << "Divide expression: " << std::endl;
@@ -492,46 +481,133 @@ void Bit_Xor_Expression::generateRISCV(std::ostream &os, Context& context, int d
 /* ------------------------------ LOGICAL AND -------------------------------------*/
 
 
-// Logic_And_Expression :: Logic_And_Expression (Node* left, Node* right) : leftop(left), rightop(right) {}
+Logic_And_Expression :: Logic_And_Expression (Node* left, Node* right) : leftop(left), rightop(right) {}
 
-//  void Logic_And_Expression::~Logic_And_Expression(){
-// 			delete leftop;
-// 			delete rightop;
-// 		}
+Logic_And_Expression::~Logic_And_Expression(){
+			delete leftop;
+			delete rightop;
+		}
 
-// void Logic_And_Expression::visualiser(std::ostream &os) const {
-//     os << " " << "Logical And expression: " << std::endl;
-//     os << " " << "Left Op: " <<leftop->visualiser(os) << std::endl;
-//     os << " " << "Right Op: " <<rightop->visualiser(os) << std::endl;
-// }
+void Logic_And_Expression::visualiser(std::ostream &os) const {
+    os << " " << "Logical And expression: " << std::endl;
+    os << " " << "Left Op: ";
+    leftop->visualiser(os);
+    os << " " << "Right Op: ";
+    rightop->visualiser(os);
+}
 
-// void Logic_And_Expression::generateRISCV(std::ostream &os, Context& context, int destReg) const{
-//     leftop->generateRISCV(os, context, 6);
-//     rightop->generateRISCV(os, context, 5);
-//     //add branch labels
+void Logic_And_Expression::generateRISCV(std::ostream &os, Context& context, int destReg) const{
+    std::string L1 = context.createlabel("L_");
+	leftop->generateRISCV(os, context, destReg);
+    os << "beq" << " " << "x" << destReg << "," << "zero" << "," << L1 << std::endl;
+    rightop->generateRISCV(os, context, destReg);
+    os << "beq" << " " << "x" << destReg << "," << "zero" << "," << L1 << std::endl;
+    os << "li" << " " << "x" << destReg << "," << "1" <<  std::endl;
+    os << "j .function_end" << std::endl;
+    os << L1 << ":" << std::endl;
+    os << "li" << " " << "x" << destReg << "," << "0" <<  std::endl;
 
-// }
+}
 
 /* ------------------------------ LOGICAL OR -------------------------------------*/
 
-// Logic_Or_Expression :: Logic_Or_Expression (Node* left, Node* right) : leftop(left), rightop(right) {}
+Logic_Or_Expression :: Logic_Or_Expression (Node* left, Node* right) : leftop(left), rightop(right) {}
 
-//  void Logic_Or_Expression::~Logic_Or_Expression(){
-// 			delete leftop;
-// 			delete rightop;
-// 		}
+Logic_Or_Expression::~Logic_Or_Expression(){
+			delete leftop;
+			delete rightop;
+		}
 
-// void Logic_Or_Expression::visualiser(std::ostream &os) const {
-//     os << " " << "Logical Or expression: " << std::endl;
-//     os << " " << "Left Op: " <<leftop->visualiser(os) << std::endl;
-//     os << " " << "Right Op: " <<rightop->visualiser(os) << std::endl;
-// }
+void Logic_Or_Expression::visualiser(std::ostream &os) const {
+    os << " " << "Logical Or expression: " << std::endl;
+    os << " " << "Left Op: ";
+    leftop->visualiser(os);
+    os << " " << "Right Op: ";
+    rightop->visualiser(os);
+}
 
-// void Logic_Or_Expression::generateRISCV(std::ostream &os, Context& context, int destReg) const{
-// 	leftop->generateRISCV(os, context, 6);
-//     rightop->generateRISCV(os, context, 5);
-//     //add branch labels
+void Logic_Or_Expression::generateRISCV(std::ostream &os, Context& context, int destReg) const{
+    std::string L1 = context.createlabel("L_");
+     std::string L2 = context.createlabel("L_");
+	leftop->generateRISCV(os, context, destReg);
+    os << "bne" << " " << "x" << destReg << "," << "zero" << "," << L1 << std::endl;
+    rightop->generateRISCV(os, context, destReg);
+    os << "beq" << " " << "x" << destReg << "," << "zero" << "," << L2 << std::endl;
+    os << L1 << ":" << std::endl;
+    os << "li" << " " << "x" << destReg << "," << "1" <<  std::endl;
+    os << "j .function_end" << std::endl;
+    os << L2 << ":" << std::endl;
+    os << "li" << " " << "x" << destReg << "," << "0" <<  std::endl;
 
-// }
+}
 
-//SHIFT EXPRESSIONS?
+/* ------------------------------ LEFT SHIFT -------------------------------------*/
+
+
+Left_Shift_Expression :: Left_Shift_Expression (Node* left, Node* right) : leftop(left), rightop(right) {}
+
+Left_Shift_Expression::~Left_Shift_Expression(){
+			delete leftop;
+			delete rightop;
+		}
+
+void Left_Shift_Expression::visualiser(std::ostream &os) const {
+    os << " " << "Left_Shift_Expression: " << std::endl;
+    os << " " << "Left Op: ";
+    leftop->visualiser(os);
+    os << " " << "Right Op: ";
+    rightop->visualiser(os);
+}
+
+void Left_Shift_Expression::generateRISCV(std::ostream &os, Context& context, int destReg) const{
+    leftop->generateRISCV(os, context, 6);
+    rightop->generateRISCV(os, context, 5);
+    os << "sll" << " " << "x" << destReg << ",x" << 6 << "," << "x" << 5 << std::endl;
+}
+
+/* ------------------------------ RIGHT SHIFT -------------------------------------*/
+
+
+Right_Shift_Expression :: Right_Shift_Expression (Node* left, Node* right) : leftop(left), rightop(right) {}
+
+Right_Shift_Expression::~Right_Shift_Expression(){
+			delete leftop;
+			delete rightop;
+		}
+
+void Right_Shift_Expression::visualiser(std::ostream &os) const {
+    os << " " << "Right_Shift_Expression: " << std::endl;
+    os << " " << "Left Op: ";
+    leftop->visualiser(os);
+    os << " " << "Right Op: ";
+    rightop->visualiser(os);
+}
+
+void Right_Shift_Expression::generateRISCV(std::ostream &os, Context& context, int destReg) const{
+    leftop->generateRISCV(os, context, 6);
+    rightop->generateRISCV(os, context, 5);
+    os << "sra" << " " << "x" << destReg << ",x" << 6 << "," << "x" << 5 << std::endl;
+}
+
+/* ------------------------------ POST INC -------------------------------------*/
+
+Post_Increment_Expression :: Post_Increment_Expression (Node* _op) : op(_op){}
+
+Post_Increment_Expression::~Post_Increment_Expression(){
+			delete op;
+		}
+
+void Post_Increment_Expression::visualiser(std::ostream &os) const {
+    os << "Post_Increment_Expression: " << std::endl;
+    op->visualiser(os);
+}
+
+void Post_Increment_Expression::generateRISCV(std::ostream &os, Context& context, int destReg) const{
+    op->generateRISCV(os, context, destReg);
+    os << "addi" << " " << "x6,x" << destReg << ",1" << std::endl;
+    context.store_word(os, 6, -20);
+    std::string name = op->get_variable_name();
+    variable this_variable = context.get_variable(name);
+    int value = this_variable.return_variable_value();
+    this_variable.store_value(value+1);
+}

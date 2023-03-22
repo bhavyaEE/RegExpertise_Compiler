@@ -17,6 +17,9 @@
 [&]                                 { return (T_BIT_AND); }
 [|]                                 { return (T_BIT_OR); }
 [\^]                                { return (T_BIT_XOR); }
+[|][|]            {return (T_LOGICAL_OR);}     
+[&][&]            {return (T_LOGICAL_AND);}  
+[+][+]            {return (INC_OP); }                     
 
 [<]			{  return  T_LESSTHAN; }
 [>]			{  return  T_GREATERTHAN; }
@@ -24,6 +27,8 @@
 [>][=]    { return T_GREATER_EQUAL; }
 [=][=]			{  return  T_EQUAL; }
 [!][=]			{  return  T_NOT_EQUAL; }
+[>][>]			{  return  T_RIGHT_SHIFT; }
+[<][<]			{  return  T_LEFT_SHIFT; }
 
 [=]     { return T_ASSIGN; }
 
@@ -41,6 +46,7 @@
 "if"            { return T_IF; }
 "else"          { return T_ELSE; }
 "while"         { return T_WHILE; }
+"for"			      { return(T_FOR); }
 
 "int"           { return T_INT; }
 "unsigned"      { return T_UNSIGNED;}

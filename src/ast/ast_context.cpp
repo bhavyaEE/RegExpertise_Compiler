@@ -1,19 +1,24 @@
 #include "ast/ast_context.hpp"
 
-variable::variable(int _fp_offset)
-    : fp_offset(_fp_offset){}
+variable::variable(int _fp_offset, int _value)
+    : fp_offset(_fp_offset), value(_value){}
 
 variable::~variable(){}
 
 int variable::get_variable_address(){
     return fp_offset;
 }
-
+void variable::store_value(int val){
+    value = val;
+}
+int variable::return_variable_value(){
+    return value;
+}
 
 variable Context::new_variable(std::string variable_name)
 {
     frame_pointer_offset -=4; //assume integer so 4 bytes reserved for each variable
-    (*variable_map)[variable_name] = new variable(frame_pointer_offset);
+    (*variable_map)[variable_name] = new variable(frame_pointer_offset, 0);
     return *((*variable_map)[variable_name]); //put variable on the map
 }
 
@@ -30,7 +35,7 @@ int Context::get_fp_offset(){
     return frame_pointer_offset;
 }
 void Context::for_array_declaration(int array_size){
-    frame_pointer_offset -= 4*array_size;
+    frame_pointer_offset -= 4*(array_size-1);
 }
 
 void Context::load_word(std::ostream& os, int register_name, int memory_location)
@@ -44,6 +49,11 @@ void Context::store_word(std::ostream& os, int register_name, int memory_locatio
 
 variable Context::add_arguments(std::string argument_name, int offset)
 {
-    (*variable_map)[argument_name] = new variable(offset);
+    (*variable_map)[argument_name] = new variable(offset, 0);
     return *((*variable_map)[argument_name]);
+}
+
+std::string Context::createlabel(std::string inputlabelname){ 
+    std::string labelname = inputlabelname + std::to_string(labelnumber++);
+	return labelname; 
 }
