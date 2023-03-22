@@ -14,18 +14,21 @@ void Function_No_Arg_Definition::visualiser(std::ostream &os) const {
 }
 
 void Function_No_Arg_Definition::generateRISCV(std::ostream &os, Context& context, int destReg) const {
-    //a bunch of stack allocation deallocation
-    os << ".globl " << Function_Name << std::endl;
+    context.store_function_name(Function_Name);
+    os << ".global " << Function_Name << std::endl;
     // Function label
     os << Function_Name << ":" << std::endl;
     // os << "addi " << "sp,sp" << "-16" << std::endl;
     // os << "sw " << "s0,12" << "(sp)" << std::endl;
     // os << "addi " << "s0,sp" << "16" << std::endl;
     Function_Body->generateRISCV(os, context, destReg);
-    os << ".function_end:" << std::endl;
+    os << ".function_end"<<Function_Name<<":"<<std::endl;
     os <<"mv" << " x10," <<"x" << destReg << std::endl;
     // os << "lw " << "s0,12" << "(sp)" << std::endl;
     // os << "addi " << "sp,sp" << "16" << std::endl;
+    if(context.if_called_functions()){
+        os << "lw ra,-4(s0)"<<std::endl;
+    }
     os << "jr " << "ra" << std::endl;
 }
 
@@ -48,15 +51,15 @@ void Function_With_Arg_Definition::visualiser(std::ostream &os) const {
 }
 
 void Function_With_Arg_Definition::generateRISCV(std::ostream &os, Context& context, int destReg) const {
-    //a bunch of stack allocation deallocation
-    os << ".globl " << Function_Name << std::endl;
+    context.store_function_name(Function_Name);
+    os << ".global " << Function_Name << std::endl;
     // Function label
     os << Function_Name << ":" << std::endl;
     // os << "addi " << "sp,sp" << "-16" << std::endl;
     // os << "sw " << "s0,12" << "(sp)" << std::endl;
     // os << "addi " << "s0,sp" << "16" << std::endl;
     int argument_frame_pointer = 0;
-	int argument_registers[4]  = {10, 11, 12, 13};
+	int argument_registers[8]  = {10, 11, 12, 13, 14, 15, 16, 17};
     for(int i = 0; i < Function_Arguments->size(); i++){
         argument_frame_pointer += 4;
         context.store_word(os, argument_registers[i], argument_frame_pointer);
@@ -64,10 +67,13 @@ void Function_With_Arg_Definition::generateRISCV(std::ostream &os, Context& cont
         context.add_arguments(this_arg->get_parameter(), argument_frame_pointer);
     }
     Function_Body->generateRISCV(os, context, destReg);
-    os << ".function_end:" << std::endl;
-    os <<"mv" << " x10," <<"x" << destReg << std::endl;
+    os << ".function_end"<<Function_Name<<":"<<std::endl;
+    os << "mv" << " x10," <<"x" << destReg << std::endl;
     // os << "lw " << "s0,12" << "(sp)" << std::endl;
     // os << "addi " << "sp,sp" << "16" << std::endl;
+    if(context.if_called_functions()){
+        os << "lw ra,-4(s0)"<<std::endl;
+    }
     os << "jr " << "ra" << std::endl;
 }
 

@@ -23,5 +23,6 @@ void Return::generateRISCV(std::ostream &os, Context& context, int destReg) cons
     } else {
         os << "li x" << destReg << "," << " " << "0" << std::endl;
     }
-    os << "j .function_end" << std::endl;
+    std::string fname = context.return_function_name();
+    os << "j .function_end" << fname<<std::endl;
 }

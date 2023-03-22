@@ -32,6 +32,8 @@ struct Context{
         int frame_pointer_offset = -16;
     protected: 
 		int labelnumber = 0;
+        std::string function_name = "";
+        bool called_functions = 0;
     public:
 
 		variable new_variable(std::string variable_name, bool isArr);
@@ -44,6 +46,9 @@ struct Context{
 		void load_word(std::ostream& os, int register_name, int memory_location);
 		void store_word(std::ostream& os, int register_name, int memory_location);
         std::string createlabel(std::string inputlabelname);
-
+        void store_function_name(std::string input_name );
+        std::string return_function_name();
+        void function_calling();
+        bool if_called_functions();
 
 };

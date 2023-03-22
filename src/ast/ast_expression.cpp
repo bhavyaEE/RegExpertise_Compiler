@@ -30,6 +30,28 @@ void Direct_Assignment::generateRISCV(std::ostream &os, Context& context, int de
     }
 }
 
+Function_Call_No_Arg::Function_Call_No_Arg(std::string _function_name)
+: function_name(_function_name){}
+void Function_Call_No_Arg::visualiser(std::ostream &os) const{
+    os << "calling function: " << function_name << "()"<<std::endl;
+}
+void Function_Call_No_Arg::generateRISCV(std::ostream &os, Context& context, int destReg) const{
+    context.function_calling();
+    os << "sw ra,-4(s0)"<<std::endl;
+    os << "call " << function_name << std::endl;
+    os << "mv x" << destReg << ",x10"<<std::endl;
+}
+
+
+//    if(function_arguments!= nullptr){
+//         for(auto argument = function_arguments->begin(); argument != function_arguments->end(); argument++)
+//         {
+//             (*argument)->visualiser(os);
+//         }
+//     }
+
+
+
 
 /* ------------------------------ADD -------------------------------------*/
 
@@ -51,8 +73,9 @@ void Add_Expression::visualiser(std::ostream &os) const {
 }
 
 void Add_Expression::generateRISCV(std::ostream &os, Context& context, int destReg) const{
-    rightop->generateRISCV(os, context, 5);
+    // rightop->generateRISCV(os, context, 5);
     leftop->generateRISCV(os, context, 6);
+    rightop->generateRISCV(os, context, 5);
 	os << "add" << " " << "x" << destReg << ",x" << 6 << "," << "x" << 5 << std::endl;
 }
 
@@ -84,8 +107,9 @@ void Sub_Expression::visualiser(std::ostream &os) const {
 }
 
 void Sub_Expression::generateRISCV(std::ostream &os, Context& context, int destReg) const{
-    rightop->generateRISCV(os, context, 5);
+    // rightop->generateRISCV(os, context, 5);
     leftop->generateRISCV(os, context, 6);
+    rightop->generateRISCV(os, context, 5);
 	os << "sub" << " " << "x" << destReg << ",x" << 6 << "," << "x" << 5 << std::endl;
 }
 
@@ -490,7 +514,8 @@ void Logic_And_Expression::generateRISCV(std::ostream &os, Context& context, int
     rightop->generateRISCV(os, context, destReg);
     os << "beq" << " " << "x" << destReg << "," << "zero" << "," << L1 << std::endl;
     os << "li" << " " << "x" << destReg << "," << "1" <<  std::endl;
-    os << "j .function_end" << std::endl;
+    std::string fname = context.return_function_name();
+    os << "j .function_end" << fname<<std::endl;
     os << L1 << ":" << std::endl;
     os << "li" << " " << "x" << destReg << "," << "0" <<  std::endl;
 
@@ -522,7 +547,8 @@ void Logic_Or_Expression::generateRISCV(std::ostream &os, Context& context, int 
     os << "beq" << " " << "x" << destReg << "," << "zero" << "," << L2 << std::endl;
     os << L1 << ":" << std::endl;
     os << "li" << " " << "x" << destReg << "," << "1" <<  std::endl;
-    os << "j .function_end" << std::endl;
+    std::string fname = context.return_function_name();
+    os << "j .function_end" << fname<<std::endl;
     os << L2 << ":" << std::endl;
     os << "li" << " " << "x" << destReg << "," << "0" <<  std::endl;
 

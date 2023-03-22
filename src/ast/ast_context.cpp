@@ -60,3 +60,15 @@ std::string Context::createlabel(std::string inputlabelname){
     std::string labelname = inputlabelname + std::to_string(labelnumber++);
 	return labelname; 
 }
+void Context::store_function_name(std::string input_name){
+    function_name = input_name;
+}
+std::string Context::return_function_name(){
+    return function_name;
+}
+void Context::function_calling(){
+    called_functions = 1;
+}
+bool Context::if_called_functions(){
+    return called_functions;
+}

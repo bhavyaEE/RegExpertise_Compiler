@@ -74,7 +74,7 @@ ROOT : root_program { g_root = $1; }
 
 root_program
 	: external_declaration { $$ = $1; }
-	| root_program external_declaration { std::cerr << "TODO, write a root_program function i guess in ast" << std::endl;  }
+	| root_program external_declaration { $$ = new Add_Program($1, $2); }
 	;
 
 external_declaration
@@ -95,7 +95,6 @@ function_definition
 initialisation_declarator
   : 	declarator 	{ $$ = $1; }
   | 	NAME T_ASSIGN assignment_expression 					{ $$ = new Initialisation_Variable_Declarator(*$1, $3); }
-  /* X=5 */
   ;
 
 declaration_list
@@ -127,6 +126,8 @@ primary_expression
 	| 	NAME                              { $$ = new Variable(*$1);}
   |   NAME SQU_LBRACKET expression SQU_RBRACKET { $$ = new Array(*$1, $3);}
 	| 	T_LBRACKET expression T_RBRACKET								{ $$ = $2; }
+  |	  NAME T_LBRACKET T_RBRACKET			{ $$ = new Function_Call_No_Arg(*$1) ; }
+  //|	  NUMBER T_LBRACKET parameter_list T_RBRACKET  { $$ = new Function_Call(*$1, $3); }
   ;
 
 postfix_expression

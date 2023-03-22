@@ -16,3 +16,16 @@ class Declaration : public Node
 		void visualiser(std::ostream &os) const override;
 		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 };
+
+class Add_Program : public Node
+{
+	private:
+		Node* left;
+		Node* right;
+
+	public:
+		Add_Program(Node* _left, Node* _right);
+		~Add_Program(){};
+		void visualiser(std::ostream &os) const override; 
+		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
+};

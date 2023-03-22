@@ -20,7 +20,16 @@ class Direct_Assignment : public Node{
 
 };
 
+class Function_Call_No_Arg: public Node{
+	private:
+	    std::string function_name;
+	public:
+		Function_Call_No_Arg(std::string _function_name);
+		~Function_Call_No_Arg(){};
+		void visualiser(std::ostream &os) const override;
+		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 
+};
 /* -------------------Arithmetic------------------------ */
 
 class Add_Expression : public Node

@@ -17,3 +17,20 @@ void Declaration::visualiser(std::ostream &os) const {
 void Declaration::generateRISCV(std::ostream &os, Context& context, int destReg) const {
     Init_Declarator->generateRISCV(os, context, destReg);
 }
+
+Add_Program::Add_Program(Node* _left, Node* _right)
+ : left(_left), right(_right) {}
+
+void Add_Program::visualiser(std::ostream &os) const {
+    left->visualiser(os);
+    os<<std::endl;
+    right->visualiser(os);
+    os<<std::endl;
+}
+void Add_Program::generateRISCV(std::ostream &os, Context& context, int destReg) const {
+    os << ".text" << std::endl;
+    os << ".global f" <<std::endl;
+    os<<std::endl;
+    left ->generateRISCV(os, context, destReg);
+	right->generateRISCV(os, context, destReg);
+}
