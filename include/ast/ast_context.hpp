@@ -13,13 +13,14 @@
 class variable{
     private:
         int fp_offset;
-        int value;
+        bool isThisArray = 0;
     public:
-        variable(int _fp_offset, int _value);
+        variable(int _fp_offset, bool _isArray);
         ~variable();
         int get_variable_address();
-        void store_value(int val);
-        int return_variable_value();
+        //void store_value(int val);
+        //int return_variable_value();
+        bool isArray();
 
 };
 
@@ -33,7 +34,7 @@ struct Context{
 		int labelnumber = 0;
     public:
 
-		variable new_variable(std::string variable_name);
+		variable new_variable(std::string variable_name, bool isArr);
 
 		variable get_variable(std::string variable_name);
 

@@ -13,35 +13,22 @@ void Direct_Assignment::generateRISCV(std::ostream &os, Context& context, int de
     // left->generateRISCV(os, context, destReg);
     std::string name = left->get_variable_name();
     variable this_variable = context.get_variable(name);
-    int index = left->get_index(context);
-    int offset =  this_variable.get_variable_address() + index*4;
-    expression->generateRISCV(os, context, destReg);
-    int val = expression->get_value(context);
-    this_variable.store_value(val);
-    context.store_word(os, destReg, offset);
+    if (this_variable.isArray()){
+        left->get_index(os, context, destReg);
+        os << "mv x7, x" << destReg <<std::endl;
+        os << "slli x7,x7,2" << std::endl;
+        int offset =  this_variable.get_variable_address();
+        os << "addi x7,x7," <<offset<<std::endl;
+        os << "add x7,x7,s0" <<std::endl;
+        expression->generateRISCV(os, context, destReg);
+        os <<"sw x" << destReg << ",0(x7)"<<std::endl;
+    }
+    else{
+        int offset =  this_variable.get_variable_address();
+        expression->generateRISCV(os, context, destReg);
+        context.store_word(os, destReg, offset);
+    }
 }
-
-// Array_Assignment_Expression :: Array_Assignment_Expression(std::string _array_name, Node* _size_expression, Node* _expression)
-// :array_name(_array_name), size_expression(_size_expression), expression(_expression){}
-
-// void Array_Assignment_Expression::visualiser(std::ostream &os) const{
-//     os <<"array name: " << array_name << "  ";
-//     os << " array index " << size_expression->get_value() <<std::endl;
-//     // size_expression->visualiser(os);
-//     os << " is assigned to be" <<std::endl;
-//     expression->visualiser(os);
-//     os <<std::endl;
-// }
-
-// void Array_Assignment_Expression::generateRISCV(std::ostream &os, Context& context, int destReg) const {
-//     variable this_variable = context.get_variable(array_name);
-//     int index = size_expression->get_value();
-//     int offset = this_variable.get_variable_address() +index*4;
-//     expression->generateRISCV(os, context, destReg);
-//     context.store_word(os, destReg, offset);
-// }
-
-
 
 
 /* ------------------------------ADD -------------------------------------*/
@@ -64,8 +51,8 @@ void Add_Expression::visualiser(std::ostream &os) const {
 }
 
 void Add_Expression::generateRISCV(std::ostream &os, Context& context, int destReg) const{
-    leftop->generateRISCV(os, context, 6);
     rightop->generateRISCV(os, context, 5);
+    leftop->generateRISCV(os, context, 6);
 	os << "add" << " " << "x" << destReg << ",x" << 6 << "," << "x" << 5 << std::endl;
 }
 
@@ -97,8 +84,8 @@ void Sub_Expression::visualiser(std::ostream &os) const {
 }
 
 void Sub_Expression::generateRISCV(std::ostream &os, Context& context, int destReg) const{
-    leftop->generateRISCV(os, context, 6);
     rightop->generateRISCV(os, context, 5);
+    leftop->generateRISCV(os, context, 6);
 	os << "sub" << " " << "x" << destReg << ",x" << 6 << "," << "x" << 5 << std::endl;
 }
 
@@ -606,8 +593,4 @@ void Post_Increment_Expression::generateRISCV(std::ostream &os, Context& context
     op->generateRISCV(os, context, destReg);
     os << "addi" << " " << "x6,x" << destReg << ",1" << std::endl;
     context.store_word(os, 6, -20);
-    std::string name = op->get_variable_name();
-    variable this_variable = context.get_variable(name);
-    int value = this_variable.return_variable_value();
-    this_variable.store_value(value+1);
 }

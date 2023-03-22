@@ -29,14 +29,14 @@ void Variable::generateRISCV(std::ostream &os, Context& context, int destReg) co
 std::string Variable::get_variable_name() const{
     return variable_name;
 }
-int Variable::get_variable_value(Context& context) const{
-    variable this_variable = context.get_variable(variable_name);
-    return this_variable.return_variable_value();
-}
-int Variable::get_value(Context& context) const{
-    int value = get_variable_value(context);
-    return value;
-}
+// int Variable::get_variable_value(Context& context) const{
+//     variable this_variable = context.get_variable(variable_name);
+//     return this_variable.return_variable_value();
+// }
+// int Variable::get_value(Context& context) const{
+//     int value = get_variable_value(context);
+//     return value;
+// }
 
 Array::Array(std::string _name, Node* _index)
     :array_name(_name),  index(_index){}
@@ -44,8 +44,8 @@ Array::Array(std::string _name, Node* _index)
 std::string Array::get_variable_name() const{
     return array_name;
 }
-int Array::get_index(Context& context) const{
-    return index->get_value(context);
+void Array::get_index(std::ostream &os, Context& context, int destReg) const{
+    index->generateRISCV(os, context, destReg);
 }
 void Array::visualiser(std::ostream &os) const{
     os << array_name << "[";
@@ -54,7 +54,11 @@ void Array::visualiser(std::ostream &os) const{
 }
 void Array::generateRISCV(std::ostream &os, Context& context, int destReg) const {
     variable this_variable = context.get_variable(array_name);
-    int array_index = index->get_value(context);
-    int offset = this_variable.get_variable_address() +array_index*4;
-    context.load_word(os, destReg, offset);
+    int offset = this_variable.get_variable_address();
+    index->generateRISCV(os, context, destReg);
+    os << "mv x7, x" << destReg <<std::endl;
+    os << "slli x7,x7,2" << std::endl;
+    os << "addi x7,x7," <<offset<<std::endl;
+    os << "add x7,x7,s0" <<std::endl;
+    os <<"lw x" << destReg << ",0(x7)"<<std::endl;
 }

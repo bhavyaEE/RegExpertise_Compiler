@@ -20,20 +20,6 @@ class Direct_Assignment : public Node{
 
 };
 
-// class Array_Assignment_Expression : public Node{
-// 	private:
-// 		std::string array_name;
-// 		Node* size_expression;
-// 		Node* expression;
-// 	public:
-// 		Array_Assignment_Expression(std::string _array_name, Node* _size_expression, Node* _expression);
-// 		~Array_Assignment_Expression(){};
-// 		void visualiser(std::ostream &os) const override;
-// 		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
-
-// };
-
-
 
 /* -------------------Arithmetic------------------------ */
 

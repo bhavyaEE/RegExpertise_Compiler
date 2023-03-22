@@ -1,24 +1,27 @@
 #include "ast/ast_context.hpp"
 
-variable::variable(int _fp_offset, int _value)
-    : fp_offset(_fp_offset), value(_value){}
+variable::variable(int _fp_offset, bool _isArray)
+    : fp_offset(_fp_offset), isThisArray(_isArray){}
 
 variable::~variable(){}
 
 int variable::get_variable_address(){
     return fp_offset;
 }
-void variable::store_value(int val){
-    value = val;
+bool variable::isArray(){
+    return isThisArray;
 }
-int variable::return_variable_value(){
-    return value;
-}
+// void variable::store_value(int val){
+//     value = val;
+// }
+// //int variable::return_variable_value(){
+//     return value;
+// }
 
-variable Context::new_variable(std::string variable_name)
+variable Context::new_variable(std::string variable_name, bool isArr)
 {
     frame_pointer_offset -=4; //assume integer so 4 bytes reserved for each variable
-    (*variable_map)[variable_name] = new variable(frame_pointer_offset, 0);
+    (*variable_map)[variable_name] = new variable(frame_pointer_offset, isArr);
     return *((*variable_map)[variable_name]); //put variable on the map
 }
 

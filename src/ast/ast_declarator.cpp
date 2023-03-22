@@ -13,7 +13,7 @@ void Variable_Declarator::visualiser(std::ostream &os) const {
     os << "variable name: "<<variable_name << std::endl;
 }
 void Variable_Declarator::generateRISCV(std::ostream &os, Context& context, int destReg) const {
-    variable this_variable = context.new_variable(variable_name);
+    variable this_variable = context.new_variable(variable_name, 0);
 	int offset = this_variable.get_variable_address();
     context.store_word(os, 0, offset);
 }
@@ -30,12 +30,10 @@ void Initialisation_Variable_Declarator::visualiser(std::ostream &os) const{
     expression->visualiser(os);
 }
 void Initialisation_Variable_Declarator::generateRISCV(std::ostream &os, Context& context, int destReg) const {
-    variable this_variable = context.new_variable(variable_name);
+    variable this_variable = context.new_variable(variable_name, 0);
     int offset = this_variable.get_variable_address();
     expression->generateRISCV(os, context, destReg);
     context.store_word(os, destReg, offset);
-    int val = expression->get_value(context);
-    this_variable.store_value(val);
 }
 
 
@@ -64,9 +62,9 @@ void Array_Declarator::visualiser(std::ostream &os) const {
     os<<std::endl;
 }
 void Array_Declarator::generateRISCV(std::ostream &os, Context& context, int destReg) const {
-    int size = get_array_size(context);
+    int size = get_array_size(context); //inside bracket
     context.for_array_declaration(size);
-    variable this_variable = context.new_variable(array_name);
+    variable this_variable = context.new_variable(array_name, 1);
 	int offset = this_variable.get_variable_address();
     for (int i = 0;i<size; i++ ){
         context.store_word(os, 0, offset+4*i);
