@@ -160,8 +160,9 @@ union YYSTYPE
 	std::string        	*string;
 	int 			          number;
 	std::vector<Node*>* 	NodeVectorPtr;
+  std::vector<int>*   IntVectorPtr;
 
-#line 165 "src/parser.tab.hpp"
+#line 166 "src/parser.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

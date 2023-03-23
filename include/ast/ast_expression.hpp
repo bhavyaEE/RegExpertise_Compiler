@@ -30,6 +30,20 @@ class Function_Call_No_Arg: public Node{
 		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 
 };
+
+class Function_Call_With_Arg: public Node{
+	private:
+	    std::string function_name;
+		std::vector<int>*	function_arguments;
+	public:
+		Function_Call_With_Arg(std::string _function_name, std::vector<int>* _function_arguments);
+		~Function_Call_With_Arg(){};
+		void visualiser(std::ostream &os) const override;
+		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
+
+};
+
+
 /* -------------------Arithmetic------------------------ */
 
 class Add_Expression : public Node

@@ -37,19 +37,29 @@ void Function_Call_No_Arg::visualiser(std::ostream &os) const{
 }
 void Function_Call_No_Arg::generateRISCV(std::ostream &os, Context& context, int destReg) const{
     context.function_calling();
-    os << "sw ra,-4(s0)"<<std::endl;
     os << "call " << function_name << std::endl;
     os << "mv x" << destReg << ",x10"<<std::endl;
 }
 
 
-//    if(function_arguments!= nullptr){
-//         for(auto argument = function_arguments->begin(); argument != function_arguments->end(); argument++)
-//         {
-//             (*argument)->visualiser(os);
-//         }
-//     }
-
+Function_Call_With_Arg::Function_Call_With_Arg(std::string _function_name, std::vector<int>*	_function_arguments)
+: function_name(_function_name), function_arguments(_function_arguments){}
+void Function_Call_With_Arg::visualiser(std::ostream &os) const{
+    os << "calling function: " << function_name << "()"<<std::endl;
+    os << " " << "Function Arguments: " << std::endl;
+    for(int i = 0; i < function_arguments->size(); i++){
+            os << (*function_arguments)[i] << "  ";
+    }
+    os << std::endl;
+}
+void Function_Call_With_Arg::generateRISCV(std::ostream &os, Context& context, int destReg) const{
+    int argument_registers[8]  = {10, 11, 12, 13, 14, 15, 16, 17};
+    for(int i = 0; i < function_arguments->size(); i++){
+        os << "li x" << argument_registers[i] << "," << (*function_arguments)[i] <<std::endl;
+    }
+    os << "call " << function_name << std::endl;
+    os << "mv x" << destReg << ",x10"<<std::endl;
+}
 
 
 

@@ -28,9 +28,7 @@ void Add_Program::visualiser(std::ostream &os) const {
     os<<std::endl;
 }
 void Add_Program::generateRISCV(std::ostream &os, Context& context, int destReg) const {
-    os << ".text" << std::endl;
-    os << ".global f" <<std::endl;
-    os<<std::endl;
     left ->generateRISCV(os, context, destReg);
+    context.function_calling();
 	right->generateRISCV(os, context, destReg);
 }

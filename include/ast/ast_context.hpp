@@ -37,10 +37,8 @@ struct Context{
     public:
 
 		variable new_variable(std::string variable_name, bool isArr);
-
 		variable get_variable(std::string variable_name);
-
-		variable add_arguments(std::string argument_name, int offset);
+		variable add_arguments(std::string argument_name);
         int get_fp_offset();
 		void for_array_declaration(int array_size);
 		void load_word(std::ostream& os, int register_name, int memory_location);
@@ -50,5 +48,6 @@ struct Context{
         std::string return_function_name();
         void function_calling();
         bool if_called_functions();
+
 
 };

@@ -50,9 +50,10 @@ void Context::store_word(std::ostream& os, int register_name, int memory_locatio
     os << "sw x" << register_name << "," << memory_location << "(s0)" << std::endl;
 }
 
-variable Context::add_arguments(std::string argument_name, int offset)
+variable Context::add_arguments(std::string argument_name)
 {
-    (*variable_map)[argument_name] = new variable(offset, 0);
+    frame_pointer_offset -=4;
+    (*variable_map)[argument_name] = new variable(frame_pointer_offset, 0);
     return *((*variable_map)[argument_name]);
 }
 
