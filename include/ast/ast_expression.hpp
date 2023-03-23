@@ -28,6 +28,7 @@ class Function_Call: public Node{
 	public:
 		Function_Call(std::string _function_name, std::vector<Node*>* _function_arguments);
 		~Function_Call(){};
+		bool isFunction() const override;
 		void visualiser(std::ostream &os) const override;
 		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 

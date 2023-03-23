@@ -36,6 +36,10 @@ void Direct_Assignment::generateRISCV(std::ostream &os, Context &context, int de
 
 Function_Call::Function_Call(std::string _function_name, std::vector<Node*>* _function_arguments)
     : function_name(_function_name), function_arguments(_function_arguments) {}
+
+bool Function_Call::isFunction() const{
+    return 1;
+}
 void Function_Call::visualiser(std::ostream &os) const
 {
     if (function_arguments == NULL){
@@ -87,6 +91,9 @@ void Add_Expression::visualiser(std::ostream &os) const
     leftop->visualiser(os);
     os << " "
        << "Right Op: ";
+    if(rightop->isFunction()){
+        os << "right op is function" <<std::endl;
+    }
     rightop->visualiser(os);
 }
 
@@ -97,9 +104,20 @@ void Add_Expression::generateRISCV(std::ostream &os, Context &context, int destR
 
     context.setLeftReg(leftReg);
     context.setRightReg(rightReg);
-
-    leftop->generateRISCV(os, context, leftReg);
-    rightop->generateRISCV(os, context, rightReg);
+    if(  (leftop->isFunction()) && (rightop->isFunction()) ){
+        leftop->generateRISCV(os, context, leftReg);
+        os << "mv x9,x" << leftReg << std::endl;
+        leftReg = 9;
+        rightop->generateRISCV(os, context, rightReg);
+    }
+    else if(rightop->isFunction()){
+        rightop->generateRISCV(os, context, rightReg);
+        leftop->generateRISCV(os, context, leftReg);
+    }
+    else{
+        leftop->generateRISCV(os, context, leftReg);
+        rightop->generateRISCV(os, context, rightReg);
+    }
 
     os << "add"
        << " "
@@ -144,8 +162,20 @@ void Sub_Expression::generateRISCV(std::ostream &os, Context &context, int destR
     context.setLeftReg(leftReg);
     context.setRightReg(rightReg);
 
-    leftop->generateRISCV(os, context, leftReg);
-    rightop->generateRISCV(os, context, rightReg);
+    if(  (leftop->isFunction()) && (rightop->isFunction()) ){
+        leftop->generateRISCV(os, context, leftReg);
+        os << "mv x9,x" << rightReg << std::endl;
+        leftReg = 9;
+        rightop->generateRISCV(os, context, rightReg);
+    }
+    else if(rightop->isFunction()){
+        rightop->generateRISCV(os, context, rightReg);
+        leftop->generateRISCV(os, context, leftReg);
+    }
+    else{
+        leftop->generateRISCV(os, context, leftReg);
+        rightop->generateRISCV(os, context, rightReg);
+    }
 
     os << "sub"
        << " "
@@ -190,8 +220,20 @@ void Multiply_Expression::generateRISCV(std::ostream &os, Context &context, int 
     context.setLeftReg(leftReg);
     context.setRightReg(rightReg);
 
-    leftop->generateRISCV(os, context, leftReg);
-    rightop->generateRISCV(os, context, rightReg);
+    if(  (leftop->isFunction()) && (rightop->isFunction()) ){
+        leftop->generateRISCV(os, context, leftReg);
+        os << "mv x9,x" << rightReg << std::endl;
+        leftReg = 9;
+        rightop->generateRISCV(os, context, rightReg);
+    }
+    else if(rightop->isFunction()){
+        rightop->generateRISCV(os, context, rightReg);
+        leftop->generateRISCV(os, context, leftReg);
+    }
+    else{
+        leftop->generateRISCV(os, context, leftReg);
+        rightop->generateRISCV(os, context, rightReg);
+    }
 
     os << "mul"
        << " "
@@ -234,9 +276,20 @@ void Divide_Expression::generateRISCV(std::ostream &os, Context &context, int de
 
     context.setLeftReg(leftReg);
     context.setRightReg(rightReg);
-
-    leftop->generateRISCV(os, context, leftReg);
-    rightop->generateRISCV(os, context, rightReg);
+    if(  (leftop->isFunction()) && (rightop->isFunction()) ){
+        leftop->generateRISCV(os, context, leftReg);
+        os << "mv x9,x" << rightReg << std::endl;
+        leftReg = 9;
+        rightop->generateRISCV(os, context, rightReg);
+    }
+    else if(rightop->isFunction()){
+        rightop->generateRISCV(os, context, rightReg);
+        leftop->generateRISCV(os, context, leftReg);
+    }
+    else{
+        leftop->generateRISCV(os, context, leftReg);
+        rightop->generateRISCV(os, context, rightReg);
+    }
 
     os << "div"
        << " "

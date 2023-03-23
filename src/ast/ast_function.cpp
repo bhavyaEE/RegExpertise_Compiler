@@ -19,16 +19,16 @@ void Function_No_Arg_Definition::generateRISCV(std::ostream &os, Context& contex
     os << ".globl " << Function_Name << std::endl;
     // Function label
     os << Function_Name << ":" << std::endl;
-    os << "addi " << "sp,sp,-16" << std::endl;
-    os << "sw ra," << 12 <<"(sp)"<<std::endl;
-    os << "sw " << "s0," << 8 <<"(sp)" << std::endl;
-    os << "addi " << "s0,sp," << 16 << std::endl;
+    os << "addi " << "sp,sp,-480" << std::endl;
+    os << "sw ra," << 476 <<"(sp)"<<std::endl;
+    os << "sw " << "s0," << 472 <<"(sp)" << std::endl;
+    os << "addi " << "s0,sp," << 480 << std::endl;
     Function_Body->generateRISCV(os, context, destReg);
     os << ".function_end"<<Function_Name<<":"<<std::endl;
     os << "mv" << " x10," <<"x" << destReg << std::endl;
-    os << "lw ra," << 12 << "(sp)" <<std::endl;
-    os << "lw " << "s0," << 8 << "(sp)" << std::endl;
-    os << "addi " << "sp,sp," << 16 << std::endl;
+    os << "lw ra," << 476 << "(sp)" <<std::endl;
+    os << "lw " << "s0," << 472 << "(sp)" << std::endl;
+    os << "addi " << "sp,sp," << 480 << std::endl;
     os << "jr " << "ra" << std::endl;
 }
 
@@ -56,10 +56,10 @@ void Function_With_Arg_Definition::generateRISCV(std::ostream &os, Context& cont
     os << ".globl " << Function_Name << std::endl;
     // Function label
     os << Function_Name << ":" << std::endl;
-    os << "addi " << "sp,sp,-16" << std::endl;
-    os << "sw ra," << 12 <<"(sp)"<<std::endl;
-    os << "sw " << "s0," << 8 <<"(sp)" << std::endl;
-    os << "addi " << "s0,sp," << 16 << std::endl;
+    os << "addi " << "sp,sp,-480" << std::endl;
+    os << "sw ra," << 476 <<"(sp)"<<std::endl;
+    os << "sw " << "s0," << 472 <<"(sp)" << std::endl;
+    os << "addi " << "s0,sp," << 480 << std::endl;
 	int argument_registers[8]  = {10, 11, 12, 13, 14, 15, 16, 17};
     for(int i = 0; i < Function_Arguments->size(); i++){
         Declaration* this_arg = dynamic_cast<Declaration*>((*Function_Arguments)[i]);
@@ -70,9 +70,9 @@ void Function_With_Arg_Definition::generateRISCV(std::ostream &os, Context& cont
     Function_Body->generateRISCV(os, context, destReg);
     os << ".function_end"<<Function_Name<<":"<<std::endl;
     os << "mv" << " x10," <<"x" << destReg << std::endl;
-    os << "lw ra," << 12 << "(sp)" <<std::endl;
-    os << "lw " << "s0," << 8 << "(sp)" << std::endl;
-    os << "addi " << "sp,sp," << 16 << std::endl;
+    os << "lw ra," << 476 << "(sp)" <<std::endl;
+    os << "lw " << "s0," << 472 << "(sp)" << std::endl;
+    os << "addi " << "sp,sp," << 480 << std::endl;
     os << "jr " << "ra" << std::endl;
 }
 

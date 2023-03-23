@@ -29,5 +29,8 @@ public:
     std::cerr << "get array index when there's no array index, get out" << std::endl;
     exit(1);
   };
+  virtual bool isFunction() const{
+    return 0;
+  }
 };
 
