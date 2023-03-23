@@ -19,8 +19,6 @@ public:
 	variable(int _fp_offset, bool _isArray);
 	~variable();
 	int get_variable_address();
-	// void store_value(int val);
-	// int return_variable_value();
 	bool isArray();
 };
 
@@ -29,7 +27,8 @@ typedef std::map<std::string, variable *> var_map;
 struct Context
 {
 private:
-	var_map *variable_map = new var_map();
+	var_map* variable_map = new var_map();
+	std::vector<var_map*> context_scope; 
 	int frame_pointer_offset = -16;
 
 protected:
@@ -54,12 +53,11 @@ public:
 	int left_reg;
 	int right_reg;
 	std::array<bool, 32> usedRegs;
-
 	void freeReg(int reg);
-
 	int leftreg() const;
 	int rightreg() const;
-
 	void setLeftReg(int reg);
 	void setRightReg(int reg);
+	void enter_scope();
+	void exit_scope();
 };

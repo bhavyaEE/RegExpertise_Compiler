@@ -26,12 +26,9 @@ variable Context::new_variable(std::string variable_name, bool isArr)
     (*variable_map)[variable_name] = new variable(frame_pointer_offset, isArr);
     return *((*variable_map)[variable_name]); // put variable on the map
 }
-
 variable Context::get_variable(std::string variable_name)
 {
-    // Return variable
-    if ((*variable_map).count(variable_name))
-    {
+    if ((*variable_map).count(variable_name)){
         return *((*variable_map)[variable_name]);
     }
 }
@@ -56,7 +53,7 @@ void Context::store_word(std::ostream &os, int register_name, int memory_locatio
 
 variable Context::add_arguments(std::string argument_name)
 {
-    frame_pointer_offset -= 4;
+    frame_pointer_offset -= 4; 
     (*variable_map)[argument_name] = new variable(frame_pointer_offset, 0);
     return *((*variable_map)[argument_name]);
 }
@@ -118,4 +115,15 @@ void Context::setRightReg(int reg)
     usedRegs[30] = false;
     usedRegs[31] = false;
     usedRegs[reg] = true;
+}
+void Context::enter_scope(){
+    context_scope.push_back(variable_map);
+    variable_map = new var_map(*variable_map);
+}
+void Context::exit_scope(){
+    delete variable_map;
+    variable_map = context_scope.back();
+    if(!context_scope.empty()){
+        context_scope.pop_back();
+    }
 }

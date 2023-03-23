@@ -23,6 +23,7 @@ void Compound_Statement::visualiser(std::ostream &os) const{
 }
 void Compound_Statement::generateRISCV(std::ostream &os, Context& context, int destReg) const
 {
+    context.enter_scope();
     if (statement_list != NULL)
     {
         for(auto statement = statement_list->begin(); statement != statement_list->end(); statement++)
@@ -38,7 +39,7 @@ void Compound_Statement::generateRISCV(std::ostream &os, Context& context, int d
             (*declaration)->generateRISCV(os, context, destReg);
         }
     }
-
+    context.exit_scope();
 
 }
 
