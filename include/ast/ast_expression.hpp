@@ -20,24 +20,14 @@ class Direct_Assignment : public Node{
 
 };
 
-class Function_Call_No_Arg: public Node{
+
+class Function_Call: public Node{
 	private:
 	    std::string function_name;
+		std::vector<Node*>*	function_arguments;
 	public:
-		Function_Call_No_Arg(std::string _function_name);
-		~Function_Call_No_Arg(){};
-		void visualiser(std::ostream &os) const override;
-		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
-
-};
-
-class Function_Call_With_Arg: public Node{
-	private:
-	    std::string function_name;
-		std::vector<int>*	function_arguments;
-	public:
-		Function_Call_With_Arg(std::string _function_name, std::vector<int>* _function_arguments);
-		~Function_Call_With_Arg(){};
+		Function_Call(std::string _function_name, std::vector<Node*>* _function_arguments);
+		~Function_Call(){};
 		void visualiser(std::ostream &os) const override;
 		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 

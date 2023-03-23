@@ -40,3 +40,15 @@ class Array_Declarator : public Node
 		void visualiser(std::ostream &os) const override;
 		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 };
+
+
+class Function_Declarator : public Node{
+	private:
+		std::string fname;
+		std::vector<Node*>* argument_list;
+	public:
+		Function_Declarator(std::string _fname, std::vector<Node*>* _argument_list);
+		~Function_Declarator(){}
+		void visualiser(std::ostream &os) const override;
+		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
+};

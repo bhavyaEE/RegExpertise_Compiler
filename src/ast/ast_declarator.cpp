@@ -72,3 +72,22 @@ void Array_Declarator::generateRISCV(std::ostream &os, Context& context, int des
 
 }
 
+Function_Declarator::Function_Declarator(std::string _fname, std::vector<Node*>* _argument_list)
+:  fname(_fname), argument_list(_argument_list){}
+
+void Function_Declarator::visualiser(std::ostream &os) const {
+    os << "function name: "<<fname << std::endl;
+    if (argument_list != NULL){
+        for(auto argument = argument_list->begin(); argument != argument_list->end(); argument++)
+        {
+            (*argument)->visualiser(os);
+        }
+    }
+    os<<std::endl;
+}
+void Function_Declarator::generateRISCV(std::ostream &os, Context& context, int destReg) const {
+    context.store_function_name(fname);
+    os << ".text" << std::endl;
+    os << ".globl " << fname << std::endl;
+}
+

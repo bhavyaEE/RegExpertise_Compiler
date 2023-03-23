@@ -33,38 +33,33 @@ void Direct_Assignment::generateRISCV(std::ostream &os, Context &context, int de
     }
 }
 
-Function_Call_No_Arg::Function_Call_No_Arg(std::string _function_name)
-    : function_name(_function_name) {}
-void Function_Call_No_Arg::visualiser(std::ostream &os) const
-{
-    os << "calling function: " << function_name << "()" << std::endl;
-}
-void Function_Call_No_Arg::generateRISCV(std::ostream &os, Context &context, int destReg) const
-{
-    context.function_calling();
-    os << "call " << function_name << std::endl;
-    os << "mv x" << destReg << ",x10" << std::endl;
-}
 
-Function_Call_With_Arg::Function_Call_With_Arg(std::string _function_name, std::vector<int> *_function_arguments)
+Function_Call::Function_Call(std::string _function_name, std::vector<Node*>* _function_arguments)
     : function_name(_function_name), function_arguments(_function_arguments) {}
-void Function_Call_With_Arg::visualiser(std::ostream &os) const
+void Function_Call::visualiser(std::ostream &os) const
 {
-    os << "calling function: " << function_name << "()" << std::endl;
-    os << " "
-       << "Function Arguments: " << std::endl;
-    for (int i = 0; i < function_arguments->size(); i++)
-    {
-        os << (*function_arguments)[i] << "  ";
+    if (function_arguments == NULL){
+        os << "calling function: " << function_name << "()" << std::endl;
     }
-    os << std::endl;
+    else{
+        os << "Function Arguments: " << std::endl;
+        for(auto argument = function_arguments->begin(); argument != function_arguments->end(); argument++)
+        {
+            (*argument)->visualiser(os);
+        }
+    }
+
 }
-void Function_Call_With_Arg::generateRISCV(std::ostream &os, Context &context, int destReg) const
+void Function_Call::generateRISCV(std::ostream &os, Context &context, int destReg) const
 {
     int argument_registers[8] = {10, 11, 12, 13, 14, 15, 16, 17};
-    for (int i = 0; i < function_arguments->size(); i++)
-    {
-        os << "li x" << argument_registers[i] << "," << (*function_arguments)[i] << std::endl;
+    int i = 0;
+    if (function_arguments != NULL){
+        for(auto argument = function_arguments->begin(); argument != function_arguments->end(); argument++){
+            (*argument)->generateRISCV(os, context, destReg);
+            os << "mv x" << argument_registers[i] << ",x" << destReg << std::endl;
+            i++;
+        }
     }
     os << "call " << function_name << std::endl;
     os << "mv x" << destReg << ",x10" << std::endl;

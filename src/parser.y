@@ -47,7 +47,7 @@
 
 %type <NodePtr> declaration parameter_declaration
 %type <NodeVectorPtr> declaration_list parameter_list 
-%type <IntVectorPtr> function_call_arguments
+%type <NodeVectorPtr> function_call_expression
 
 %type <NodePtr> primary_expression postfix_expression
 %type <NodePtr> multiply_expression add_expression
@@ -107,6 +107,8 @@ declaration_list
 declarator
   : NAME { $$ = new Variable_Declarator(*$1); }
   | NAME SQU_LBRACKET add_expression SQU_RBRACKET { $$ = new Array_Declarator(*$1, $3);}
+  | NAME T_LBRACKET T_RBRACKET			{ $$ = new Function_Declarator(*$1, nullptr) ; }
+  |	NAME T_LBRACKET parameter_list T_RBRACKET { $$ = new Function_Declarator(*$1, $3);}
   ;
 
 declaration
@@ -122,17 +124,17 @@ parameter_list
 	|	parameter_list COMMA parameter_declaration 				{ $1->push_back($3); $$ = $1; }
   ;
 
-function_call_arguments
-  : NUMBER														{ $$ = new std::vector<int>(1, $1); }
-  | function_call_arguments COMMA NUMBER { $1->push_back($3); $$ = $1; }
+function_call_expression
+  : shift_expression										{ $$ = new std::vector<Node*>(1, $1); }
+  | function_call_expression COMMA multiply_expression { $1->push_back($3); $$ = $1; }
 
 primary_expression
   : 	NUMBER														{ $$ = new Int($1); }
 	| 	NAME                              { $$ = new Variable(*$1);}
   |   NAME SQU_LBRACKET expression SQU_RBRACKET { $$ = new Array(*$1, $3);}
 	| 	T_LBRACKET expression T_RBRACKET								{ $$ = $2; }
-  |	  NAME T_LBRACKET T_RBRACKET			{ $$ = new Function_Call_No_Arg(*$1) ; }
-  |	  NAME T_LBRACKET function_call_arguments T_RBRACKET  { $$ = new  Function_Call_With_Arg(*$1, $3); }
+  |	  NAME T_LBRACKET T_RBRACKET			{ $$ = new Function_Call(*$1, nullptr) ; }
+  |	  NAME T_LBRACKET function_call_expression T_RBRACKET  { $$ = new  Function_Call(*$1, $3); }
   ;
 
 postfix_expression
