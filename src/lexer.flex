@@ -20,6 +20,7 @@
 [|][|]            {return (T_LOGICAL_OR);}
 [&][&]            {return (T_LOGICAL_AND);}
 [+][+]            {return (INC_OP); }
+[-][-]            {return (DEC_OP); }
 
 [<]			{  return  T_LESSTHAN; }
 [>]			{  return  T_GREATERTHAN; }
@@ -30,7 +31,25 @@
 [>][>]			{  return  T_RIGHT_SHIFT; }
 [<][<]			{  return  T_LEFT_SHIFT; }
 
+
+
 [=]     { return T_ASSIGN; }
+[+][=]			{  return  T_PLUS_ASSIGN; }
+[-][=]			{  return  T_MINUS_ASSIGN; }
+[*][=]			{  return  T_TIMES_ASSIGN; }
+[\/][=]            { return T_DIV_ASSIGN; }
+[<][<][=]			{  return  T_LEFT_ASSIGN; }
+[>][>][=]			{  return  T_LEFT_ASSIGN; }
+[&][=]			{  return  T_AND_ASSIGN; }
+[\^][=]			{  return  T_XOR_ASSIGN; }
+[|][=]			{  return  T_OR_ASSIGN; }
+[!]			{  return  T_NOT; }
+[~]			{  return  T_BIT_NOT; }
+[%][=]			{  return  T_MOD_ASSIGN; }
+[%]			{  return  T_MOD; }
+
+
+
 
 [(]             { return T_LBRACKET; }
 [)]             { return T_RBRACKET; }

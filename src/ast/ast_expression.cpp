@@ -32,33 +32,36 @@ void Direct_Assignment::generateRISCV(std::ostream &os, Context &context, int de
     }
 }
 
-
-Function_Call::Function_Call(std::string _function_name, std::vector<Node*>* _function_arguments)
+Function_Call::Function_Call(std::string _function_name, std::vector<Node *> *_function_arguments)
     : function_name(_function_name), function_arguments(_function_arguments) {}
 
-bool Function_Call::isFunction() const{
+bool Function_Call::isFunction() const
+{
     return 1;
 }
 void Function_Call::visualiser(std::ostream &os) const
 {
-    if (function_arguments == NULL){
+    if (function_arguments == NULL)
+    {
         os << "calling function: " << function_name << "()" << std::endl;
     }
-    else{
+    else
+    {
         os << "Function Arguments: " << std::endl;
-        for(auto argument = function_arguments->begin(); argument != function_arguments->end(); argument++)
+        for (auto argument = function_arguments->begin(); argument != function_arguments->end(); argument++)
         {
             (*argument)->visualiser(os);
         }
     }
-
 }
 void Function_Call::generateRISCV(std::ostream &os, Context &context, int destReg) const
 {
     int argument_registers[8] = {10, 11, 12, 13, 14, 15, 16, 17};
     int i = 0;
-    if (function_arguments != NULL){
-        for(auto argument = function_arguments->begin(); argument != function_arguments->end(); argument++){
+    if (function_arguments != NULL)
+    {
+        for (auto argument = function_arguments->begin(); argument != function_arguments->end(); argument++)
+        {
             (*argument)->generateRISCV(os, context, destReg);
             os << "mv x" << argument_registers[i] << ",x" << destReg << std::endl;
             i++;
@@ -90,8 +93,9 @@ void Add_Expression::visualiser(std::ostream &os) const
     leftop->visualiser(os);
     os << " "
        << "Right Op: ";
-    if(rightop->isFunction()){
-        os << "right op is function" <<std::endl;
+    if (rightop->isFunction())
+    {
+        os << "right op is function" << std::endl;
     }
     rightop->visualiser(os);
 }
@@ -103,31 +107,36 @@ void Add_Expression::generateRISCV(std::ostream &os, Context &context, int destR
 
     context.setLeftReg(leftReg);
     context.setRightReg(rightReg);
-    if(  (leftop->isFunction()) && (rightop->isFunction()) ){
+    if ((leftop->isFunction()) && (rightop->isFunction()))
+    {
         leftop->generateRISCV(os, context, leftReg);
         os << "mv x9,x" << leftReg << std::endl;
         leftReg = 9;
         rightop->generateRISCV(os, context, rightReg);
     }
-    else if(rightop->isFunction()){
+    else if (rightop->isFunction())
+    {
         rightop->generateRISCV(os, context, rightReg);
         leftop->generateRISCV(os, context, leftReg);
     }
-    else{
+    else
+    {
         leftop->generateRISCV(os, context, leftReg);
         rightop->generateRISCV(os, context, rightReg);
     }
-    if((leftop->get_data_type(context)=="float")||(rightop->get_data_type(context)=="float")){
+    if ((leftop->get_data_type(context) == "float") || (rightop->get_data_type(context) == "float"))
+    {
         os << "fadd.s"
-        << " "
-        << "f" << destReg << ",f" << leftReg << ","
-        << "f" << rightReg << std::endl;
+           << " "
+           << "f" << destReg << ",f" << leftReg << ","
+           << "f" << rightReg << std::endl;
     }
-    else{
+    else
+    {
         os << "add"
-        << " "
-        << "x" << destReg << ",x" << leftReg << ","
-        << "x" << rightReg << std::endl;
+           << " "
+           << "x" << destReg << ",x" << leftReg << ","
+           << "x" << rightReg << std::endl;
     }
 
     context.freeReg(leftReg);
@@ -168,31 +177,36 @@ void Sub_Expression::generateRISCV(std::ostream &os, Context &context, int destR
     context.setLeftReg(leftReg);
     context.setRightReg(rightReg);
 
-    if(  (leftop->isFunction()) && (rightop->isFunction()) ){
+    if ((leftop->isFunction()) && (rightop->isFunction()))
+    {
         leftop->generateRISCV(os, context, leftReg);
         os << "mv x9,x" << rightReg << std::endl;
         leftReg = 9;
         rightop->generateRISCV(os, context, rightReg);
     }
-    else if(rightop->isFunction()){
+    else if (rightop->isFunction())
+    {
         rightop->generateRISCV(os, context, rightReg);
         leftop->generateRISCV(os, context, leftReg);
     }
-    else{
+    else
+    {
         leftop->generateRISCV(os, context, leftReg);
         rightop->generateRISCV(os, context, rightReg);
     }
-    if((leftop->get_data_type(context)=="float")||(rightop->get_data_type(context)=="float")){
+    if ((leftop->get_data_type(context) == "float") || (rightop->get_data_type(context) == "float"))
+    {
         os << "fsub.s"
-        << " "
-        << "f" << destReg << ",f" << leftReg << ","
-        << "f" << rightReg << std::endl;
+           << " "
+           << "f" << destReg << ",f" << leftReg << ","
+           << "f" << rightReg << std::endl;
     }
-    else{
+    else
+    {
         os << "sub"
-        << " "
-        << "x" << destReg << ",x" << leftReg << ","
-        << "x" << rightReg << std::endl;
+           << " "
+           << "x" << destReg << ",x" << leftReg << ","
+           << "x" << rightReg << std::endl;
     }
 
     context.freeReg(leftReg);
@@ -233,31 +247,36 @@ void Multiply_Expression::generateRISCV(std::ostream &os, Context &context, int 
     context.setLeftReg(leftReg);
     context.setRightReg(rightReg);
 
-    if(  (leftop->isFunction()) && (rightop->isFunction()) ){
+    if ((leftop->isFunction()) && (rightop->isFunction()))
+    {
         leftop->generateRISCV(os, context, leftReg);
         os << "mv x9,x" << rightReg << std::endl;
         leftReg = 9;
         rightop->generateRISCV(os, context, rightReg);
     }
-    else if(rightop->isFunction()){
+    else if (rightop->isFunction())
+    {
         rightop->generateRISCV(os, context, rightReg);
         leftop->generateRISCV(os, context, leftReg);
     }
-    else{
+    else
+    {
         leftop->generateRISCV(os, context, leftReg);
         rightop->generateRISCV(os, context, rightReg);
     }
-    if((leftop->get_data_type(context)=="float")||(rightop->get_data_type(context)=="float")){
+    if ((leftop->get_data_type(context) == "float") || (rightop->get_data_type(context) == "float"))
+    {
         os << "fmul.s"
-        << " "
-        << "f" << destReg << ",f" << leftReg << ","
-        << "f" << rightReg << std::endl;
+           << " "
+           << "f" << destReg << ",f" << leftReg << ","
+           << "f" << rightReg << std::endl;
     }
-    else{
+    else
+    {
         os << "mul"
-        << " "
-        << "x" << destReg << ",x" << leftReg << ","
-        << "x" << rightReg << std::endl;
+           << " "
+           << "x" << destReg << ",x" << leftReg << ","
+           << "x" << rightReg << std::endl;
     }
 
     context.freeReg(leftReg);
@@ -296,32 +315,37 @@ void Divide_Expression::generateRISCV(std::ostream &os, Context &context, int de
 
     context.setLeftReg(leftReg);
     context.setRightReg(rightReg);
-    if(  (leftop->isFunction()) && (rightop->isFunction()) ){
+    if ((leftop->isFunction()) && (rightop->isFunction()))
+    {
         leftop->generateRISCV(os, context, leftReg);
         os << "mv x9,x" << rightReg << std::endl;
         leftReg = 9;
         rightop->generateRISCV(os, context, rightReg);
     }
-    else if(rightop->isFunction()){
+    else if (rightop->isFunction())
+    {
         rightop->generateRISCV(os, context, rightReg);
         leftop->generateRISCV(os, context, leftReg);
     }
-    else{
+    else
+    {
         leftop->generateRISCV(os, context, leftReg);
         rightop->generateRISCV(os, context, rightReg);
     }
 
-    if((leftop->get_data_type(context)=="float")||(rightop->get_data_type(context)=="float")){
+    if ((leftop->get_data_type(context) == "float") || (rightop->get_data_type(context) == "float"))
+    {
         os << "fdiv.s"
-        << " "
-        << "f" << destReg << ",f" << leftReg << ","
-        << "f" << rightReg << std::endl;
+           << " "
+           << "f" << destReg << ",f" << leftReg << ","
+           << "f" << rightReg << std::endl;
     }
-    else{
+    else
+    {
         os << "div"
-        << " "
-        << "x" << destReg << ",x" << leftReg << ","
-        << "x" << rightReg << std::endl;
+           << " "
+           << "x" << destReg << ",x" << leftReg << ","
+           << "x" << rightReg << std::endl;
     }
     context.freeReg(leftReg);
     context.freeReg(rightReg);
@@ -1003,6 +1027,47 @@ void Right_Shift_Expression::generateRISCV(std::ostream &os, Context &context, i
     context.freeReg(rightReg);
 }
 
+/* ------------------------------ MOD -------------------------------------*/
+
+Mod_Expression ::Mod_Expression(Node *left, Node *right) : leftop(left), rightop(right) {}
+
+Mod_Expression::~Mod_Expression()
+{
+    delete leftop;
+    delete rightop;
+}
+
+void Mod_Expression::visualiser(std::ostream &os) const
+{
+    os << " "
+       << "Right_Shift_Expression: " << std::endl;
+    os << " "
+       << "Left Op: ";
+    leftop->visualiser(os);
+    os << " "
+       << "Right Op: ";
+    rightop->visualiser(os);
+}
+
+void Mod_Expression::generateRISCV(std::ostream &os, Context &context, int destReg) const
+{
+    int leftReg = context.leftreg();
+    int rightReg = context.rightreg();
+
+    context.setLeftReg(leftReg);
+    context.setRightReg(rightReg);
+
+    leftop->generateRISCV(os, context, leftReg);
+    rightop->generateRISCV(os, context, rightReg);
+    os << "rem"
+       << " "
+       << "x" << destReg << ",x" << leftReg << ","
+       << "x" << rightReg << std::endl;
+
+    context.freeReg(leftReg);
+    context.freeReg(rightReg);
+}
+
 /* ------------------------------ POST INC -------------------------------------*/
 
 Post_Increment_Expression ::Post_Increment_Expression(Node *_op) : op(_op) {}
@@ -1031,4 +1096,156 @@ void Post_Increment_Expression::generateRISCV(std::ostream &os, Context &context
     context.store_word(os, tempReg, -20);
 
     context.freeReg(tempReg);
+}
+
+/* ------------------------------ PRE INC -------------------------------------*/
+
+Pre_Increment_Expression ::Pre_Increment_Expression(Node *_op) : op(_op) {}
+
+Pre_Increment_Expression::~Pre_Increment_Expression()
+{
+    delete op;
+}
+
+void Pre_Increment_Expression::visualiser(std::ostream &os) const
+{
+    os << "Pre_Increment_Expression: " << std::endl;
+    op->visualiser(os);
+}
+
+void Pre_Increment_Expression::generateRISCV(std::ostream &os, Context &context, int destReg) const
+{
+
+    op->generateRISCV(os, context, destReg);
+    os << "addi"
+       << " "
+       << "x" << destReg << ",x" << destReg << ",1" << std::endl;
+    context.store_word(os, destReg, -20);
+    context.load_word(os, destReg, -20);
+}
+
+/* ------------------------------ POST DEC -------------------------------------*/
+
+Post_Decrement_Expression ::Post_Decrement_Expression(Node *_op) : op(_op) {}
+
+Post_Decrement_Expression::~Post_Decrement_Expression()
+{
+    delete op;
+}
+
+void Post_Decrement_Expression::visualiser(std::ostream &os) const
+{
+    os << "Post_Decrement_Expression: " << std::endl;
+    op->visualiser(os);
+}
+
+void Post_Decrement_Expression::generateRISCV(std::ostream &os, Context &context, int destReg) const
+{
+    int tempReg = context.leftreg();
+
+    context.setLeftReg(tempReg);
+
+    op->generateRISCV(os, context, destReg);
+    os << "addi"
+       << " "
+       << "x" << tempReg << ",x" << destReg << ",-1" << std::endl;
+    context.store_word(os, tempReg, -20);
+
+    context.freeReg(tempReg);
+}
+
+/* ------------------------------ PRE DEC -------------------------------------*/
+Pre_Decrement_Expression ::Pre_Decrement_Expression(Node *_op) : op(_op) {}
+
+Pre_Decrement_Expression::~Pre_Decrement_Expression()
+{
+    delete op;
+}
+
+void Pre_Decrement_Expression::visualiser(std::ostream &os) const
+{
+    os << "Pre_Decrement_Expression: " << std::endl;
+    op->visualiser(os);
+}
+
+void Pre_Decrement_Expression::generateRISCV(std::ostream &os, Context &context, int destReg) const
+{
+
+    op->generateRISCV(os, context, destReg);
+    os << "addi"
+       << " "
+       << "x" << destReg << ",x" << destReg << ",-1" << std::endl;
+    context.store_word(os, destReg, -20);
+    context.load_word(os, destReg, -20);
+}
+
+/* ------------------------------ UNARY OPS -------------------------------------*/
+
+/* ------------------------------ NEGATION -------------------------------------*/
+Negation_Expression ::Negation_Expression(Node *_op) : op(_op) {}
+
+Negation_Expression::~Negation_Expression()
+{
+    delete op;
+}
+
+void Negation_Expression::visualiser(std::ostream &os) const
+{
+    os << "Post_Increment_Expression: " << std::endl;
+    op->visualiser(os);
+}
+
+void Negation_Expression::generateRISCV(std::ostream &os, Context &context, int destReg) const
+{
+    op->generateRISCV(os, context, destReg);
+    os << "neg"
+       << " "
+       << "x" << destReg << ",x" << destReg << std::endl;
+}
+
+/* ------------------------------ NOT -------------------------------------*/
+Logic_Not_Expression ::Logic_Not_Expression(Node *_op) : op(_op) {}
+
+Logic_Not_Expression::~Logic_Not_Expression()
+{
+    delete op;
+}
+
+void Logic_Not_Expression::visualiser(std::ostream &os) const
+{
+    os << "Logic_Not_Expression: " << std::endl;
+    op->visualiser(os);
+}
+
+void Logic_Not_Expression::generateRISCV(std::ostream &os, Context &context, int destReg) const
+{
+    op->generateRISCV(os, context, destReg);
+    os << "seqz"
+       << " "
+       << "x" << destReg << ",x" << destReg << std::endl;
+    os << "andi"
+       << " "
+       << "x" << destReg << ",x" << destReg << ",0xff" << std::endl;
+}
+
+/* ------------------------------ BIT NOT -------------------------------------*/
+Bit_Not_Expression ::Bit_Not_Expression(Node *_op) : op(_op) {}
+
+Bit_Not_Expression::~Bit_Not_Expression()
+{
+    delete op;
+}
+
+void Bit_Not_Expression::visualiser(std::ostream &os) const
+{
+    os << "Bit_Not_Expression: " << std::endl;
+    op->visualiser(os);
+}
+
+void Bit_Not_Expression::generateRISCV(std::ostream &os, Context &context, int destReg) const
+{
+    op->generateRISCV(os, context, destReg);
+    os << "not"
+       << " "
+       << "x" << destReg << ",x" << destReg << std::endl;
 }

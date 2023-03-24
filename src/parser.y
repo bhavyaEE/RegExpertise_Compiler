@@ -23,11 +23,11 @@
 /* ------------------------------------					Tokens					------------------------------------ */
 
 // Assignment Operators needed
-%token T_ASSIGN
+%token T_ASSIGN T_PLUS_ASSIGN T_MINUS_ASSIGN  T_TIMES_ASSIGN T_DIV_ASSIGN T_RIGHT_ASSIGN T_LEFT_ASSIGN T_AND_ASSIGN T_XOR_ASSIGN T_OR_ASSIGN T_MOD_ASSIGN
 // Arithmetic Operators
 %token T_TIMES T_DIVIDE T_PLUS T_MINUS
 // Bitwise and Logical Operators
-%token T_BIT_AND T_BIT_OR T_BIT_XOR T_LOGICAL_OR T_LOGICAL_AND T_RIGHT_SHIFT T_LEFT_SHIFT
+%token T_BIT_AND T_BIT_OR T_BIT_XOR T_LOGICAL_OR T_LOGICAL_AND T_RIGHT_SHIFT T_LEFT_SHIFT T_NOT T_BIT_NOT T_MOD
 // Characters Operators
 %token T_LBRACKET T_RBRACKET CUR_LBRACKET CUR_RBRACKET SQU_LBRACKET SQU_RBRACKET COLON SEMICOLON COMMA
 // Comparison Operators
@@ -35,7 +35,7 @@
 // Types Operators
 %token T_INT T_UNSIGNED T_FLOAT
 // Structures Operators
-%token T_IF T_ELSE T_WHILE T_RETURN T_FOR INC_OP
+%token T_IF T_ELSE T_WHILE T_RETURN T_FOR INC_OP DEC_OP
 // Rules
 %token NAME NUMBER FLOAT_NUMBER
 
@@ -50,7 +50,7 @@
 %type <NodeVectorPtr> function_call_expression
 
 %type <NodePtr> primary_expression postfix_expression
-%type <NodePtr> multiply_expression add_expression
+%type <NodePtr> multiply_expression add_expression unary_expression
 %type <NodePtr> shift_expression compare_expression equal_expression
 %type <NodePtr> bitwise_expression logical_expression
 %type <NodePtr> assignment_expression expression
@@ -144,6 +144,7 @@ primary_expression
 postfix_expression
   :	primary_expression												{ $$ = $1; }
 	|	postfix_expression INC_OP 						{ $$ = new Post_Increment_Expression($1); }
+  |	postfix_expression DEC_OP 						{ $$ = new Post_Decrement_Expression($1); }
   ;
 
 add_expression
@@ -153,10 +154,21 @@ add_expression
   ;
 
 multiply_expression
-  :	postfix_expression				 								{ $$ = $1; }
-	| multiply_expression T_TIMES postfix_expression 				{ $$ = new Multiply_Expression($1, $3); }
-	| multiply_expression T_DIVIDE postfix_expression 				{ $$ = new Divide_Expression($1, $3); }
+  :	unary_expression				 								{ $$ = $1; }
+	| multiply_expression T_TIMES unary_expression 				{ $$ = new Multiply_Expression($1, $3); }
+	| multiply_expression T_DIVIDE unary_expression 				{ $$ = new Divide_Expression($1, $3); }
+  | multiply_expression T_MOD unary_expression {  $$ = new Mod_Expression($1, $3);  }
   ;
+
+unary_expression
+	: postfix_expression { $$ = $1; }
+	| INC_OP unary_expression { $$ = new Pre_Increment_Expression($2); }
+	| DEC_OP unary_expression { $$ = new Post_Increment_Expression($2); }
+	| T_PLUS multiply_expression { $$ = $2; }
+	| T_MINUS multiply_expression { $$ = new Negation_Expression($2); }
+	| T_NOT multiply_expression { $$ = new Logic_Not_Expression($2); }
+  | T_BIT_NOT multiply_expression { $$ = new Bit_Not_Expression($2); }
+	;
 
 shift_expression
     : add_expression { $$=$1; }
@@ -191,8 +203,19 @@ logical_expression
   ;
 assignment_expression
   : logical_expression { $$=$1; }
-	|	postfix_expression T_ASSIGN assignment_expression 				{ $$ = new Direct_Assignment($1, $3); }
-  ;
+	|	unary_expression T_ASSIGN assignment_expression 				{ $$ = new Direct_Assignment($1, $3); }
+	| unary_expression T_TIMES_ASSIGN assignment_expression { $$ = new Direct_Assignment($1, new Multiply_Expression($1, $3)); }
+	| unary_expression T_DIV_ASSIGN assignment_expression { $$ = new Direct_Assignment($1, new Divide_Expression($1, $3)); }
+	| unary_expression T_MOD_ASSIGN assignment_expression { $$ = new Direct_Assignment($1, new Mod_Expression($1, $3)); }
+	| unary_expression T_PLUS_ASSIGN assignment_expression { $$ = new Direct_Assignment($1, new Add_Expression($1, $3)); }
+	| unary_expression T_MINUS_ASSIGN assignment_expression { $$ = new Direct_Assignment($1, new Sub_Expression($1, $3)); }
+	| unary_expression T_LEFT_ASSIGN assignment_expression { $$ = new Direct_Assignment($1, new Left_Shift_Expression($1, $3)); }
+	| unary_expression T_RIGHT_ASSIGN assignment_expression { $$ = new Direct_Assignment($1, new Right_Shift_Expression($1, $3)); }
+	| unary_expression T_AND_ASSIGN assignment_expression { $$ = new Direct_Assignment($1, new Bit_And_Expression($1, $3)); }
+	| unary_expression T_XOR_ASSIGN assignment_expression { $$ = new Direct_Assignment($1, new Bit_Xor_Expression($1, $3)); }
+	| unary_expression T_OR_ASSIGN assignment_expression { $$ = new Direct_Assignment($1, new Bit_Or_Expression($1, $3)); }
+	;
+
 
 initialisation_list
   : assignment_expression 			{ $$ = new std::vector<Node*>(1, $1);	}
