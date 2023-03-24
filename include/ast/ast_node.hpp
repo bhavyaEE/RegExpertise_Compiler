@@ -28,7 +28,7 @@ public:
   }
   virtual void get_index(std::ostream &os, Context &context, int destReg) const
   {
-    std::cerr << "get array index when there's no array index, get out" << std::endl;
+    std::cerr << "get array index when there's no array index, get out!" << std::endl;
     exit(1);
   };
   virtual bool isFunction() const
