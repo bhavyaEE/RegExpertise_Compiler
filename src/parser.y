@@ -16,6 +16,7 @@
 	Node 		           *NodePtr;
 	std::string        	*string;
 	int 			          number;
+  float               float_num;
 	std::vector<Node*>* 	NodeVectorPtr;
 }
 
@@ -32,11 +33,11 @@
 // Comparison Operators
 %token T_LESSTHAN T_GREATERTHAN T_LESS_EQUAL T_GREATER_EQUAL T_EQUAL T_NOT_EQUAL
 // Types Operators
-%token T_INT T_UNSIGNED
+%token T_INT T_UNSIGNED T_FLOAT
 // Structures Operators
 %token T_IF T_ELSE T_WHILE T_RETURN T_FOR INC_OP
 // Rules
-%token NAME NUMBER
+%token NAME NUMBER FLOAT_NUMBER
 
 
 %type <NodePtr> root_program external_declaration function_definition
@@ -65,6 +66,8 @@
 
 %type <number> NUMBER
 
+%type <float_num> FLOAT_NUMBER
+
 
 %start ROOT
 
@@ -85,7 +88,7 @@ external_declaration
 
 function_definition
 	: type_specifier NAME T_LBRACKET T_RBRACKET compound_statement { $$ = new Function_No_Arg_Definition( *$1, *$2, $5 );}
-	| type_specifier NAME T_LBRACKET parameter_list T_RBRACKET compound_statement { $$ = new Function_With_Arg_Definition( *$1, *$2, $4, $6 );} //like int f(parameters ){ body}; */
+	| type_specifier NAME T_LBRACKET parameter_list T_RBRACKET compound_statement { $$ = new Function_With_Arg_Definition( *$1, *$2, $4, $6 );}
 	;
 
 initialisation_declarator_list
@@ -113,7 +116,7 @@ declarator
 
 declaration
   :	type_specifier SEMICOLON
-	| type_specifier initialisation_declarator_list SEMICOLON 	{$$ = new Declaration(*$1, $2); }/* i cahnged list to declarator*/
+	| type_specifier initialisation_declarator_list SEMICOLON 	{$$ = new Declaration(*$1, $2); }
   ;
 
 parameter_declaration
@@ -130,6 +133,7 @@ function_call_expression
 
 primary_expression
   : 	NUMBER														{ $$ = new Int($1); }
+  |   FLOAT_NUMBER                      {  $$ = new Float($1);}
 	| 	NAME                              { $$ = new Variable(*$1);}
   |   NAME SQU_LBRACKET expression SQU_RBRACKET { $$ = new Array(*$1, $3);}
 	| 	T_LBRACKET expression T_RBRACKET								{ $$ = $2; }
@@ -244,6 +248,7 @@ iteration_statement
 type_specifier
   :	T_INT 		{ $$ = new std::string("int"); }
   | T_UNSIGNED {$$ = new std::string("unsigned");}
+  | T_FLOAT {$$ = new std::string("float");}
 ;
 
 

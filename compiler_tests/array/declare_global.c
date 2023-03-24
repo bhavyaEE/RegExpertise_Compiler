@@ -2,5 +2,6 @@ int x[8];
 
 int f()
 {
-    return 11;
+    x[2] = 1;
+    return 11+x[2];
 }

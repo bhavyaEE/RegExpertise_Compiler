@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ast_node.hpp"
-#include "ast_integer.hpp"
+#include "ast_primitive.hpp"
 
 #include <string>
 #include <iostream>
@@ -223,7 +223,7 @@ class Logic_And_Expression : public Node
 		Logic_And_Expression (Node* _left, Node* _right);
 		~Logic_And_Expression();
 
-		void visualiser(std::ostream &os) const override; 
+		void visualiser(std::ostream &os) const override;
         void generateRISCV(std::ostream &os,  Context& context, int destReg) const override;
 };
 
@@ -237,7 +237,7 @@ class Logic_Or_Expression : public Node
 		Logic_Or_Expression (Node* _left, Node* _right);
 		~Logic_Or_Expression();
 
-		void visualiser(std::ostream &os) const override; 
+		void visualiser(std::ostream &os) const override;
         void generateRISCV(std::ostream &os,  Context& context, int destReg) const override;
 };
 
@@ -250,7 +250,7 @@ class Left_Shift_Expression : public Node
 		Left_Shift_Expression (Node* _left, Node* _right);
 		~Left_Shift_Expression();
 
-		void visualiser(std::ostream &os) const override; 
+		void visualiser(std::ostream &os) const override;
         void generateRISCV(std::ostream &os,  Context& context, int destReg) const override;
 };
 
@@ -263,7 +263,7 @@ class Right_Shift_Expression : public Node
 		Right_Shift_Expression (Node* _left, Node* _right);
 		~Right_Shift_Expression();
 
-		void visualiser(std::ostream &os) const override; 
+		void visualiser(std::ostream &os) const override;
         void generateRISCV(std::ostream &os,  Context& context, int destReg) const override;
 };
 
@@ -275,6 +275,6 @@ class Post_Increment_Expression : public Node
 		Post_Increment_Expression (Node* _op);
 		~Post_Increment_Expression();
 
-		void visualiser(std::ostream &os) const override; 
+		void visualiser(std::ostream &os) const override;
         void generateRISCV(std::ostream &os,  Context& context, int destReg) const override;
 };

@@ -1,4 +1,4 @@
-#include "ast/ast_integer.hpp"
+#include "ast/ast_primitive.hpp"
 
 Int::Int(int _value)
     : value(_value)
@@ -15,6 +15,10 @@ void Int::generateRISCV(std::ostream &os, Context& context, int destReg) const {
 int Int::get_value(Context& context) const {
     return value;
 }
+std::string Int::get_data_type(Context& context) const{
+    return "int";
+}
+
 
 Variable::Variable(std::string _variable_name) : variable_name (_variable_name){}
 
@@ -54,4 +58,19 @@ void Array::generateRISCV(std::ostream &os, Context& context, int destReg) const
     os << "addi x7,x7," <<offset<<std::endl;
     os << "add x7,x7,s0" <<std::endl;
     os <<"lw x" << destReg << ",0(x7)"<<std::endl;
+}
+
+Float::Float (float _value) : value(_value) {}
+
+void Float::visualiser(std::ostream &os) const{
+    os << " " << "float = " << value << std::endl;
+}
+
+void Float::generateRISCV(std::ostream &os, Context& context, int destReg) const {
+	os << "i have no idea what to do here" << std::endl;
+    exit(1);
+}
+
+std::string Float::get_data_type(Context& context) const{
+    return "float";
 }

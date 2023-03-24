@@ -96,14 +96,16 @@ extern int yydebug;
     T_NOT_EQUAL = 284,             /* T_NOT_EQUAL  */
     T_INT = 285,                   /* T_INT  */
     T_UNSIGNED = 286,              /* T_UNSIGNED  */
-    T_IF = 287,                    /* T_IF  */
-    T_ELSE = 288,                  /* T_ELSE  */
-    T_WHILE = 289,                 /* T_WHILE  */
-    T_RETURN = 290,                /* T_RETURN  */
-    T_FOR = 291,                   /* T_FOR  */
-    INC_OP = 292,                  /* INC_OP  */
-    NAME = 293,                    /* NAME  */
-    NUMBER = 294                   /* NUMBER  */
+    T_FLOAT = 287,                 /* T_FLOAT  */
+    T_IF = 288,                    /* T_IF  */
+    T_ELSE = 289,                  /* T_ELSE  */
+    T_WHILE = 290,                 /* T_WHILE  */
+    T_RETURN = 291,                /* T_RETURN  */
+    T_FOR = 292,                   /* T_FOR  */
+    INC_OP = 293,                  /* INC_OP  */
+    NAME = 294,                    /* NAME  */
+    NUMBER = 295,                  /* NUMBER  */
+    FLOAT_NUMBER = 296             /* FLOAT_NUMBER  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -141,14 +143,16 @@ extern int yydebug;
 #define T_NOT_EQUAL 284
 #define T_INT 285
 #define T_UNSIGNED 286
-#define T_IF 287
-#define T_ELSE 288
-#define T_WHILE 289
-#define T_RETURN 290
-#define T_FOR 291
-#define INC_OP 292
-#define NAME 293
-#define NUMBER 294
+#define T_FLOAT 287
+#define T_IF 288
+#define T_ELSE 289
+#define T_WHILE 290
+#define T_RETURN 291
+#define T_FOR 292
+#define INC_OP 293
+#define NAME 294
+#define NUMBER 295
+#define FLOAT_NUMBER 296
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -159,9 +163,10 @@ union YYSTYPE
 	Node 		           *NodePtr;
 	std::string        	*string;
 	int 			          number;
+  float               float_num;
 	std::vector<Node*>* 	NodeVectorPtr;
 
-#line 165 "src/parser.tab.hpp"
+#line 170 "src/parser.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -17,9 +17,9 @@
 [&]                                 { return (T_BIT_AND); }
 [|]                                 { return (T_BIT_OR); }
 [\^]                                { return (T_BIT_XOR); }
-[|][|]            {return (T_LOGICAL_OR);}     
-[&][&]            {return (T_LOGICAL_AND);}  
-[+][+]            {return (INC_OP); }                     
+[|][|]            {return (T_LOGICAL_OR);}
+[&][&]            {return (T_LOGICAL_AND);}
+[+][+]            {return (INC_OP); }
 
 [<]			{  return  T_LESSTHAN; }
 [>]			{  return  T_GREATERTHAN; }
@@ -50,9 +50,11 @@
 
 "int"           { return T_INT; }
 "unsigned"      { return T_UNSIGNED;}
+"float"         { return T_FLOAT;}
 
 [0-9]+([.][0-9]*)?      { yylval.number=strtod(yytext, 0); return NUMBER; }
 [a-zA-Z_]+[a-zA-Z0-9_]* { yylval.string= new std::string(yytext); return NAME; }
+[0-9]+[.][0-9]+[f|F|l|L]   { yylval.float_num = strtod(yytext, 0);  return FLOAT_NUMBER; }
 
 [ \t\r\n]+		{;}
 
