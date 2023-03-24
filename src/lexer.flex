@@ -6,21 +6,19 @@
 
 
 %%
-  /* Comments (To be done at a later date) */
-  // "/*"			{ comment(); }
 
 [*]             { return T_TIMES; }
 [+]             { return T_PLUS; }
 [-]             { return T_MINUS; }
 [\/]            { return T_DIVIDE; }
 
-[&]                                 { return (T_BIT_AND); }
-[|]                                 { return (T_BIT_OR); }
-[\^]                                { return (T_BIT_XOR); }
-[|][|]            {return (T_LOGICAL_OR);}
-[&][&]            {return (T_LOGICAL_AND);}
-[+][+]            {return (INC_OP); }
-[-][-]            {return (DEC_OP); }
+[&]                                 { return T_BIT_AND; }
+[|]                                 { return T_BIT_OR; }
+[\^]                                { return T_BIT_XOR; }
+[|][|]            {return T_LOGICAL_OR;}
+[&][&]            {return T_LOGICAL_AND;}
+[+][+]            {return INC_OP; }
+[-][-]            {return DEC_OP; }
 
 [<]			{  return  T_LESSTHAN; }
 [>]			{  return  T_GREATERTHAN; }
@@ -39,7 +37,7 @@
 [*][=]			{  return  T_TIMES_ASSIGN; }
 [\/][=]            { return T_DIV_ASSIGN; }
 [<][<][=]			{  return  T_LEFT_ASSIGN; }
-[>][>][=]			{  return  T_LEFT_ASSIGN; }
+[>][>][=]			{  return  T_RIGHT_ASSIGN; }
 [&][=]			{  return  T_AND_ASSIGN; }
 [\^][=]			{  return  T_XOR_ASSIGN; }
 [|][=]			{  return  T_OR_ASSIGN; }
@@ -65,7 +63,7 @@
 "if"            { return T_IF; }
 "else"          { return T_ELSE; }
 "while"         { return T_WHILE; }
-"for"			      { return(T_FOR); }
+"for"			      { return T_FOR; }
 
 "int"           { return T_INT; }
 "unsigned"      { return T_UNSIGNED;}

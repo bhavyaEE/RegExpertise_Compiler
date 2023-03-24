@@ -47,7 +47,7 @@ public:
 	Add_Expression(Node *left, Node *right);
 	~Add_Expression();
 	int get_value(Context &context) const override;
-	void visualiser(std::ostream &os) const override; // should it be virtual
+	void visualiser(std::ostream &os) const override;
 	void generateRISCV(std::ostream &os, Context &context, int destReg) const override;
 };
 
@@ -61,7 +61,7 @@ public:
 	Sub_Expression(Node *left, Node *right);
 	~Sub_Expression();
 	int get_value(Context &context) const override;
-	void visualiser(std::ostream &os) const override; // should it be virtual
+	void visualiser(std::ostream &os) const override;
 	void generateRISCV(std::ostream &os, Context &context, int destReg) const override;
 };
 
@@ -75,7 +75,7 @@ public:
 	Multiply_Expression(Node *_left, Node *_right);
 	~Multiply_Expression();
 	int get_value(Context &context) const override;
-	void visualiser(std::ostream &os) const override; // should it be virtual
+	void visualiser(std::ostream &os) const override;
 	void generateRISCV(std::ostream &os, Context &context, int destReg) const override;
 };
 
@@ -89,7 +89,7 @@ public:
 	Divide_Expression(Node *_left, Node *_right);
 	~Divide_Expression();
 	int get_value(Context &context) const override;
-	void visualiser(std::ostream &os) const override; // should it be virtual
+	void visualiser(std::ostream &os) const override;
 	void generateRISCV(std::ostream &os, Context &context, int destReg) const override;
 };
 
@@ -105,7 +105,7 @@ public:
 	Equal_Expression(Node *_left, Node *_right);
 	~Equal_Expression();
 
-	void visualiser(std::ostream &os) const override; // should it be virtual
+	void visualiser(std::ostream &os) const override;
 	void generateRISCV(std::ostream &os, Context &context, int destReg) const override;
 };
 
@@ -119,7 +119,7 @@ public:
 	Not_Equal_Expression(Node *_left, Node *_right);
 	~Not_Equal_Expression();
 
-	void visualiser(std::ostream &os) const override; // should it be virtual
+	void visualiser(std::ostream &os) const override;
 	void generateRISCV(std::ostream &os, Context &context, int destReg) const override;
 };
 
@@ -133,7 +133,7 @@ public:
 	Less_Than_Expression(Node *_left, Node *_right);
 	~Less_Than_Expression();
 
-	void visualiser(std::ostream &os) const override; // should it be virtual
+	void visualiser(std::ostream &os) const override;
 	void generateRISCV(std::ostream &os, Context &context, int destReg) const override;
 };
 
@@ -147,7 +147,7 @@ public:
 	More_Than_Expression(Node *_left, Node *_right);
 	~More_Than_Expression();
 
-	void visualiser(std::ostream &os) const override; // should it be virtual
+	void visualiser(std::ostream &os) const override;
 	void generateRISCV(std::ostream &os, Context &context, int destReg) const override;
 };
 
@@ -161,7 +161,7 @@ public:
 	Less_Equal_Expression(Node *_left, Node *_right);
 	~Less_Equal_Expression();
 
-	void visualiser(std::ostream &os) const override; // should it be virtual
+	void visualiser(std::ostream &os) const override;
 	void generateRISCV(std::ostream &os, Context &context, int destReg) const override;
 };
 
@@ -175,7 +175,7 @@ public:
 	More_Equal_Expression(Node *_left, Node *_right);
 	~More_Equal_Expression();
 
-	void visualiser(std::ostream &os) const override; // should it be virtual
+	void visualiser(std::ostream &os) const override;
 	void generateRISCV(std::ostream &os, Context &context, int destReg) const override;
 };
 
@@ -191,7 +191,7 @@ public:
 	Bit_And_Expression(Node *_left, Node *_right);
 	~Bit_And_Expression();
 
-	void visualiser(std::ostream &os) const override; // should it be virtual
+	void visualiser(std::ostream &os) const override;
 	void generateRISCV(std::ostream &os, Context &context, int destReg) const override;
 };
 
@@ -205,7 +205,7 @@ public:
 	Bit_Or_Expression(Node *_left, Node *_right);
 	~Bit_Or_Expression();
 
-	void visualiser(std::ostream &os) const override; // should it be virtual
+	void visualiser(std::ostream &os) const override;
 	void generateRISCV(std::ostream &os, Context &context, int destReg) const override;
 };
 
@@ -219,7 +219,7 @@ public:
 	Bit_Xor_Expression(Node *_left, Node *_right);
 	~Bit_Xor_Expression();
 
-	void visualiser(std::ostream &os) const override; // should it be virtual
+	void visualiser(std::ostream &os) const override;
 	void generateRISCV(std::ostream &os, Context &context, int destReg) const override;
 };
 

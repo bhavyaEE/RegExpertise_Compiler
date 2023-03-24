@@ -1,4 +1,3 @@
-// a bunch of register operations and stack operations need to implement here
 #pragma once
 
 #include <map>
@@ -15,6 +14,7 @@ private:
 	int fp_offset;
 	bool isThisArray = 0;
 	std::string type = "int";
+
 public:
 	variable(int _fp_offset, bool _isArray, std::string _type);
 	~variable();
@@ -28,8 +28,8 @@ typedef std::map<std::string, variable *> var_map;
 struct Context
 {
 private:
-	var_map* variable_map = new var_map();
-	std::vector<var_map*> context_scope;
+	var_map *variable_map = new var_map();
+	std::vector<var_map *> context_scope;
 	int frame_pointer_offset = -16;
 	std::string declaration_type = "int";
 

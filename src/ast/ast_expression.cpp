@@ -401,17 +401,6 @@ void Equal_Expression::generateRISCV(std::ostream &os, Context &context, int des
     context.freeReg(rightReg);
 }
 
-/*
-    The instructions from Godbolt for 'return x==y;' part of equal.c test
-    Note - not identical to codegen above as Godbolt uses different registers:
-        lw      a4,-20(s0)
-        lw      a5,-24(s0)
-        sub     a5,a4,a5
-        seqz    a5,a5
-        andi    a5,a5,0xff
-
-*/
-
 /* ------------------------------ NOT EQUAL  -------------------------------------*/
 
 Not_Equal_Expression ::Not_Equal_Expression(Node *left, Node *right) : leftop(left), rightop(right) {}
@@ -461,14 +450,6 @@ void Not_Equal_Expression::generateRISCV(std::ostream &os, Context &context, int
     context.freeReg(rightReg);
 }
 
-/*
-        lw      a4,-20(s0)
-        lw      a5,-24(s0)
-        sub     a5,a4,a5
-        snez    a5,a5
-        andi    a5,a5,0xff
-*/
-
 /* ------------------------------ Less than -------------------------------------*/
 
 Less_Than_Expression ::Less_Than_Expression(Node *left, Node *right) : leftop(left), rightop(right) {}
@@ -516,15 +497,6 @@ void Less_Than_Expression::generateRISCV(std::ostream &os, Context &context, int
     context.freeReg(rightReg);
 }
 
-/*
-
-        lw      a4,-20(s0)
-        lw      a5,-24(s0)
-        slt     a5,a4,a5
-        andi    a5,a5,0xff
-
-*/
-
 /* ------------------------------ More than -------------------------------------*/
 
 More_Than_Expression ::More_Than_Expression(Node *left, Node *right) : leftop(left), rightop(right) {}
@@ -570,15 +542,6 @@ void More_Than_Expression::generateRISCV(std::ostream &os, Context &context, int
     context.freeReg(leftReg);
     context.freeReg(rightReg);
 }
-
-/*
-
-        lw      a4,-20(s0)
-        lw      a5,-24(s0)
-        sgt     a5,a4,a5
-        andi    a5,a5,0xff
-
-*/
 
 /* ------------------------------ Less equal -------------------------------------*/
 
@@ -630,15 +593,6 @@ void Less_Equal_Expression::generateRISCV(std::ostream &os, Context &context, in
     context.freeReg(rightReg);
 }
 
-/*
-
-        lw      a4,-20(s0)
-        lw      a5,-24(s0)
-        sgt     a5,a4,a5
-        xori    a5,a5,1
-        andi    a5,a5,0xff
-*/
-
 /* ------------------------------ More equal -------------------------------------*/
 
 More_Equal_Expression ::More_Equal_Expression(Node *left, Node *right) : leftop(left), rightop(right) {}
@@ -688,15 +642,6 @@ void More_Equal_Expression::generateRISCV(std::ostream &os, Context &context, in
     context.freeReg(rightReg);
 }
 
-/*
-
-        lw      a4,-20(s0)
-        lw      a5,-24(s0)
-        slt     a5,a4,a5
-        xori    a5,a5,1
-        andi    a5,a5,0xff
-*/
-
 /* ------------------------------ BIT AND -------------------------------------*/
 
 Bit_And_Expression ::Bit_And_Expression(Node *left, Node *right) : leftop(left), rightop(right) {}
@@ -739,12 +684,6 @@ void Bit_And_Expression::generateRISCV(std::ostream &os, Context &context, int d
     context.freeReg(rightReg);
 }
 
-/*
-        lw      a4,-20(s0)
-        lw      a5,-24(s0)
-        and     a5,a4,a5
-*/
-
 /* ------------------------------ BIT OR -------------------------------------*/
 
 Bit_Or_Expression ::Bit_Or_Expression(Node *left, Node *right) : leftop(left), rightop(right) {}
@@ -785,12 +724,6 @@ void Bit_Or_Expression::generateRISCV(std::ostream &os, Context &context, int de
     context.freeReg(leftReg);
     context.freeReg(rightReg);
 }
-
-/*
-        lw      a4,-20(s0)
-        lw      a5,-24(s0)
-        or      a5,a4,a5
-*/
 
 /* ------------------------------ BIT XOR -------------------------------------*/
 
@@ -833,12 +766,6 @@ void Bit_Xor_Expression::generateRISCV(std::ostream &os, Context &context, int d
     context.freeReg(leftReg);
     context.freeReg(rightReg);
 }
-
-/*
-        lw      a4,-20(s0)
-        lw      a5,-24(s0)
-        xor     a5,a4,a5
-*/
 
 /* ------------------------------ LOGICAL AND -------------------------------------*/
 

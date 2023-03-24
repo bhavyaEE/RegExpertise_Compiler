@@ -13,18 +13,20 @@ bool variable::isArray()
 {
     return isThisArray;
 }
-std::string variable::get_type_variable(){
+std::string variable::get_type_variable()
+{
     return type;
 }
 variable Context::new_variable(std::string variable_name, bool isArr, std::string type)
 {
-    frame_pointer_offset -= 4; // assume integer so 4 bytes reserved for each variable
+    frame_pointer_offset -= 4;
     (*variable_map)[variable_name] = new variable(frame_pointer_offset, isArr, type);
-    return *((*variable_map)[variable_name]); // put variable on the map
+    return *((*variable_map)[variable_name]);
 }
 variable Context::get_variable(std::string variable_name)
 {
-    if ((*variable_map).count(variable_name)){
+    if ((*variable_map).count(variable_name))
+    {
         return *((*variable_map)[variable_name]);
     }
 }
@@ -120,21 +122,25 @@ void Context::setRightReg(int reg)
     usedRegs[31] = false;
     usedRegs[reg] = true;
 }
-void Context::enter_scope(){
+void Context::enter_scope()
+{
     context_scope.push_back(variable_map);
     variable_map = new var_map(*variable_map);
 }
-void Context::exit_scope(){
+void Context::exit_scope()
+{
     delete variable_map;
     variable_map = context_scope.back();
-    if(!context_scope.empty()){
+    if (!context_scope.empty())
+    {
         context_scope.pop_back();
     }
 }
-void Context::declare_type(std::string type){
+void Context::declare_type(std::string type)
+{
     declaration_type = type;
-
 }
-std::string Context::get_declaration_type(){
+std::string Context::get_declaration_type()
+{
     return declaration_type;
 }
