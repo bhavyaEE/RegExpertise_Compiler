@@ -48,13 +48,13 @@ void Compound_Statement::generateRISCV(std::ostream &os, Context& context, int d
 If_Statement :: If_Statement(Node* _condition, Node* _statement): condition(_condition), statement(_statement){}
 
 If_Statement :: ~If_Statement(){
-    delete statement; 
-    delete condition; 
+    delete statement;
+    delete condition;
 }
 
 void If_Statement :: visualiser(std::ostream &os) const {
     os << "If ";
-    condition->visualiser(os); 
+    condition->visualiser(os);
     os << "Then ";
     statement->visualiser(os);
     os << "" << std::endl;
@@ -67,7 +67,7 @@ void If_Statement :: generateRISCV(std::ostream &os, Context& context, int destR
     statement->generateRISCV(os, context, destReg);
 	os << if_exit_label << " :" << std::endl;
 }
-	
+
 
 /*------------------------------------IF ELSE STATEMENT--------------------------------------*/
 
@@ -75,14 +75,14 @@ If_Else_Statement :: If_Else_Statement(Node* _condition, Node* _true_statement, 
 : condition(_condition), true_statement(_true_statement), else_statement(_else_statement){}
 
 If_Else_Statement :: ~If_Else_Statement(){
-    delete true_statement; 
-    delete else_statement; 
-    delete condition; 
+    delete true_statement;
+    delete else_statement;
+    delete condition;
 }
 
 void If_Else_Statement :: visualiser(std::ostream &os) const{
     os << "If ";
-    condition->visualiser(os); 
+    condition->visualiser(os);
     os << "Then ";
     true_statement->visualiser(os);
     os << "Else ";
@@ -109,14 +109,14 @@ void If_Else_Statement :: generateRISCV(std::ostream &os, Context& context, int 
 While_Statement :: While_Statement(Node* _expression, Node* _statement): expression(_expression), statement(_statement){}
 
 While_Statement :: ~While_Statement(){
-    delete statement; 
-    delete expression; 
+    delete statement;
+    delete expression;
 }
 
 void While_Statement :: visualiser(std::ostream &os) const {
     os << "While ";
     if (expression !=NULL){
-        expression->visualiser(os); 
+        expression->visualiser(os);
     }
     os << "Do ";
     if (statement !=NULL){
@@ -126,7 +126,7 @@ void While_Statement :: visualiser(std::ostream &os) const {
 }
 
 void While_Statement :: generateRISCV(std::ostream &os, Context& context, int destReg) const {
-   
+
     std::string begin_while_label = context.createlabel("DO");
 	std::string end_while_label = context.createlabel("END");
 
@@ -138,35 +138,35 @@ void While_Statement :: generateRISCV(std::ostream &os, Context& context, int de
     if (statement != NULL){
         statement->generateRISCV(os, context, destReg);
     }
-    os << "j " << begin_while_label << std::endl;  
+    os << "j " << begin_while_label << std::endl;
     os << end_while_label << " :" << std::endl;
 }
 
 
 // /*------------------------------------ FOR LOOP --------------------------------------*/
 
-For_Loop :: For_Loop (Node* _initial_expression, Node* _loop_condition, Node* _increment_expression, Node* _statement) 
-: initial_expression(_initial_expression), loop_condition(_loop_condition), increment_expression(_increment_expression), statement(_statement){} 
+For_Loop :: For_Loop (Node* _initial_expression, Node* _loop_condition, Node* _increment_expression, Node* _statement)
+: initial_expression(_initial_expression), loop_condition(_loop_condition), increment_expression(_increment_expression), statement(_statement){}
 
 For_Loop :: ~For_Loop(){
-    delete initial_expression; 
-    delete loop_condition; 
-    delete increment_expression; 
-    delete statement; 
+    delete initial_expression;
+    delete loop_condition;
+    delete increment_expression;
+    delete statement;
 }
 
 void For_Loop :: visualiser(std::ostream &os) const{
-    os << "For Loop " << std::endl; 
-    os << "Initial Set Condition : " ;  
-    initial_expression->visualiser(os); 
-    os << "Loop condition : "; 
-    loop_condition->visualiser(os); 
-    os << "Increment condition (if exists) : "; 
+    os << "For Loop " << std::endl;
+    os << "Initial Set Condition : " ;
+    initial_expression->visualiser(os);
+    os << "Loop condition : ";
+    loop_condition->visualiser(os);
+    os << "Increment condition (if exists) : ";
     if (statement !=NULL){
         increment_expression->visualiser(os);
     }
-    os << "Statements in loop : "; 
-    statement->visualiser(os); 
+    os << "Statements in loop : ";
+    statement->visualiser(os);
     os << std::endl;
 }
 
@@ -174,8 +174,8 @@ void For_Loop :: generateRISCV(std::ostream &os, Context& context, int destReg) 
 
     std::string begin_for_label = context.createlabel("FOR");
 	std::string end_for_label = context.createlabel("END");
-    
-	
+
+
 	if (initial_expression !=NULL){
          initial_expression->generateRISCV(os, context, destReg);
     }
@@ -195,8 +195,8 @@ void For_Loop :: generateRISCV(std::ostream &os, Context& context, int destReg) 
     if (increment_expression !=NULL){
          increment_expression->generateRISCV(os, context, destReg);
     }
-    
-    os << "j " << begin_for_label << std::endl; 
-    os << end_for_label << ":" << std::endl; 
+
+    os << "j " << begin_for_label << std::endl;
+    os << end_for_label << ":" << std::endl;
 
  }

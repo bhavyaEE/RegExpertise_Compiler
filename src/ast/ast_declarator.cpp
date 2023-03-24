@@ -56,7 +56,6 @@ int Array_Declarator::get_array_size(Context& context) const{
 
 void Array_Declarator::visualiser(std::ostream &os) const {
     os << "array name: "<<array_name << std::endl;
-    // os << "array size: " << get_array_size()<<std::endl;
     os << "array size " ;
     array_size_expression->visualiser(os);
     os<<std::endl;
@@ -70,6 +69,48 @@ void Array_Declarator::generateRISCV(std::ostream &os, Context& context, int des
         context.store_word(os, 0, offset+4*i);
     }
 
+}
+
+Initialisation_Array_Declarator ::Initialisation_Array_Declarator(std::string _array_name, Node* _expression, std::vector<Node*>* _initialisation_list)
+    : init_array_name(_array_name), expression(_expression), initialisation_list(_initialisation_list){}
+
+int Initialisation_Array_Declarator::get_array_size(Context& context) const{
+    if (expression != NULL){
+        return expression->get_value(context);
+    }
+    else{
+        return -1;
+    }
+}
+void Initialisation_Array_Declarator::visualiser(std::ostream &os) const{
+    os << "array name: "<< init_array_name << std::endl;
+    os << "array size " ;
+    expression->visualiser(os);
+    os << "= {";
+    for(auto initialisation = initialisation_list->begin(); initialisation != initialisation_list->end(); initialisation++)
+    {
+        (*initialisation)->visualiser(os);
+    }
+    os << "}" <<std::endl;
+
+}
+void Initialisation_Array_Declarator::generateRISCV(std::ostream &os, Context& context, int destReg) const {
+    int size = get_array_size(context); //inside bracket
+    context.for_array_declaration(size);
+    variable this_variable = context.new_variable(init_array_name, 1);
+    int list_size = initialisation_list->size();
+    for (int i = 0;i<size; i++ ){
+        if (i < list_size){
+            int offset = this_variable.get_variable_address() + 4*i;
+            (*initialisation_list)[i]->generateRISCV(os, context, destReg);
+            context.store_word(os, destReg, offset);
+        }
+        else{
+            int offset = this_variable.get_variable_address() + 4*i;
+            context.store_word(os, 0, offset);
+        }
+
+    }
 }
 
 Function_Declarator::Function_Declarator(std::string _fname, std::vector<Node*>* _argument_list)

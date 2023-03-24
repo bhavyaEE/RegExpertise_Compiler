@@ -17,7 +17,6 @@
 	std::string        	*string;
 	int 			          number;
 	std::vector<Node*>* 	NodeVectorPtr;
-  std::vector<int>*   IntVectorPtr;
 }
 
 /* ------------------------------------					Tokens					------------------------------------ */
@@ -43,15 +42,15 @@
 %type <NodePtr> root_program external_declaration function_definition
 
 %type <NodePtr>	declarator initialisation_declarator
-/* %type <NodeVectorPtr> initialisation_declarator_list */
+%type <NodeVectorPtr> initialisation_declarator_list initialisation_list
 
 %type <NodePtr> declaration parameter_declaration
-%type <NodeVectorPtr> declaration_list parameter_list 
+%type <NodeVectorPtr> declaration_list parameter_list
 %type <NodeVectorPtr> function_call_expression
 
 %type <NodePtr> primary_expression postfix_expression
 %type <NodePtr> multiply_expression add_expression
-%type <NodePtr> shift_expression compare_expression equal_expression 
+%type <NodePtr> shift_expression compare_expression equal_expression
 %type <NodePtr> bitwise_expression logical_expression
 %type <NodePtr> assignment_expression expression
 
@@ -89,14 +88,15 @@ function_definition
 	| type_specifier NAME T_LBRACKET parameter_list T_RBRACKET compound_statement { $$ = new Function_With_Arg_Definition( *$1, *$2, $4, $6 );} //like int f(parameters ){ body}; */
 	;
 
-/* initialisation_declarator_list
+initialisation_declarator_list
   : initialisation_declarator 											{ $$ = new std::vector<Node*>(1, $1);	}
 	|	initialisation_declarator_list COMMA initialisation_declarator	{ $1->push_back($3); $$ = $1; }
-  ; */
+  ;
 
 initialisation_declarator
   : 	declarator 	{ $$ = $1; }
   | 	NAME T_ASSIGN assignment_expression 					{ $$ = new Initialisation_Variable_Declarator(*$1, $3); }
+  | 	NAME SQU_LBRACKET add_expression SQU_RBRACKET T_ASSIGN CUR_LBRACKET initialisation_list CUR_RBRACKET 	{ $$ = new Initialisation_Array_Declarator(*$1, $3, $7); }
   ;
 
 declaration_list
@@ -113,11 +113,11 @@ declarator
 
 declaration
   :	type_specifier SEMICOLON
-	| type_specifier initialisation_declarator SEMICOLON 	{$$ = new Declaration(*$1, $2); }/* i cahnged list to declarator*/
+	| type_specifier initialisation_declarator_list SEMICOLON 	{$$ = new Declaration(*$1, $2); }/* i cahnged list to declarator*/
   ;
 
 parameter_declaration
-  :	type_specifier declarator   { $$ = new Declaration(*$1, $2); }
+  :	type_specifier declarator   { $$ = new Declaration(*$1, new std::vector<Node*>(1, $2)); }
   ;
 parameter_list
   :	parameter_declaration				     					{ $$ = new std::vector<Node*>(1, $1); }
@@ -188,6 +188,11 @@ logical_expression
 assignment_expression
   : logical_expression { $$=$1; }
 	|	postfix_expression T_ASSIGN assignment_expression 				{ $$ = new Direct_Assignment($1, $3); }
+  ;
+
+initialisation_list
+  : assignment_expression 			{ $$ = new std::vector<Node*>(1, $1);	}
+  |	initialisation_list COMMA assignment_expression 	{ $1->push_back($3); $$=$1; }
   ;
 
 expression

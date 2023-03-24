@@ -41,6 +41,21 @@ class Array_Declarator : public Node
 		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 };
 
+class Initialisation_Array_Declarator : public Node
+{
+	private:
+		std::string init_array_name;
+		Node*		expression;
+		std::vector<Node*>*	initialisation_list;
+	public:
+		Initialisation_Array_Declarator(std::string _array_name, Node* _expression, std::vector<Node*>* _initialisation_list);
+		~Initialisation_Array_Declarator(){};
+		int get_array_size(Context& context) const;
+		void visualiser(std::ostream &os) const override;
+		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
+};
+
+
 
 class Function_Declarator : public Node{
 	private:

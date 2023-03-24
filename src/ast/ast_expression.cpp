@@ -11,7 +11,6 @@ void Direct_Assignment::visualiser(std::ostream &os) const
 }
 void Direct_Assignment::generateRISCV(std::ostream &os, Context &context, int destReg) const
 {
-    // left->generateRISCV(os, context, destReg);
     std::string name = left->get_variable_name();
     variable this_variable = context.get_variable(name);
     if (this_variable.isArray())

@@ -29,14 +29,7 @@ void Variable::generateRISCV(std::ostream &os, Context& context, int destReg) co
 std::string Variable::get_variable_name() const{
     return variable_name;
 }
-// int Variable::get_variable_value(Context& context) const{
-//     variable this_variable = context.get_variable(variable_name);
-//     return this_variable.return_variable_value();
-// }
-// int Variable::get_value(Context& context) const{
-//     int value = get_variable_value(context);
-//     return value;
-// }
+
 
 Array::Array(std::string _name, Node* _index)
     :array_name(_name),  index(_index){}

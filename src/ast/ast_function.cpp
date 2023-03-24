@@ -22,12 +22,14 @@ void Function_No_Arg_Definition::generateRISCV(std::ostream &os, Context& contex
     os << "addi " << "sp,sp,-480" << std::endl;
     os << "sw ra," << 476 <<"(sp)"<<std::endl;
     os << "sw " << "s0," << 472 <<"(sp)" << std::endl;
+    os << "sw x9, 468(sp)" <<std::endl;
     os << "addi " << "s0,sp," << 480 << std::endl;
     Function_Body->generateRISCV(os, context, destReg);
     os << ".function_end"<<Function_Name<<":"<<std::endl;
     os << "mv" << " x10," <<"x" << destReg << std::endl;
     os << "lw ra," << 476 << "(sp)" <<std::endl;
     os << "lw " << "s0," << 472 << "(sp)" << std::endl;
+    os << "lw x9, 468(sp)" <<std::endl;
     os << "addi " << "sp,sp," << 480 << std::endl;
     os << "jr " << "ra" << std::endl;
 }
@@ -59,7 +61,7 @@ void Function_With_Arg_Definition::generateRISCV(std::ostream &os, Context& cont
     os << "addi " << "sp,sp,-480" << std::endl;
     os << "sw ra," << 476 <<"(sp)"<<std::endl;
     os << "sw " << "s0," << 472 <<"(sp)" << std::endl;
-    os << "sw s1, 468(sp)" <<std::endl;
+    os << "sw x9, 468(sp)" <<std::endl;
     os << "addi " << "s0,sp," << 480 << std::endl;
 	int argument_registers[8]  = {10, 11, 12, 13, 14, 15, 16, 17};
     for(int i = 0; i < Function_Arguments->size(); i++){
@@ -73,7 +75,7 @@ void Function_With_Arg_Definition::generateRISCV(std::ostream &os, Context& cont
     os << "mv" << " x10," <<"x" << destReg << std::endl;
     os << "lw ra," << 476 << "(sp)" <<std::endl;
     os << "lw " << "s0," << 472 << "(sp)" << std::endl;
-    os << "lw s1, 468(sp)" <<std::endl;
+    os << "lw x9, 468(sp)" <<std::endl;
     os << "addi " << "sp,sp," << 480 << std::endl;
     os << "jr " << "ra" << std::endl;
 }

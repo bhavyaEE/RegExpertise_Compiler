@@ -13,12 +13,6 @@ bool variable::isArray()
 {
     return isThisArray;
 }
-// void variable::store_value(int val){
-//     value = val;
-// }
-// //int variable::return_variable_value(){
-//     return value;
-// }
 
 variable Context::new_variable(std::string variable_name, bool isArr)
 {
@@ -53,7 +47,7 @@ void Context::store_word(std::ostream &os, int register_name, int memory_locatio
 
 variable Context::add_arguments(std::string argument_name)
 {
-    frame_pointer_offset -= 4; 
+    frame_pointer_offset -= 4;
     (*variable_map)[argument_name] = new variable(frame_pointer_offset, 0);
     return *((*variable_map)[argument_name]);
 }

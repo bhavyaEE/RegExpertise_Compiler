@@ -7,10 +7,10 @@ class Declaration : public Node
 {
     private:
 		std::string Type;
-		Node* Init_Declarator;
+		std::vector<Node*>* Init_Declarator_List;
 
 	public:
-		Declaration(std::string _TYPE, Node* _init_declarator);
+		Declaration(std::string _TYPE, std::vector<Node*>* _Init_Declarator_List);
 		~Declaration();
 		virtual std::string get_parameter() const;
 		void visualiser(std::ostream &os) const override;
@@ -26,6 +26,6 @@ class Add_Program : public Node
 	public:
 		Add_Program(Node* _left, Node* _right);
 		~Add_Program(){};
-		void visualiser(std::ostream &os) const override; 
+		void visualiser(std::ostream &os) const override;
 		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
 };
