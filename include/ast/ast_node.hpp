@@ -33,7 +33,7 @@ public:
     return 0;
   }
   virtual std::string get_data_type(Context& context) const{
-    std::cerr << "get data type when I haven't implemented this, get out" << std::endl;
+    return "int";
   }
 };
 

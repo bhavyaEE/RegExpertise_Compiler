@@ -21,10 +21,14 @@ void Declaration::visualiser(std::ostream &os) const {
         }
 }
 void Declaration::generateRISCV(std::ostream &os, Context& context, int destReg) const {
+    context.declare_type(Type);
     for (auto Init_Declarator = Init_Declarator_List->begin(); Init_Declarator != Init_Declarator_List->end(); Init_Declarator++)
         {
             (*Init_Declarator)->generateRISCV(os, context, destReg);
         }
+}
+std::string Declaration::get_data_type(Context& context) const {
+    return Type;
 }
 
 Add_Program::Add_Program(Node* _left, Node* _right)

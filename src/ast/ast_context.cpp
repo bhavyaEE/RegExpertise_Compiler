@@ -1,7 +1,7 @@
 #include "ast/ast_context.hpp"
 
-variable::variable(int _fp_offset, bool _isArray)
-    : fp_offset(_fp_offset), isThisArray(_isArray) {}
+variable::variable(int _fp_offset, bool _isArray, std::string _type)
+    : fp_offset(_fp_offset), isThisArray(_isArray), type(_type) {}
 
 variable::~variable() {}
 
@@ -13,11 +13,13 @@ bool variable::isArray()
 {
     return isThisArray;
 }
-
-variable Context::new_variable(std::string variable_name, bool isArr)
+std::string variable::get_type_variable(){
+    return type;
+}
+variable Context::new_variable(std::string variable_name, bool isArr, std::string type)
 {
     frame_pointer_offset -= 4; // assume integer so 4 bytes reserved for each variable
-    (*variable_map)[variable_name] = new variable(frame_pointer_offset, isArr);
+    (*variable_map)[variable_name] = new variable(frame_pointer_offset, isArr, type);
     return *((*variable_map)[variable_name]); // put variable on the map
 }
 variable Context::get_variable(std::string variable_name)
@@ -44,11 +46,19 @@ void Context::store_word(std::ostream &os, int register_name, int memory_locatio
 {
     os << "sw x" << register_name << "," << memory_location << "(s0)" << std::endl;
 }
+void Context::fload_word(std::ostream &os, int register_name, int memory_location)
+{
+    os << "flw f" << register_name << "," << memory_location << "(s0)" << std::endl;
+}
+void Context::fstore_word(std::ostream &os, int register_name, int memory_location)
+{
+    os << "fsw f" << register_name << "," << memory_location << "(s0)" << std::endl;
+}
 
-variable Context::add_arguments(std::string argument_name)
+variable Context::add_arguments(std::string argument_name, std::string type)
 {
     frame_pointer_offset -= 4;
-    (*variable_map)[argument_name] = new variable(frame_pointer_offset, 0);
+    (*variable_map)[argument_name] = new variable(frame_pointer_offset, 0, type);
     return *((*variable_map)[argument_name]);
 }
 
@@ -120,4 +130,11 @@ void Context::exit_scope(){
     if(!context_scope.empty()){
         context_scope.pop_back();
     }
+}
+void Context::declare_type(std::string type){
+    declaration_type = type;
+
+}
+std::string Context::get_declaration_type(){
+    return declaration_type;
 }

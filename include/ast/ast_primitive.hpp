@@ -28,8 +28,7 @@ class Variable : public Node
         void visualiser(std::ostream &os) const override;
 		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
         std::string get_variable_name() const override;
-        // int get_value(Context& context) const override;
-        // int get_variable_value(Context& context) const;
+		std::string get_data_type(Context& context) const override;
 };
 
 class Array : public Node{

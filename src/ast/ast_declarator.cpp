@@ -13,9 +13,15 @@ void Variable_Declarator::visualiser(std::ostream &os) const {
     os << "variable name: "<<variable_name << std::endl;
 }
 void Variable_Declarator::generateRISCV(std::ostream &os, Context& context, int destReg) const {
-    variable this_variable = context.new_variable(variable_name, 0);
+    std::string type = context.get_declaration_type();
+    variable this_variable = context.new_variable(variable_name, 0, type);
 	int offset = this_variable.get_variable_address();
-    context.store_word(os, 0, offset);
+    if (type == "float"){
+        context.fstore_word(os, 0, offset);
+    }
+    else{
+        context.store_word(os, 0, offset);
+    }
 }
 
 
@@ -30,7 +36,8 @@ void Initialisation_Variable_Declarator::visualiser(std::ostream &os) const{
     expression->visualiser(os);
 }
 void Initialisation_Variable_Declarator::generateRISCV(std::ostream &os, Context& context, int destReg) const {
-    variable this_variable = context.new_variable(variable_name, 0);
+    std::string type = context.get_declaration_type();
+    variable this_variable = context.new_variable(variable_name, 0, type);
     int offset = this_variable.get_variable_address();
     expression->generateRISCV(os, context, destReg);
     context.store_word(os, destReg, offset);
@@ -63,7 +70,7 @@ void Array_Declarator::visualiser(std::ostream &os) const {
 void Array_Declarator::generateRISCV(std::ostream &os, Context& context, int destReg) const {
     int size = get_array_size(context); //inside bracket
     context.for_array_declaration(size);
-    variable this_variable = context.new_variable(array_name, 1);
+    variable this_variable = context.new_variable(array_name, 1, "int");
 	int offset = this_variable.get_variable_address();
     for (int i = 0;i<size; i++ ){
         context.store_word(os, 0, offset+4*i);
@@ -97,7 +104,7 @@ void Initialisation_Array_Declarator::visualiser(std::ostream &os) const{
 void Initialisation_Array_Declarator::generateRISCV(std::ostream &os, Context& context, int destReg) const {
     int size = get_array_size(context); //inside bracket
     context.for_array_declaration(size);
-    variable this_variable = context.new_variable(init_array_name, 1);
+    variable this_variable = context.new_variable(init_array_name, 1, "int");
     int list_size = initialisation_list->size();
     for (int i = 0;i<size; i++ ){
         if (i < list_size){

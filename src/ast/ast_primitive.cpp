@@ -28,10 +28,19 @@ void Variable::visualiser(std::ostream &os) const{
 void Variable::generateRISCV(std::ostream &os, Context& context, int destReg) const {
     variable this_variable = context.get_variable(variable_name);
 	int offset = this_variable.get_variable_address();
-    context.load_word(os, destReg, offset );
+    if (this_variable.get_type_variable()=="float"){
+        context.fload_word(os, destReg, offset);
+    }
+    else{
+        context.load_word(os, destReg, offset);
+    }
 }
 std::string Variable::get_variable_name() const{
     return variable_name;
+}
+std::string Variable::get_data_type(Context& context) const {
+    variable this_variable = context.get_variable(variable_name);
+    return this_variable.get_type_variable();
 }
 
 

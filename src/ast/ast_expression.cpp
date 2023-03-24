@@ -117,11 +117,18 @@ void Add_Expression::generateRISCV(std::ostream &os, Context &context, int destR
         leftop->generateRISCV(os, context, leftReg);
         rightop->generateRISCV(os, context, rightReg);
     }
-
-    os << "add"
-       << " "
-       << "x" << destReg << ",x" << leftReg << ","
-       << "x" << rightReg << std::endl;
+    if((leftop->get_data_type(context)=="float")||(rightop->get_data_type(context)=="float")){
+        os << "fadd.s"
+        << " "
+        << "f" << destReg << ",f" << leftReg << ","
+        << "f" << rightReg << std::endl;
+    }
+    else{
+        os << "add"
+        << " "
+        << "x" << destReg << ",x" << leftReg << ","
+        << "x" << rightReg << std::endl;
+    }
 
     context.freeReg(leftReg);
     context.freeReg(rightReg);
@@ -175,11 +182,18 @@ void Sub_Expression::generateRISCV(std::ostream &os, Context &context, int destR
         leftop->generateRISCV(os, context, leftReg);
         rightop->generateRISCV(os, context, rightReg);
     }
-
-    os << "sub"
-       << " "
-       << "x" << destReg << ",x" << leftReg << ","
-       << "x" << rightReg << std::endl;
+    if((leftop->get_data_type(context)=="float")||(rightop->get_data_type(context)=="float")){
+        os << "fsub.s"
+        << " "
+        << "f" << destReg << ",f" << leftReg << ","
+        << "f" << rightReg << std::endl;
+    }
+    else{
+        os << "sub"
+        << " "
+        << "x" << destReg << ",x" << leftReg << ","
+        << "x" << rightReg << std::endl;
+    }
 
     context.freeReg(leftReg);
     context.freeReg(rightReg);
@@ -233,11 +247,18 @@ void Multiply_Expression::generateRISCV(std::ostream &os, Context &context, int 
         leftop->generateRISCV(os, context, leftReg);
         rightop->generateRISCV(os, context, rightReg);
     }
-
-    os << "mul"
-       << " "
-       << "x" << destReg << ",x" << leftReg << ","
-       << "x" << rightReg << std::endl;
+    if((leftop->get_data_type(context)=="float")||(rightop->get_data_type(context)=="float")){
+        os << "fmul.s"
+        << " "
+        << "f" << destReg << ",f" << leftReg << ","
+        << "f" << rightReg << std::endl;
+    }
+    else{
+        os << "mul"
+        << " "
+        << "x" << destReg << ",x" << leftReg << ","
+        << "x" << rightReg << std::endl;
+    }
 
     context.freeReg(leftReg);
     context.freeReg(rightReg);
@@ -290,11 +311,18 @@ void Divide_Expression::generateRISCV(std::ostream &os, Context &context, int de
         rightop->generateRISCV(os, context, rightReg);
     }
 
-    os << "div"
-       << " "
-       << "x" << destReg << ",x" << leftReg << ","
-       << "x" << rightReg << std::endl;
-
+    if((leftop->get_data_type(context)=="float")||(rightop->get_data_type(context)=="float")){
+        os << "fdiv.s"
+        << " "
+        << "f" << destReg << ",f" << leftReg << ","
+        << "f" << rightReg << std::endl;
+    }
+    else{
+        os << "div"
+        << " "
+        << "x" << destReg << ",x" << leftReg << ","
+        << "x" << rightReg << std::endl;
+    }
     context.freeReg(leftReg);
     context.freeReg(rightReg);
 }

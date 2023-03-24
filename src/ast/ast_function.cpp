@@ -26,7 +26,12 @@ void Function_No_Arg_Definition::generateRISCV(std::ostream &os, Context& contex
     os << "addi " << "s0,sp," << 480 << std::endl;
     Function_Body->generateRISCV(os, context, destReg);
     os << ".function_end"<<Function_Name<<":"<<std::endl;
-    os << "mv" << " x10," <<"x" << destReg << std::endl;
+    if (Type == "float"){
+        os << "fmv.s f10,f" <<destReg<<std::endl;
+    }
+    else{
+        os << "mv" << " x10," <<"x" << destReg << std::endl;
+    }
     os << "lw ra," << 476 << "(sp)" <<std::endl;
     os << "lw " << "s0," << 472 << "(sp)" << std::endl;
     os << "lw x9, 468(sp)" <<std::endl;
@@ -66,13 +71,24 @@ void Function_With_Arg_Definition::generateRISCV(std::ostream &os, Context& cont
 	int argument_registers[8]  = {10, 11, 12, 13, 14, 15, 16, 17};
     for(int i = 0; i < Function_Arguments->size(); i++){
         Declaration* this_arg = dynamic_cast<Declaration*>((*Function_Arguments)[i]);
-        context.add_arguments(this_arg->get_parameter());
+        std::string type = this_arg->get_data_type(context);
+        context.add_arguments(this_arg->get_parameter(), type);
         int argument_frame_pointer = context.get_fp_offset();
-        context.store_word(os, argument_registers[i], argument_frame_pointer);
+        if (Type == "float"){
+            context.fstore_word(os, argument_registers[i], argument_frame_pointer);
+        }
+        else{
+            context.store_word(os, argument_registers[i], argument_frame_pointer);
+        }
     }
     Function_Body->generateRISCV(os, context, destReg);
     os << ".function_end"<<Function_Name<<":"<<std::endl;
-    os << "mv" << " x10," <<"x" << destReg << std::endl;
+    if (Type == "float"){
+        os << "fmv.s f10,f" <<destReg<<std::endl;
+    }
+    else{
+        os << "mv" << " x10," <<"x" << destReg << std::endl;
+    }
     os << "lw ra," << 476 << "(sp)" <<std::endl;
     os << "lw " << "s0," << 472 << "(sp)" << std::endl;
     os << "lw x9, 468(sp)" <<std::endl;

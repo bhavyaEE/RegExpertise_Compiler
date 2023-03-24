@@ -15,6 +15,7 @@ class Declaration : public Node
 		virtual std::string get_parameter() const;
 		void visualiser(std::ostream &os) const override;
 		void generateRISCV(std::ostream &os, Context& context, int destReg) const override;
+		std::string get_data_type(Context& context) const override;
 };
 
 class Add_Program : public Node
