@@ -1846,7 +1846,7 @@ yyreduce:
 
   case 46: /* unary_expression: DEC_OP unary_expression  */
 #line 166 "src/parser.y"
-                                  { (yyval.NodePtr) = new Post_Increment_Expression((yyvsp[0].NodePtr)); }
+                                  { (yyval.NodePtr) = new Pre_Decrement_Expression((yyvsp[0].NodePtr)); }
 #line 1851 "src/parser.tab.cpp"
     break;
 

@@ -163,7 +163,7 @@ multiply_expression
 unary_expression
 	: postfix_expression { $$ = $1; }
 	| INC_OP unary_expression { $$ = new Pre_Increment_Expression($2); }
-	| DEC_OP unary_expression { $$ = new Post_Increment_Expression($2); }
+	| DEC_OP unary_expression { $$ = new Pre_Decrement_Expression($2); }
 	| T_PLUS multiply_expression { $$ = $2; }
 	| T_MINUS multiply_expression { $$ = new Negation_Expression($2); }
 	| T_NOT multiply_expression { $$ = new Logic_Not_Expression($2); }
