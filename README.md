@@ -2,19 +2,9 @@
 **Ranked in top 25% of the year, as part of the EIE 2nd Year Instruction Set Architecture and Compilers coursework.**
 Functionality implemented for all basic C constructs and operators including loops, functions, arrays and types.
 Developed in C++, flex and bison, using fundamentals of compiler design such as lexing, parsing, abstract-syntax-tree (AST) and assembly generation.
+
 ![image](https://github.com/bhavyaEE/RegExpertise_Compiler/assets/107200668/d6e0be9e-038f-4a13-8466-76ad524d798e)
 
-
-Breakdown list of features successfully implemented: 
-- functions with and without arguments (upto 4 parameters)
-- variables of int anf float type
-- local variables
-- arithmetic and logical expressions
-- if-then-else statements
-- while and for loops
-- local and global arrays
-  
-![RegExpertise (2)](https://github.com/bhavyaEE/RegExpertise_Compiler/assets/107200668/8ed6558e-04ac-4f9d-beba-b5e7ef6cc537)
 
 Acknowledgements
 ================
