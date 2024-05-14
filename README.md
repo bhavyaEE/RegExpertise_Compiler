@@ -3,6 +3,9 @@
 Functionality implemented for all basic C constructs and operators including loops, functions, arrays and types.
 Developed in C++, flex and bison, using fundamentals of compiler design such as lexing, parsing, abstract-syntax-tree (AST) and assembly generation.
 
+![image](https://github.com/bhavyaEE/RegExpertise_Compiler/assets/107200668/a41bd866-5f0f-4266-b06d-18d81395e37e)
+
+
 ![image](https://github.com/bhavyaEE/RegExpertise_Compiler/assets/107200668/d6e0be9e-038f-4a13-8466-76ad524d798e)
 
 
