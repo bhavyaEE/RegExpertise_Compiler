@@ -11,6 +11,7 @@ Breakdown list of features successfully implemented:
 - if-then-else statements
 - while and for loops
 - local and global arrays
+  
 ![RegExpertise (2)](https://github.com/bhavyaEE/RegExpertise_Compiler/assets/107200668/8ed6558e-04ac-4f9d-beba-b5e7ef6cc537)
 
 Acknowledgements
