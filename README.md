@@ -1,7 +1,8 @@
 # ANSI-C to RISC-V assembly Compiler developed in C++, flex and bison, using fundamentals of compiler design such as lexing, parsing, abstract-syntax-tree (AST) and assembly generation.
-Ranked in top 25% of the year, as part of the EIE 2nd Year Instruction Set Architecture and Compilers coursework; functionality implemented for all basic C constructs and operators including loops, functions, arrays and types.
+Ranked in top 25% of the year, as part of the EIE 2nd Year Instruction Set Architecture and Compilers coursework. 
+Functionality implemented for all basic C constructs and operators including loops, functions, arrays and types.
 
- Breakdown of features were successfully implemented: 
+ Breakdown list of features successfully implemented: 
 - functions with and without arguments (upto 4 parameters)
 - variables of int anf float type
 - local variables
