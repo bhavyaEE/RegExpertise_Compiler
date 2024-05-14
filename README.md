@@ -1,7 +1,6 @@
 # ANSI-C to RISC-V assembly Compiler
-**Ranked in top 25% of the year, as part of the EIE 2nd Year Instruction Set Architecture and Compilers coursework.**
-Functionality implemented for all basic C constructs and operators including loops, functions, arrays and types.
-Developed in C++, flex and bison, using fundamentals of compiler design such as lexing, parsing, abstract-syntax-tree (AST) and assembly generation.
+## **Ranked in top 25% of the year, as part of the EIE 2nd Year Instruction Set Architecture and Compilers coursework.**
+### Functionality implemented for all basic C constructs and operators including loops, functions, arrays and types. Developed in C++, flex and bison, using fundamentals of compiler design such as lexing, parsing, abstract-syntax-tree (AST) and assembly generation.
 
 ![image](https://github.com/bhavyaEE/RegExpertise_Compiler/assets/107200668/258acd2f-db37-495e-b688-5e9cae975ef8)
 
