@@ -3,6 +3,9 @@
 Functionality implemented for all basic C constructs and operators including loops, functions, arrays and types.
 Developed in C++, flex and bison, using fundamentals of compiler design such as lexing, parsing, abstract-syntax-tree (AST) and assembly generation.
 
+![image](https://github.com/bhavyaEE/RegExpertise_Compiler/assets/107200668/0fe164b1-f49a-4cc6-9296-9ff260688adb)
+
+
 Breakdown list of features successfully implemented: 
 - functions with and without arguments (upto 4 parameters)
 - variables of int anf float type
